@@ -1,0 +1,179 @@
+---
+/**
+ * Chat flotante en página (sin redirección obligatoria a WhatsApp).
+ * - Saludo según hora
+ * - Rutas: Conocer Inbolsa / Hablar con asesor
+ * - Derivación por ciudad: La Paz / Santa Cruz
+ * - Solo UI (100% front-end)
+ * - Usa Tailwind (brand-600/700 ya existen en tu tema)
+ */
+
+export const prerender = true;
+
+const OFFICES = [
+  {
+    id: 'lp',
+    name: 'La Paz',
+    phone: '+591 2 000000',  // ← cámbialo
+    wa: 'https://wa.me/59170000000?text=Hola%20Inbolsa%20La%20Paz%2C%20quisiera%20m%C3%A1s%20informaci%C3%B3n',
+    email: 'ventas.lapaz@inbolsa.bo',
+  },
+  {
+    id: 'scz',
+    name: 'Santa Cruz',
+    phone: '+591 3 000000',  // ← cámbialo
+    wa: 'https://wa.me/59171000000?text=Hola%20Inbolsa%20Santa%20Cruz%2C%20quisiera%20m%C3%A1s%20informaci%C3%B3n',
+    email: 'ventas.scz@inbolsa.bo',
+  },
+];
+---
+
+<div id="inb-chat" class="pointer-events-none">
+  <!-- Botón flotante -->
+  <button
+    data-chat-open
+    aria-label="Abrir chat"
+    class="pointer-events-auto fixed bottom-5 right-5 z-50 grid h-14 w-14 place-items-center rounded-full bg-brand-600 text-white shadow-lg transition hover:bg-brand-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-300"
+  >
+    <svg viewBox="0 0 24 24" class="h-7 w-7" aria-hidden="true">
+      <path fill="currentColor" d="M2 5a3 3 0 0 1 3-3h14a3 3 0 0 1 3 3v9a3 3 0 0 1-3 3H9.83L5.41 21.41A1 1 0 0 1 4 20.59V17H5a3 3 0 0 1-3-3z"/>
+    </svg>
+  </button>
+
+  <!-- Panel -->
+  <section
+    data-chat-panel
+    class="pointer-events-auto fixed bottom-24 right-5 z-50 hidden w-[min(92vw,380px)] overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-xl"
+    role="dialog"
+    aria-labelledby="inb-chat-title"
+    aria-modal="true"
+  >
+    <!-- Header -->
+    <header class="flex items-center justify-between bg-gradient-to-r from-brand-600 to-brand-700 px-4 py-3 text-white">
+      <div class="flex items-center gap-2">
+        <span class="inline-block h-2.5 w-2.5 rounded-full bg-emerald-400"></span>
+        <h3 id="inb-chat-title" class="font-semibold">Asistente Inbolsa</h3>
+      </div>
+      <div class="flex items-center gap-2">
+        <button data-chat-min class="rounded-lg px-2 py-1 text-white/90 hover:bg-white/10" aria-label="Minimizar">–</button>
+        <button data-chat-close class="rounded-lg px-2 py-1 text-white/90 hover:bg-white/10" aria-label="Cerrar">×</button>
+      </div>
+    </header>
+
+    <!-- Conversación -->
+    <div class="grid max-h-[60vh] grid-rows-[1fr_auto]">
+      <div data-chat-body class="space-y-3 overflow-auto px-3 py-3 text-sm"></div>
+      <div data-quick class="border-t bg-slate-50/50 p-3"></div>
+    </div>
+  </section>
+</div>
+
+<!-- Exponemos OFFICES al script (evita ${} en Astro): -->
+<script type="module" define:vars={{ OFFICES }}>
+  const root   = document.getElementById('inb-chat');
+  const openBt = root.querySelector('[data-chat-open]');
+  const panel  = root.querySelector('[data-chat-panel]');
+  const closeBt= root.querySelector('[data-chat-close]');
+  const minBt  = root.querySelector('[data-chat-min]');
+  const body   = root.querySelector('[data-chat-body]');
+  const quick  = root.querySelector('[data-quick]');
+
+  function salutation(){
+    const h = new Date().getHours();
+    if (h < 12) return '¡Buenos días!';
+    if (h < 19) return '¡Buenas tardes!';
+    return '¡Buenas noches!';
+  }
+  function scrollToEnd(){ requestAnimationFrame(()=> body.scrollTop = body.scrollHeight); }
+
+  function bubble(side, html){
+    const wrap = document.createElement('div');
+    wrap.className = side === 'bot' ? 'flex items-start gap-2' : 'flex items-start justify-end gap-2';
+    wrap.innerHTML = side === 'bot'
+      ? `<div class="grid h-8 w-8 place-items-center rounded-full bg-brand-600 text-white text-xs font-semibold">i</div>
+         <div class="max-w-[85%] rounded-2xl bg-slate-100 px-3 py-2 text-slate-800">${html}</div>`
+      : `<div class="max-w-[85%] rounded-2xl bg-brand-600 px-3 py-2 text-white">${html}</div>`;
+    body.appendChild(wrap);
+    scrollToEnd();
+  }
+
+  function setQuick(buttons){
+    quick.innerHTML = '';
+    if (!buttons || !buttons.length) return;
+    const row = document.createElement('div');
+    row.className = 'flex flex-wrap gap-2';
+    buttons.forEach(b=>{
+      const btn = document.createElement('button');
+      btn.className = 'rounded-full border px-3 py-1.5 text-sm hover:bg-slate-50';
+      btn.textContent = b.label;
+      btn.addEventListener('click', b.onClick);
+      row.appendChild(btn);
+    });
+    quick.appendChild(row);
+  }
+
+  function start(){
+    body.innerHTML = '';
+    bubble('bot', `${salutation()} Soy el asistente virtual de Inbolsa. ¿En qué te ayudo hoy?`);
+    setQuick([
+      { label: 'Conocer sobre Inbolsa', onClick: flowAbout },
+      { label: 'Hablar con un asesor',  onClick: flowSales },
+    ]);
+  }
+
+  function flowAbout(){
+    bubble('user','Conocer sobre Inbolsa');
+    bubble('bot', `Aquí tienes algunas secciones recomendadas:`);
+    body.insertAdjacentHTML('beforeend', `
+      <div class="ml-10 grid gap-2">
+        <a href="/valores"  class="rounded-lg border px-3 py-2 hover:bg-slate-50">• Valores</a>
+        <a href="/historia" class="rounded-lg border px-3 py-2 hover:bg-slate-50">• Historia</a>
+        <a href="/contacto" class="rounded-lg border px-3 py-2 hover:bg-slate-50">• Contacto</a>
+      </div>
+    `);
+    scrollToEnd();
+    setQuick([
+      { label: 'Hablar con un asesor', onClick: flowSales },
+      { label: 'Volver al inicio',     onClick: start },
+    ]);
+  }
+
+  function flowSales(){
+    bubble('user','Hablar con un asesor');
+    bubble('bot','Elige tu ciudad para contactarte con nuestro equipo de ventas:');
+    setQuick([
+      { label: 'La Paz',     onClick: ()=> city('lp') },
+      { label: 'Santa Cruz', onClick: ()=> city('scz') },
+      { label: 'Volver',     onClick: start },
+    ]);
+  }
+
+  function city(id){
+    const o = OFFICES.find(x => x.id === id);
+    if(!o){ start(); return; }
+    bubble('user', o.name);
+    bubble('bot', `
+      <div class="grid gap-2">
+        <div><strong>Teléfono:</strong> <a class="text-brand-700 underline" href="tel:${o.phone}">${o.phone}</a></div>
+        <div><strong>Email:</strong> <a class="text-brand-700 underline" href="mailto:${o.email}">${o.email}</a></div>
+        ${o.wa ? `<div><strong>WhatsApp:</strong> <a class="text-brand-700 underline" target="_blank" rel="noopener" href="${o.wa}">Abrir WhatsApp</a></div>` : ``}
+      </div>
+    `);
+    setQuick([
+      { label: 'Otra ciudad',     onClick: flowSales },
+      { label: 'Volver al inicio', onClick: start },
+    ]);
+  }
+
+  function open(){ panel.classList.remove('hidden'); localStorage.setItem('inb_chat_open','1'); }
+  function close(){ panel.classList.add('hidden');  localStorage.removeItem('inb_chat_open'); }
+  function toggle(){ panel.classList.contains('hidden') ? open() : close(); }
+
+  openBt.addEventListener('click', toggle);
+  closeBt.addEventListener('click', close);
+  minBt.addEventListener('click', close);
+
+  if (localStorage.getItem('inb_chat_open') === '1') open();
+
+  start();
+</script>

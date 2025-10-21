@@ -1,0 +1,346 @@
+---
+import Base from '../layouts/Base.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+export const prerender = true;
+
+/**
+ * Mapea manualmente cada imagen (puedes mezclar .jpg y .JPG).
+ * Mantengo tus rutas tal cual: 'public/img/...'
+ */
+const MEDIA = {
+  hero:       'public/img/landing10.jpg',
+  sideA:      'public/img/landing8.jpg',
+  bandSoft:   'public/img/landing7.jpg',
+  collageA:   'public/img/landing7.jpg',
+  collageB:   'public/img/landing9.jpg',
+  bandDark:   'public/img/landing14.jpg',
+  sideB:      'public/img/landing13.jpg',
+  sideC:      'public/img/landing11.jpg',
+  qualityBG:  'public/img/landing12.jpg',
+
+  // Mosaico extendido (manual)
+  mosaicA:    'public/img/landing16.jpg',
+  mosaicB:    'public/img/landing18.jpg',
+  mosaicC:    'public/img/landing15.jpg',
+  mosaicD:    'public/img/landing19.JPG',
+  mosaicE:    'public/img/landing21.jpg',
+  mosaicF:    'public/img/landing17.jpg',
+  mosaicG:    'public/img/landing20.jpg',
+  mosaicH:    'public/img/landing22.JPG',
+  mosaicI:    'public/img/landing23.jpg',
+  mosaicJ:    'public/img/landing24.JPG',
+  mosaicK:    'public/img/landing25.jpg',
+  mosaicL:    'public/img/landing26.jpg',
+  mosaicM:    'public/img/landing27.jpg',
+
+};
+---
+<Base title="Valores — Inbolsa">
+  <Header />
+
+  <main class="bg-white">
+
+    <!-- Banda superior con imagen -->
+    <section
+      class="relative isolate"
+      style={`background-image:url('${MEDIA.hero}'); background-size:cover; background-position:center;`}
+    >
+      <div class="absolute inset-0 bg-slate-900/60"></div>
+      <div class="mx-auto max-w-7xl px-4 py-20 relative z-10 text-white">
+        <p class="text-brand-200 font-medium">Sobre nosotros</p>
+        <h1 class="mt-1 text-3xl md:text-5xl font-semibold tracking-tight">
+          Declaración, visión y valores
+        </h1>
+        <p class="mt-3 max-w-3xl text-white/90">
+          Tejiendo productos de alta calidad desde 1974 con la última tecnología.
+        </p>
+      </div>
+    </section>
+
+    <!-- Declaración & Visión + imagen lateral (simétrico y más grande) -->
+    <section class="py-12">
+      <div class="mx-auto max-w-7xl px-4 grid md:grid-cols-2 gap-8 items-stretch">
+        <!-- Texto -->
+        <article class="rounded-2xl border bg-white p-6 shadow-sm h-full">
+          <h2 class="text-xl font-semibold">Declaración de negocios y visión</h2>
+          <ul class="mt-4 space-y-3 text-slate-700">
+            <li class="flex gap-3">
+              <span class="mt-2 h-1.5 w-1.5 rounded-full bg-brand-600"></span>
+              <span>
+                <strong>Convertirnos en una de las empresas líderes de Latinoamérica</strong>
+                en la fabricación de tejidos de polipropileno (productos de embalajes industriales).
+              </span>
+            </li>
+            <li class="flex gap-3">
+              <span class="mt-2 h-1.5 w-1.5 rounded-full bg-brand-600"></span>
+              <span>
+                Trabajamos con esfuerzo y dedicación, buscando eficiencia y eficacia en nuestras
+                operaciones para ofrecer productos y servicios de alta calidad. Construimos
+                relaciones estables y permanentes porque <em>nuestra forma de crear valor</em> es
+                mediante el servicio y la satisfacción de las necesidades de nuestros clientes.
+              </span>
+            </li>
+          </ul>
+
+          <blockquote class="mt-6 rounded-xl border p-4 bg-slate-50 text-slate-700">
+            <p class="italic">
+              “Y todo lo que hagáis, hacedlo de corazón, como para el Señor y no para los hombres;
+              sabiendo que del Señor recibiréis la recompensa de la herencia, porque a Cristo el
+              Señor servís.”
+            </p>
+            <footer class="mt-2 text-sm text-slate-500">Colosenses 3:23–24</footer>
+          </blockquote>
+        </article>
+
+        <!-- Imagen (más grande y simétrica) -->
+        <aside class="h-full">
+          <figure class="h-full min-h-[420px] md:min-h-[520px] overflow-hidden rounded-3xl border shadow-sm">
+            <img
+              src={MEDIA.sideA}
+              alt="Operación de tejido"
+              class="w-full h-full object-cover"
+              loading="lazy"
+            />
+          </figure>
+          <figcaption class="mt-2 text-xs text-slate-500">Compromiso con la excelencia</figcaption>
+        </aside>
+      </div>
+    </section>
+
+    <!-- Banda con imagen suave -->
+    <section
+      class="my-6 rounded-[28px] mx-auto max-w-7xl px-4"
+      style={`background-image:url('${MEDIA.bandSoft}'); background-size:cover; background-position:center;`}
+    >
+      <div class="rounded-[28px] bg-white/80 backdrop-blur p-6 md:p-8 border">
+        <h3 class="text-lg md:text-xl font-semibold">“Calidad superior” como cultura</h3>
+        <p class="mt-2 text-slate-700">
+          Nuestros estándares se viven en planta, en producto y en cada contacto con el cliente.
+        </p>
+      </div>
+    </section>
+
+    <!-- Valores de negocios + collage lateral -->
+    <section class="py-10">
+      <div class="mx-auto max-w-7xl px-4 grid md:grid-cols-2 gap-8">
+        <article class="rounded-2xl border bg-white p-6 shadow-sm">
+          <h2 class="text-xl font-semibold">Valores de negocios</h2>
+
+          <div class="mt-5 space-y-6">
+            <div>
+              <h3 class="font-semibold">Actuamos con integridad</h3>
+              <p class="text-slate-700">
+                Cumplimos con las leyes y nuestros compromisos.
+              </p>
+              <ul class="mt-2 list-disc pl-5 text-slate-700">
+                <li>Compromiso con la responsabilidad.</li>
+                <li>Compromiso con la satisfacción del cliente.</li>
+              </ul>
+            </div>
+
+            <div>
+              <h3 class="font-semibold">Buscamos la sostenibilidad</h3>
+              <p class="text-slate-700">
+                Apostamos por la mejora continua para generar valor a largo plazo.
+              </p>
+              <ul class="mt-2 list-disc pl-5 text-slate-700">
+                <li>Productos reciclables.</li>
+                <li>Precios competitivos.</li>
+                <li>Certificación OEA.</li>
+              </ul>
+            </div>
+
+            <div>
+              <h3 class="font-semibold">Respetamos a las personas y trabajamos en equipo</h3>
+              <p class="text-slate-700">
+                Valoramos la dignidad y los derechos de cada persona. Compartimos experiencia y
+                conocimiento para apoyarnos mutuamente.
+              </p>
+              <ul class="mt-2 list-disc pl-5 text-slate-700">
+                <li>Ajustes de producto según la necesidad del cliente.</li>
+                <li>Atención oportuna.</li>
+                <li>Relaciones cercanas y enfoque en las necesidades del cliente.</li>
+              </ul>
+            </div>
+          </div>
+        </article>
+
+        <!-- Collage lateral (dos imágenes apiladas) -->
+        <aside class="grid gap-4">
+          <figure class="h-56 md:h-64 overflow-hidden rounded-3xl border shadow-sm">
+            <img src={MEDIA.collageA} alt="Control de calidad" class="w-full h-full object-cover" loading="lazy" />
+          </figure>
+          <figure class="h-56 md:h-64 overflow-hidden rounded-3xl border shadow-sm">
+            <img src={MEDIA.collageB} alt="Materia prima" class="w-full h-full object-cover" loading="lazy" />
+          </figure>
+        </aside>
+      </div>
+    </section>
+
+    <!-- Banda destacada -->
+    <section
+      class="relative my-8 isolate"
+      style={`background-image:url('${MEDIA.bandDark}'); background-size:cover; background-position:center;`}
+    >
+      <div class="absolute inset-0 bg-gradient-to-r from-slate-900/70 via-slate-900/40 to-transparent"></div>
+      <div class="relative z-10 mx-auto max-w-7xl px-4 py-20 text-white">
+        <h3 class="text-2xl font-semibold">Relaciones de largo plazo</h3>
+        <p class="mt-2 max-w-2xl text-white/90">
+          Creemos en la cercanía y en crear valor real para cada cliente.
+        </p>
+      </div>
+    </section>
+
+    <!-- Disciplinas de valor + sidecard visual -->
+    <section class="py-10">
+      <div class="mx-auto max-w-7xl px-4 grid md:grid-cols-5 gap-8">
+        <article class="md:col-span-3 rounded-2xl border bg-white p-6 shadow-sm">
+          <h2 class="text-xl font-semibold">Disciplinas de valor</h2>
+
+          <div class="mt-5">
+            <h3 class="font-semibold text-brand-700">Primaria: Excelencia de operación</h3>
+            <p class="mt-1 text-slate-700">
+              La excelencia operativa impulsa la mejora continua, reduce costos y eleva la calidad y
+              la satisfacción del cliente.
+            </p>
+            <ul class="mt-2 list-disc pl-5 text-slate-700">
+              <li>Certificación OEA.</li>
+              <li>Productos de primera calidad, confiados por grandes clientes en Bolivia.</li>
+            </ul>
+          </div>
+
+          <div class="mt-6">
+            <h3 class="font-semibold text-brand-700">Secundaria: Intimidad con el usuario</h3>
+            <ul class="mt-2 list-disc pl-5 text-slate-700">
+              <li>Desarrollo de producto junto al cliente.</li>
+              <li>Contacto directo con nuestros agentes de venta.</li>
+            </ul>
+          </div>
+        </article>
+
+        <aside class="md:col-span-2 grid gap-4">
+          <figure class="h-100 overflow-hidden rounded-3xl border shadow-sm">
+            <img src={MEDIA.sideB} alt="Operación" class="w-full h-full object-cover" loading="lazy" />
+          </figure>
+        </aside>
+      </div>
+    </section>
+
+    <!-- Inbolsa es calidad + banda visual -->
+    <section class="py-10">
+      <div class="mx-auto max-w-7xl px-4 grid md:grid-cols-2 gap-8">
+        <article class="rounded-2xl border bg-white p-6 shadow-sm">
+          <h2 class="text-xl font-semibold">Inbolsa es Calidad</h2>
+          <p class="mt-2 text-slate-700">
+            Nos enorgullecemos de una producción de alta calidad, con dedicación y eficacia para
+            servir al cliente en cada paso. Cuidamos la minuciosidad del proceso y trabajamos de
+            cerca con nuestros clientes para asegurar que el producto sea adecuado a la necesidad
+            exacta, al mejor precio posible.
+          </p>
+          <p class="mt-2 text-slate-700">
+            Tejiendo productos de alta calidad desde 1974 con la última tecnología.
+          </p>
+          <p class="mt-2 text-slate-700">
+            En Inbolsa estamos dedicados a la atención al cliente; no buscamos solo una venta, sino
+            construir conexiones distinguidas y duraderas, garantizando el mejor servicio posible.
+            Conectamos el producto adecuado con cada necesidad.
+          </p>
+        </article>
+
+        <aside
+          class="rounded-3xl border overflow-hidden shadow-sm min-h-[260px]"
+          style={`background-image:url('${MEDIA.qualityBG}'); background-size:cover; background-position:center;`}
+          aria-label="Producción de alta calidad"
+        ></aside>
+      </div>
+    </section>
+
+    <!-- Mosaico final (collage responsive con piezas horizontales y verticales) -->
+    <section class="py-10">
+      <div class="mx-auto max-w-7xl px-4">
+        <h2 class="sr-only">Galería</h2>
+
+        <!--
+          auto-rows define la "unidad" de altura, y las piezas multiplican con row-span.
+          En desktop hay 6 columnas, en móvil 2 columnas.
+        -->
+        <div class="grid grid-cols-2 md:grid-cols-6 auto-rows-[120px] md:auto-rows-[160px] gap-3 md:gap-4">
+
+          <!-- Alto y angosto -->
+          <figure class="col-span-2 row-span-3 md:col-span-2 md:row-span-3 overflow-hidden rounded-2xl border shadow-sm group">
+            <img src={MEDIA.mosaicA} alt="" class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" loading="lazy" />
+          </figure>
+
+          <!-- Ancho -->
+          <figure class="col-span-2 row-span-2 md:col-span-4 md:row-span-2 overflow-hidden rounded-2xl border shadow-sm group">
+            <img src={MEDIA.mosaicB} alt="" class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" loading="lazy" />
+          </figure>
+
+          <!-- Cuadrado -->
+          <figure class="col-span-1 row-span-2 md:col-span-2 md:row-span-2 overflow-hidden rounded-2xl border shadow-sm group">
+            <img src={MEDIA.mosaicC} alt="" class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" loading="lazy" />
+          </figure>
+
+          <!-- Cuadrado -->
+          <figure class="col-span-1 row-span-2 md:col-span-2 md:row-span-2 overflow-hidden rounded-2xl border shadow-sm group">
+            <img src={MEDIA.mosaicD} alt="" class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" loading="lazy" />
+          </figure>
+
+          <!-- Alto -->
+          <figure class="col-span-2 row-span-3 md:col-span-2 md:row-span-3 overflow-hidden rounded-2xl border shadow-sm group">
+            <img src={MEDIA.mosaicE} alt="" class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" loading="lazy" />
+          </figure>
+
+          <!-- Ancho -->
+          <figure class="col-span-2 row-span-2 md:col-span-4 md:row-span-2 overflow-hidden rounded-2xl border shadow-sm group">
+            <img src={MEDIA.mosaicF} alt="" class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" loading="lazy" />
+          </figure>
+
+         
+
+
+           <!-- Ancho -->
+          <figure class="col-span-2 row-span-2 md:col-span-4 md:row-span-2 overflow-hidden rounded-2xl border shadow-sm group">
+            <img src={MEDIA.mosaicJ} alt="" class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" loading="lazy" />
+          </figure>
+
+
+          <!-- Cuadrado -->
+          <figure class="col-span-1 row-span-2 md:col-span-2 md:row-span-2 overflow-hidden rounded-2xl border shadow-sm group">
+            <img src={MEDIA.mosaicI} alt="" class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" loading="lazy" />
+          </figure>
+
+           <!-- Cuadrado -->
+          <figure class="col-span-1 row-span-2 md:col-span-2 md:row-span-2 overflow-hidden rounded-2xl border shadow-sm group">
+            <img src={MEDIA.mosaicG} alt="" class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" loading="lazy" />
+          </figure>
+
+          <!-- Alto -->
+          <figure class="col-span-1 row-span-3 md:col-span-2 md:row-span-3 overflow-hidden rounded-2xl border shadow-sm group">
+            <img src={MEDIA.mosaicH} alt="" class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" loading="lazy" />
+          </figure>
+
+         <!-- Alto -->
+          <figure class="col-span-1 row-span-3 md:col-span-2 md:row-span-3 overflow-hidden rounded-2xl border shadow-sm group">
+            <img src={MEDIA.mosaicK} alt="" class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" loading="lazy" />
+          </figure>
+            
+          <figure class="col-span-2 row-span-3 md:col-span-2 md:row-span-3 overflow-hidden rounded-2xl border shadow-sm group">
+            <img src={MEDIA.mosaicL} alt="" class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" loading="lazy" />
+          </figure>
+
+            <!-- Ancho -->
+          <figure class="col-span-2 row-span-2 md:col-span-4 md:row-span-2 overflow-hidden rounded-2xl border shadow-sm group">
+            <img src={MEDIA.mosaicM} alt="" class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" loading="lazy" />
+          </figure>
+
+
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <Footer />
+</Base>

@@ -1,0 +1,91 @@
+---
+const { isPrivate = false } = Astro.props as { isPrivate?: boolean };
+const now = new Date();
+const hour = now.getHours();
+const saludo = hour < 12 ? 'Buenos días' : hour < 19 ? 'Buenas tardes' : 'Buenas noches';
+---
+<section
+  id="home-hero"
+  class="relative h-[92svh] min-h-[560px] w-full overflow-hidden"
+  aria-label="Hero Inbolsa"
+>
+  {isPrivate ? (
+    <div class="absolute inset-0">
+      <video
+        id="heroVideoPrivado"
+        class="w-full h-full object-cover"
+        src="/media/privado/institucional-privado.mp4"
+        autoplay
+        muted
+        loop
+        playsinline
+      ></video>
+    </div>
+  ) : (
+    <div
+      id="hero-bg"
+      class="absolute inset-0 will-change-transform"
+      style="
+        background-image:url('/img/landing1.jpg');
+        background-size:cover;
+        background-position:center;
+        transform: translateY(var(--parallax,0px));
+      "
+    ></div>
+  )}
+
+  <div class="absolute inset-0 bg-gradient-to-b from-black/40 via-black/25 to-black/20"></div>
+
+  <div class="relative z-10 mx-auto flex h-full max-w-7xl flex-col items-center justify-center px-4 text-center">
+    <img
+      src="/logo.png"
+      alt="Inbolsa"
+      class="mb-6 h-28 w-auto sm:h-36 md:h-44 lg:h-52 drop-shadow-[0_8px_24px_rgba(0,0,0,.35)]"
+      loading="eager"
+      decoding="sync"
+    />
+    <p class="text-white/80 text-sm sm:text-base">{saludo}, te damos la bienvenida.</p>
+    <h1 class="mt-2 text-3xl font-semibold tracking-tight text-white sm:text-4xl md:text-5xl">
+      Calidad superior en polipropileno
+    </h1>
+
+    <div class="mt-6 flex flex-wrap items-center justify-center gap-3">
+      <a
+        href="/historia"
+        class="rounded-xl bg-brand-600 px-5 py-3 font-medium text-white transition hover:bg-brand-700 focus:outline-none focus:ring-2 focus:ring-brand-300"
+      >
+        Ver más
+      </a>
+      <a
+        href="/contacto"
+        class="rounded-XL border border-white/60 bg-white/10 px-5 py-3 font-medium text-white backdrop-blur-sm transition hover:bg-white/20 focus:outline-none focus:ring-2 focus:ring-white/30"
+      >
+        Contáctanos
+      </a>
+    </div>
+  </div>
+
+
+  {!isPrivate && (
+    <script is:inline>
+      const bg = document.getElementById('hero-bg');
+      const root = document.getElementById('home-hero');
+      const onScroll = () => {
+        if (!bg || !root) return;
+        const rect = root.getBoundingClientRect();
+        const scrolled = Math.max(0, -rect.top);
+        bg.style.setProperty('--parallax', (scrolled * 0.25).toFixed(1) + 'px');
+      };
+      onScroll();
+      window.addEventListener('scroll', onScroll, { passive: true });
+    </script>
+  )}
+
+  <script is:inline>
+    document.getElementById('scrollCue')?.addEventListener('click', () => {
+      const root = document.getElementById('home-hero');
+      const next = root?.nextElementSibling;
+      if (next) next.scrollIntoView({ behavior: 'smooth' });
+    });
+  </script>
+</section>

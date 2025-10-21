@@ -1,0 +1,384 @@
+---
+export const prerender = true;
+import AppLayout from '../../layouts/AppLayout.astro';
+
+/** Catálogo EXACTO que ya usábamos (ids deben coincidir con la landing) */
+const CATALOG = [
+  { cat: 'Bolsas', items: [
+    { id:'bolsa-chica',   name:'Bolsa chica' },
+    { id:'bolsa-grande',  name:'Bolsa grande' },
+    { id:'bolsa-enorme',  name:'Bolsa enorme' },
+  ]},
+  { cat: 'Hilos', items: [
+    { id:'hilo-algodon',  name:'Hilo de algodón' },
+    { id:'hilo-nylon',    name:'Hilo de nylon' },
+  ]},
+];
+---
+<AppLayout title="Inbolsa · App · Panel">
+  <section class="min-h-dvh px-4 py-10">
+    <div class="mx-auto max-w-5xl">
+      <div class="flex items-center justify-between gap-4">
+        <div>
+          <h1 class="text-2xl font-semibold">Panel del administrador</h1>
+          <p class="text-slate-600 text-sm">Genera QRs y visualiza tu historial.</p>
+        </div>
+        <button id="logoutBtn" class="rounded-xl border px-4 py-2 hover:bg-slate-50">Cerrar sesión</button>
+      </div>
+
+      <!-- Generar QR -->
+      <div id="gen" class="mt-6 rounded-2xl border bg-white p-6 shadow-sm">
+        <div class="mb-3 flex items-center justify-between">
+          <h2 class="font-semibold">Generar QR</h2>
+          <div class="flex gap-2">
+            <button id="btnSelectAll" class="rounded-lg border px-3 py-1 text-sm hover:bg-slate-50">Seleccionar todos</button>
+            <button id="btnClear" class="rounded-lg border px-3 py-1 text-sm hover:bg-slate-50">Limpiar</button>
+          </div>
+        </div>
+        <p class="text-sm text-slate-600">
+          Selecciona qué productos se mostrarán cuando se desbloquee la landing privada y (opcional) nombra el destinatario.
+        </p>
+
+        <!-- Selector de productos: HTML ESTÁTICO (si el JS falla, igual lo ves) -->
+        <div id="productPicker" class="mt-4 grid gap-4 md:grid-cols-2">
+          {CATALOG.map(group => (
+            <div class="rounded-xl border p-3">
+              <div class="font-medium mb-2">{group.cat}</div>
+              <div class="grid gap-2">
+                {group.items.map(p => (
+                  <label class="flex items-center gap-2">
+                    <input type="checkbox" value={p.id} data-product-id={p.id} class="accent-brand-600" />
+                    <span>{p.name}</span>
+                    <span class="ml-auto text-xs text-slate-500">{p.id}</span>
+                  </label>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <!-- Nombre / expira / límite / generar -->
+        <div class="mt-4 grid gap-3 md:grid-cols-4">
+          <input id="recipientName" placeholder="Nombre del destinatario (opcional)"
+            class="rounded-xl border px-4 py-3 outline-none focus:ring-2 focus:ring-brand-300" />
+          <input id="expiresAt" type="datetime-local"
+            class="rounded-xl border px-4 py-3 outline-none focus:ring-2 focus:ring-brand-300" />
+          <input id="usageLimit" type="number" min="1" step="1" placeholder="Límite de usos (opcional)"
+            class="rounded-xl border px-4 py-3 outline-none focus:ring-2 focus:ring-brand-300" />
+          <button id="genBtn"
+            class="rounded-xl bg-brand-600 px-4 py-3 font-semibold text-white hover:bg-brand-700 transition">
+            Generar QR
+          </button>
+        </div>
+        <div id="genMsg" class="mt-2 text-sm text-slate-600"></div>
+      </div>
+
+      <!-- Lista -->
+      <div class="mt-6 rounded-2xl border bg-white p-6 shadow-sm">
+        <div class="flex items-center justify-between">
+          <h2 class="font-semibold">Mis QRs</h2>
+          <div class="text-sm text-slate-600"><span id="listInfo"></span></div>
+        </div>
+
+        <div id="list" class="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 items-stretch"></div>
+
+        <div class="mt-4 flex items-center gap-2">
+          <button id="prevBtn" class="rounded-xl border px-3 py-2 disabled:opacity-50">Anterior</button>
+          <button id="nextBtn" class="rounded-xl border px-3 py-2 disabled:opacity-50">Siguiente</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Modal Info -->
+  <div id="infoModal" class="fixed inset-0 z-[60] hidden">
+    <div class="absolute inset-0 bg-black/40" data-close="1"></div>
+    <div class="absolute inset-0 flex items-center justify-center p-4">
+      <div class="w-full max-w-lg rounded-2xl border bg-white p-5 shadow-xl">
+        <div class="flex items-center justify-between">
+          <h3 class="font-semibold">Información del QR</h3>
+          <button id="infoClose" class="rounded-lg border px-3 py-1 text-sm hover:bg-slate-50">Cerrar</button>
+        </div>
+        <div id="infoBody" class="mt-3 text-sm text-slate-700"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal QR -->
+  <div id="qrModal" class="fixed inset-0 z-[70] hidden">
+    <div class="absolute inset-0 bg-black/40" data-close="1"></div>
+    <div class="absolute inset-0 flex items-center justify-center p-4">
+      <div class="w-full max-w-md rounded-2xl border bg-white p-5 shadow-xl">
+        <div class="flex items-center justify-between">
+          <h3 class="font-semibold">Código QR</h3>
+          <button id="qrClose" class="rounded-lg border px-3 py-1 text-sm hover:bg-slate-50">Cerrar</button>
+        </div>
+        <div class="mt-3 flex flex-col items-center">
+          <canvas id="qrCanvas" class="w-[260px] h-[260px]"></canvas>
+          <img id="qrImg" class="hidden w-[260px] h-[260px] mt-2" alt="QR" />
+          <div id="qrLink" class="mt-3 text-xs text-slate-500 break-all text-center"></div>
+          <div class="mt-4 flex gap-2">
+            <button id="qrCopy" class="rounded-xl border px-3 py-1 hover:bg-slate-50">Copiar enlace</button>
+            <a id="qrDownload" download="qr.png" class="rounded-xl border px-3 py-1 hover:bg-slate-50" href="#">Descargar PNG</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script type="module">
+  import { api, BACK_BASE } from '../../lib/api.ts';
+
+  // util seguro
+  const esc = (t) => String(t??'')
+    .replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;')
+    .replaceAll('"','&quot;').replaceAll("'","&#39;");
+
+  (async function main(){
+    try {
+      // Guard de sesión
+      const me = await api.me().catch(()=>null);
+      if (!me?.auth) { location.href = '/app/login?next=' + encodeURIComponent('/app/panel'); return; }
+
+      // ====== Picker de productos ======
+      const selected = new Set();
+      const allInputs = Array.from(document.querySelectorAll('input[type="checkbox"][data-product-id]'));
+
+      // 1) Inicializar 'selected' con lo que YA está marcado al cargar
+      allInputs.forEach(chk => { if (chk.checked) selected.add(chk.value); });
+
+      // 2) Mantener 'selected' sincronizado al cambiar
+      allInputs.forEach(chk=>{
+        chk.addEventListener('change', ()=> {
+          chk.checked ? selected.add(chk.value) : selected.delete(chk.value);
+        });
+      });
+
+      // Botones select-all / clear
+      document.getElementById('btnSelectAll')?.addEventListener('click', (e)=> {
+        e.preventDefault();
+        allInputs.forEach(chk => { chk.checked = true; selected.add(chk.value); });
+      });
+      document.getElementById('btnClear')?.addEventListener('click', (e)=> {
+        e.preventDefault();
+        allInputs.forEach(chk => { chk.checked = false; selected.delete(chk.value); });
+      });
+
+      // ====== Crear QR ======
+      const genMsg = document.getElementById('genMsg');
+      document.getElementById('genBtn')?.addEventListener('click', async (e)=>{
+        e.preventDefault();
+
+        const expiresRaw = (document.getElementById('expiresAt')?.value || '').trim();
+        const usageRaw   = (document.getElementById('usageLimit')?.value || '').trim();
+        const label      = (document.getElementById('recipientName')?.value || '').trim();
+
+        const allIds = allInputs.map(i=>i.value);
+        const isAll = selected.size === allIds.length && allIds.length > 0;
+
+        // Validación: si no es "todos", exige al menos 1 producto
+        if (!isAll && selected.size === 0) {
+          genMsg.textContent = 'Selecciona al menos un producto o usa "Seleccionar todos".';
+          return;
+        }
+
+        const payload = isAll
+          ? { section:'productos', allow:'all', label }
+          : { section:'productos', allow:'include', products: Array.from(selected), label };
+
+        try {
+          genMsg.textContent = 'Creando...';
+          const res = await api.qrCreate({
+            type: 'landing-access',
+            payload,
+            expires_at: expiresRaw ? new Date(expiresRaw).toISOString() : undefined,
+            usage_limit: usageRaw ? Number(usageRaw) : undefined
+          });
+          genMsg.textContent = `QR creado: ${res?.code ?? ''}`;
+          (document.getElementById('recipientName')||{}).value = '';
+          await loadList();
+        } catch (err) {
+          // Mostrar el mensaje que viene del back si lo trae
+          genMsg.textContent = err?.message || 'No se pudo crear';
+        }
+      });
+
+      // ====== Lista / paginación ======
+      let allItems = []; let page = 1; const size = 9;
+      const setDisabled=(id,c)=>{ const el=document.getElementById(id); if(!el)return; c?el.setAttribute('disabled',''):el.removeAttribute('disabled'); };
+
+      function renderPage(){
+        const list=document.getElementById('list'); const info=document.getElementById('listInfo');
+        list.innerHTML='';
+        const start=(page-1)*size, slice=allItems.slice(start,start+size);
+
+        slice.forEach(item=>{
+          let displayTitle = item.type || 'QR';
+          try { const p = item?.payload ? (typeof item.payload==='string'? JSON.parse(item.payload) : item.payload) : null; if(p?.label) displayTitle=p.label; } catch{}
+
+          const badge = item.status==='active'
+            ? '<span class="text-green-700 border border-green-200 px-2 py-0.5 rounded-full text-xs">active</span>'
+            : '<span class="text-red-700 border border-red-200 px-2 py-0.5 rounded-full text-xs">revoked</span>';
+
+          // BUG FIX: antes usabas "code" (variable inexistente). Debe ser item.code
+          const openUrl = `http://localhost/inbolsa-api/api/qr/open?code=${encodeURIComponent(item.code)}`;
+
+          const card=document.createElement('div');
+          card.className='rounded-xl border p-3 hover:shadow transition flex flex-col h-full';
+          card.innerHTML = `
+            <div class="flex items-center justify-between gap-2">
+              <div class="font-semibold truncate">${esc(displayTitle)}</div>${badge}
+            </div>
+            <div class="mt-2 text-xs text-slate-500">code:</div>
+            <div class="mt-1 rounded border bg-slate-50 px-2 py-1 font-mono text-xs break-all">${esc(item.code)}</div>
+            <div class="mt-2 grid grid-cols-2 gap-2 text-xs text-slate-600">
+              <div>Usos: <strong>${item.usage_count}${item.usage_limit ? ' / '+item.usage_limit : ''}</strong></div>
+              <div>Expira: <strong>${esc(item.expires_at || '-')}</strong></div>
+            </div>
+
+            <div class="mt-3 grid grid-cols-2 gap-2">
+              <a class="rounded-xl border px-3 py-1 text-center hover:bg-slate-50" target="_blank" href="${openUrl}">Abrir</a>
+              ${item.status==='active'
+                ? `<button class="rounded-xl border px-3 py-1 hover:bg-red-50" data-revoke="${esc(item.code)}">Revocar</button>`
+                : `<button class="rounded-xl border px-3 py-1 opacity-50 cursor-not-allowed" disabled>Revocado</button>`}
+              <button class="rounded-xl bg-brand-600 text-white px-3 py-1 hover:bg-brand-700" data-share="${esc(item.code)}">Compartir</button>
+              <button class="rounded-xl border px-3 py-1 hover:bg-slate-50" data-qr="${esc(item.code)}">QR</button>
+            </div>
+
+            <div class="mt-2">
+              <button class="rounded-full border text-xs px-3 py-1" data-info="${esc(item.code)}">Más información</button>
+            </div>
+          `;
+          list.appendChild(card);
+        });
+
+        if (info) info.textContent = `Página ${page} · Mostrando ${slice.length} de ${allItems.length}`;
+        setDisabled('prevBtn', page<=1); setDisabled('nextBtn', (page*size)>=allItems.length);
+      }
+
+      async function loadList(){
+        try{ const d = await api.qrList(); allItems = Array.isArray(d?.items)? d.items:[]; page=1; renderPage(); }
+        catch{ document.getElementById('list').innerHTML='<div class="text-slate-600">Error cargando.</div>'; }
+      }
+
+      // Eventos globales de la lista
+      document.addEventListener('click', async (e)=>{
+        const t=e.target; if(!t||!t.getAttribute) return;
+
+        const codeRevoke=t.getAttribute('data-revoke');
+        if(codeRevoke){
+          e.preventDefault();
+          if(!confirm('¿Revocar este QR?\n'+codeRevoke)) return;
+          try{ await api.qrRevoke(codeRevoke); await loadList(); }catch{ alert('Error al revocar'); }
+          return;
+        }
+
+        const codeShare=t.getAttribute('data-share');
+        if(codeShare){
+          e.preventDefault();
+          const url = `${BACK_BASE}/qr/open?code=${encodeURIComponent(codeShare)}`;
+          const msg = 'Escanea este QR para acceder a la landing privada.';
+          const wa  = 'https://wa.me/?text=' + encodeURIComponent(msg + ' ' + url);
+          try { if (navigator.share) { await navigator.share({ title:'QR Inbolsa', text:msg, url }); return; } } catch {}
+          window.open(wa,'_blank','noopener,noreferrer');
+          try { await navigator.clipboard.writeText(url); } catch { prompt('Copia este enlace:', url); }
+          return;
+        }
+
+        const codeInfo=t.getAttribute('data-info');
+        if(codeInfo){
+          e.preventDefault();
+          const item=(await api.qrList()).items.find(i=>i.code===codeInfo) || null;
+          if(!item) return;
+          const infoModal = document.getElementById('infoModal');
+          const infoBody  = document.getElementById('infoBody');
+          const p = typeof item.payload==='string' ? JSON.parse(item.payload||'{}') : (item.payload||{});
+          const productos = p.allow==='all' ? '<span class="text-green-700 font-medium">Todos</span>' :
+            (Array.isArray(p.products)&&p.products.length ? p.products.map(esc).join(', ') : '—');
+          infoBody.innerHTML = `
+            <div class="space-y-2">
+              <div><span class="text-slate-500">Código:</span> <span class="font-mono">${esc(item.code)}</span></div>
+              <div><span class="text-slate-500">Destinatario:</span> ${esc(p.label||'')}</div>
+              <div><span class="text-slate-500">Expira:</span> ${esc(item.expires_at||'—')}</div>
+              <div><span class="text-slate-500">Usos:</span> ${esc(item.usage_count)}${item.usage_limit ? ' / '+item.usage_limit : ''}</div>
+              <div><span class="text-slate-500">Productos permitidos:</span> ${productos}</div>
+              <div class="pt-2">
+                <a class="rounded-xl border px-3 py-1 hover:bg-slate-50" target="_blank" href="${BACK_BASE}/qr/open?code=${encodeURIComponent(item.code)}">Abrir</a>
+              </div>
+            </div>
+          `;
+          infoModal.classList.remove('hidden');
+          return;
+        }
+
+        const codeQR=t.getAttribute('data-qr');
+        if(codeQR){
+          e.preventDefault();
+          openQRModal(codeQR);
+          return;
+        }
+      });
+
+      // Paginación
+      document.getElementById('prevBtn')?.addEventListener('click', ()=>{ if(page>1){page--;renderPage();} });
+      document.getElementById('nextBtn')?.addEventListener('click', ()=>{ if((page*size)<allItems.length){page++;renderPage();} });
+
+      // Modal: cerrar por botón o fondo
+      const close = (id)=> document.getElementById(id)?.classList.add('hidden');
+      document.getElementById('infoClose')?.addEventListener('click', ()=> close('infoModal'));
+      document.querySelector('#infoModal [data-close]')?.addEventListener('click', ()=> close('infoModal'));
+      document.getElementById('qrClose')?.addEventListener('click', ()=> close('qrModal'));
+      document.querySelector('#qrModal [data-close]')?.addEventListener('click', ()=> close('qrModal'));
+
+      // Logout
+      document.getElementById('logoutBtn')?.addEventListener('click', async ()=>{ try{ await api.logout(); }catch{} location.href='/app/login'; });
+
+      // Cargar lista
+      await loadList();
+
+      // ====== QR modal (import dinámico) ======
+      async function openQRModal(code) {
+        const url = `${BACK_BASE}/qr/open?code=${encodeURIComponent(code)}`;
+        const modal   = document.getElementById('qrModal');
+        const canvas  = document.getElementById('qrCanvas');
+        const img     = document.getElementById('qrImg');
+        const link    = document.getElementById('qrLink');
+        const dl      = document.getElementById('qrDownload');
+
+        link.textContent = url;
+        img.classList.add('hidden');
+        canvas.classList.remove('hidden');
+        canvas.width = 260; canvas.height = 260;
+
+        try {
+          const { default: QRCode } = await import('qrcode');
+          await QRCode.toCanvas(canvas, url, { width: 260, margin: 1 });
+          dl.href = canvas.toDataURL('image/png');
+        } catch {
+          const apiUrl = 'https://api.qrserver.com/v1/create-qr-code/?size=260x260&data=' + encodeURIComponent(url);
+          img.src = apiUrl;
+          img.onload = () => {
+            try {
+              const c2 = document.createElement('canvas');
+              c2.width = 260; c2.height = 260;
+              c2.getContext('2d').drawImage(img, 0, 0, 260, 260);
+              dl.href = c2.toDataURL('image/png');
+            } catch { dl.href = apiUrl; }
+          };
+          img.classList.remove('hidden');
+          canvas.classList.add('hidden');
+        }
+
+        modal.classList.remove('hidden');
+        document.getElementById('qrCopy')?.addEventListener('click', async ()=>{
+          try { await navigator.clipboard.writeText(url); alert('Enlace copiado'); }
+          catch { prompt('Copia este enlace:', url); }
+        }, { once:true });
+      }
+    } catch (err) {
+      console.error('Panel init error:', err);
+    }
+  })();
+</script>
+
+</AppLayout>

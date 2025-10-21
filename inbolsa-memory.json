@@ -1,0 +1,69 @@
+{
+  "project": "Inbolsa",
+  "frontend": {
+    "framework": "Astro + Tailwind",
+    "pages": ["index.astro", "historia.astro", "valores.astro", "industria.astro", "contacto.astro", "productos.astro (privado con QR)", "app/login.astro", "app/panel.astro", "app/qr.astro"],
+    "layout": "Base.astro con Header + Footer",
+    "static_build": {
+      "astro.config.mjs": {
+        "output": "static",
+        "base": "/inbolsaNeo/" 
+      },
+      "env": {
+        "PUBLIC_API_BASE": "https://backend-dominio.com/api",
+        "PUBLIC_DEMO_MODE": "0"
+      }
+    },
+    "demo_mode": "Permite probar todo sin backend: login libre, QR simulado, productos visibles. Se habilita con PUBLIC_DEMO_MODE=1",
+    "deployment": "Para iPage solo se sube el contenido de dist/ (no la carpeta dist), incluyendo la carpeta _astro/"
+  },
+  "backend": {
+    "stack": "PHP 8.x + MySQL",
+    "hosting": "Se sube a otro hosting con FTP, ya que iPage solo soporta PHP 7.4",
+    "endpoints": ["/api/auth.php", "/api/qr.php", "/api/payload.php"],
+    "auth": "Basado en tokens (JWT/HMAC) guardados en localStorage, no cookies",
+    "db": {
+      "tables": ["admins", "qr_codes", "qr_access_log"],
+      "notes": "admins para login; qr_codes para códigos generados; qr_access_log para auditoría"
+    },
+    "cors": "Configurar headers CORS en PHP si frontend y backend están en dominios distintos"
+  },
+  "ftp_local": {
+    "tools": ["FileZilla Server", "FileZilla Client"],
+    "setup": [
+      "Instalar FileZilla Server y crear usuario inbolsa/1234",
+      "Compartir carpeta C:\\ftp_test como Home directory",
+      "Conectar con FileZilla Client al host 127.0.0.1 puerto 21",
+      "Subir archivos del proyecto al servidor local FTP"
+    ],
+    "xampp": "Configurar XAMPP (Apache/PHP/MySQL) para apuntar su htdocs a C:\\ftp_test y así servir lo subido por FTP en http://localhost"
+  },
+  "git": {
+    "repo": "julio-mateo-velasco-auza/inbolsa-website.git",
+    "workflow": [
+      "git checkout -b nueva-rama",
+      "git add .",
+      "git commit -m 'mensaje'",
+      "git push origin nueva-rama",
+      "merge a main después de probar"
+    ]
+  },
+  "hosting": {
+    "ipage": "Solo front estático (Astro build) con PHP 7.4, no sirve para backend",
+    "backend_host": "Otro hosting con PHP 8.2 para subir /api/",
+    "deployment": "Frontend: dist/ en iPage; Backend: api/ en hosting PHP 8"
+  },
+  "notes": {
+    "problemas_resueltos": [
+      "Error NoAdapterInstalled → quitamos SSR, usamos build estático",
+      "Base path en Astro corregido (/inbolsaNeo/)",
+      "Assets en _astro/ deben subirse completos",
+      "Productos y login adaptados a modo demo para pruebas sin backend"
+    ],
+    "pendientes": [
+      "Probar backend real en hosting PHP 8 con CORS habilitado",
+      "Integrar login y QR con base de datos real",
+      "Definir dominio final de backend para conectar frontend"
+    ]
+  }
+}

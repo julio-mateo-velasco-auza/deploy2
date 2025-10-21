@@ -1,0 +1,54 @@
+# ============================
+# docker-compose.dev2.yml (raíz)
+# ============================
+services:
+  db2:
+    image: mysql:8.4
+    container_name: inbolsa2-mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root_pwd_change_me2
+      MYSQL_DATABASE: inbolsa2
+      MYSQL_USER: inbolsa2
+      MYSQL_PASSWORD: inbolsa_pwd2
+    ports:
+      - "3316:3306"
+    volumes:
+      - db2_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h 127.0.0.1 -uinbolsa2 -pinbolsa_pwd2 || exit 1"]
+      interval: 5s
+      timeout: 3s
+      retries: 30
+
+  web2:
+    build:
+      context: .
+      dockerfile: ./docker/php-apache/Dockerfile
+    container_name: inbolsa2-php
+    environment:
+      APP_ENV: docker
+    volumes:
+      - ./public_html:/var/www/html:rw
+      - ./api:/var/www/html/api:rw
+      - ./docker/php-apache/vhost.conf:/etc/apache2/sites-available/000-default.conf:ro
+    depends_on:
+      db2:
+        condition: service_healthy
+    ports:
+      - "8088:80"
+
+  phpmyadmin2:
+    image: phpmyadmin:5
+    container_name: inbolsa2-pma
+    environment:
+      PMA_HOST: db2
+      PMA_USER: inbolsa2
+      PMA_PASSWORD: inbolsa_pwd2
+    ports:
+      - "8089:80"
+    depends_on:
+      db2:
+        condition: service_healthy
+
+volumes:
+  db2_data:

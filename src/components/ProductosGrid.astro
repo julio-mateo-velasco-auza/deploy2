@@ -1,0 +1,144 @@
+---
+const CATALOG = [
+  { id: 'bolsa-chica',  title: 'Bolsa chica',  desc: 'Bolsa tamaño chico.' },
+  { id: 'bolsa-grande', title: 'Bolsa grande', desc: 'Bolsa tamaño grande.' },
+  { id: 'bolsa-enorme', title: 'Bolsa enorme', desc: 'Bolsa tamaño enorme.' },
+  { id: 'hilo-algodon', title: 'Hilo de algodón', desc: 'Hilo 100% algodón.' },
+  { id: 'hilo-nylon',   title: 'Hilo de nylon',   desc: 'Hilo de nylon resistente.' },
+];
+---
+
+<section id="productos" class="px-6 py-16 hidden">
+  <div class="mx-auto max-w-6xl">
+    <h2 class="text-3xl font-bold">Productos</h2>
+    <p class="text-slate-600 mt-2">Se personaliza con tu QR.</p>
+
+    <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 mt-8" id="productosGrid">
+      {
+        CATALOG.map(p => (
+          <article
+            data-product-id={p.id}
+            class="rounded-2xl border bg-white p-5 shadow-sm hover:shadow transition"
+          >
+            <div class="text-xs text-slate-500 font-mono mb-1">{p.id}</div>
+            <h3 class="text-lg font-semibold">{p.title}</h3>
+            <p class="text-slate-600 mt-1">{p.desc}</p>
+          </article>
+        ))
+      }
+    </div>
+
+    <div id="productosVacios" class="hidden mt-10 rounded-xl border bg-amber-50 text-amber-900 px-4 py-3">
+      No hay productos habilitados para este acceso.
+    </div>
+  </div>
+</section>
+
+<script is:inline>
+(function(){
+  var BACK_BASE = 'http://localhost/inbolsa-api/api';
+  var DEBUG = false; // true para caja de debug
+
+  function $all(s,root){return Array.prototype.slice.call((root||document).querySelectorAll(s));}
+  function $(s,root){return (root||document).querySelector(s);}
+  function getCookie(n){return (document.cookie.split('; ').find(r=>r.startsWith(n+'='))||'').split('=')[1]||'';}
+  function showEmptyIfNeeded(){
+    var anyVisible = $all('[data-product-id]').some(function(el){ return el.offsetParent !== null; });
+    $('#productosVacios').classList.toggle('hidden', anyVisible);
+  }
+  function box(msg){
+    if(!DEBUG) return;
+    var b=document.createElement('div');
+    b.style.cssText='position:fixed;left:12px;bottom:12px;z-index:99999;background:rgba(0,0,0,.85);color:#fff;padding:10px 12px;border-radius:10px;font:12px/1.35 ui-sans-serif,system-ui,Segoe UI,Roboto;max-width:420px';
+    b.innerHTML=msg;
+    document.body.appendChild(b);
+    setTimeout(function(){ try{ b.remove(); }catch(e){} }, 3500);
+  }
+  function getGrantLS(){
+    try{
+      var raw = localStorage.getItem('inb_priv_grant');
+      if(!raw) return null;
+      var g = JSON.parse(raw);
+      if(!g || !g.allow) return null;
+      if(g.allow==='include' && !Array.isArray(g.products)) g.products=[];
+      return g;
+    }catch(_){ return null; }
+  }
+  function saveGrant(g){ try{ localStorage.setItem('inb_priv_grant', JSON.stringify(g)); }catch(_){ } }
+
+  function fetchGrantFromBackend(){
+    return fetch(BACK_BASE + '/access/payload', {
+      credentials:'include',
+      headers:{'Content-Type':'application/json'}
+    })
+    .then(function(r){ return r.json(); })
+    .then(function(d){
+      if(!d || !d.ok || !d.qr) return null;
+      var g = (d.qr.payload && d.qr.payload.section==='productos')
+        ? { allow:(d.qr.payload.allow||'all'), products:Array.isArray(d.qr.payload.products)?d.qr.payload.products:[], exp:(d.payload&&d.payload.exp)||0 }
+        : { allow:'all', products:[], exp:(d.payload&&d.payload.exp)||0 };
+      saveGrant(g);
+      return g;
+    })
+    .catch(function(){ return null; });
+  }
+
+  function applyFilter(grant){
+    // Unhide sección solo si hay grant (landing privada)
+    var section = document.getElementById('productos');
+    if (!grant) { section.classList.add('hidden'); return; }
+    section.classList.remove('hidden');
+
+    var cards = $all('[data-product-id]');
+    if(!cards.length){
+      box('<b>Sin tarjetas detectadas</b>');
+      return;
+    }
+
+    if(grant.allow==='all'){
+      cards.forEach(function(el){ el.classList.remove('hidden'); el.style.display=''; });
+      showEmptyIfNeeded();
+      box('<b>allow:</b> all');
+      return;
+    }
+
+    var allowed = new Set(grant.products || []);
+    var hidden = [];
+    cards.forEach(function(el){
+      var id = el.getAttribute('data-product-id') || '';
+      if(!allowed.has(id)){
+        el.classList.add('hidden');
+        el.style.display='none';
+        hidden.push(id);
+      } else {
+        el.classList.remove('hidden');
+        el.style.display='';
+      }
+    });
+    showEmptyIfNeeded();
+    box('<b>allow:</b> include<br><b>permitidas:</b> '+(grant.products||[]).join(', '));
+  }
+
+  function main(){
+    if(document.readyState==='loading'){
+      document.addEventListener('DOMContentLoaded', main);
+      return;
+    }
+
+    var grant = getGrantLS();
+    if(grant){ applyFilter(grant); return; }
+
+    if(!(getCookie('qrauth') || getCookie('inb_access'))){
+      // Sin cookie/token => mantenemos oculta la sección en landing pública
+      applyFilter(null);
+      return;
+    }
+
+    fetchGrantFromBackend().then(function(g){
+      applyFilter(g || null);
+    });
+  }
+
+  main();
+})();
+</script>

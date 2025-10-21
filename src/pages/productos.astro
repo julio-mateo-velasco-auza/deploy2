@@ -1,0 +1,95 @@
+﻿---
+// src/pages/productos.astro
+export const prerender = true;
+
+import Base from '../layouts/Base.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+
+const pageTitle = 'Productos';
+
+// Mantén/ajusta tus IDs EXACTOS (data-product-id)
+const CATALOG = [
+  { cat: 'Bolsas', items: [
+    { id:'bolsa-chica',   name:'Bolsa chica',   img:'/imgs/bolsa-chica.jpg' },
+    { id:'bolsa-mediana', name:'Bolsa mediana', img:'/imgs/bolsa-mediana.jpg' },
+    { id:'bolsa-enorme',  name:'Bolsa enorme',  img:'/imgs/bolsa-enorme.jpg' },
+  ]},
+  { cat: 'Hilos', items: [
+    { id:'hilo-algodon',  name:'Hilo de algodón', img:'/imgs/hilo-algodon.jpg' },
+    { id:'hilo-nylon',    name:'Hilo de nylon',   img:'/imgs/hilo-nylon.jpg' },
+  ]},
+];
+---
+<Base title={pageTitle}>
+  <Header />
+
+  <main class="mx-auto max-w-6xl px-4 py-12">
+    <h1 class="text-3xl font-bold">{pageTitle}</h1>
+
+    {CATALOG.map((group) => (
+      <section class="mt-8">
+        <h2 class="text-xl font-semibold">{group.cat}</h2>
+        <div class="mt-4 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {group.items.map((p) => (
+            <article data-product-id={p.id} class="rounded-xl border border-slate-200/40 bg-white/5 p-4 shadow-sm">
+              <div class="aspect-[4/3] w-full overflow-hidden rounded-lg bg-slate-100">
+                <img src={p.img} alt={p.name} class="h-full w-full object-cover" loading="lazy" />
+              </div>
+              <h3 class="mt-3 text-lg font-medium">{p.name}</h3>
+            </article>
+          ))}
+        </div>
+      </section>
+    ))}
+
+    <p id="empty-msg" class="mt-8 hidden text-slate-500">
+      No hay productos habilitados para este acceso.
+    </p>
+  </main>
+
+  <Footer />
+
+  <!-- Guardia + FILTRO ESTRICTO (si no hay lista => no muestra nada) -->
+  <script type="module">
+    import { isPrivateEnabled, getGrantProducts } from '../lib/privado.ts';
+
+    (function(){
+      // 1) Bloquea si no hay acceso privado
+      try { if (!isPrivateEnabled()) { location.replace('/'); return; } }
+      catch { location.replace('/'); return; }
+
+      // 2) Recupera lista de productos desde storage o query (?p=)
+      let allowIds = [];
+      try {
+        allowIds = getGrantProducts();
+        // fallback: admitir ?p= en la propia URL por si no se guardó
+        if (!Array.isArray(allowIds) || !allowIds.length) {
+          const u = new URL(location.href);
+          const p = u.searchParams.get('p');
+          if (p) allowIds = p.split(',').map(s => s.trim()).filter(Boolean);
+        }
+      } catch {}
+
+      // 3) Si NO hay lista => NO mostrar nada
+      const cards = Array.from(document.querySelectorAll('[data-product-id]'));
+      const empty = document.getElementById('empty-msg');
+
+      if (!Array.isArray(allowIds) || allowIds.length === 0) {
+        cards.forEach(el => { el.classList.add('hidden'); el.style.display = 'none'; });
+        if (empty) empty.classList.remove('hidden');
+        return;
+      }
+
+      // 4) Mostrar únicamente los IDs autorizados
+      const allow = new Set(allowIds);
+      let anyVisible = false;
+      cards.forEach(el => {
+        const id = el.getAttribute('data-product-id') || '';
+        if (!allow.has(id)) { el.classList.add('hidden'); el.style.display = 'none'; }
+        else { el.classList.remove('hidden'); el.style.display = ''; anyVisible = true; }
+      });
+      if (empty) empty.classList.toggle('hidden', anyVisible);
+    })();
+  </script>
+</Base>

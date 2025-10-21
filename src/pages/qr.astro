@@ -1,0 +1,42 @@
+﻿---
+import Base from '../layouts/Base.astro';
+const ENABLE_MINUTES = 120; // puedes ajustar esto
+---
+<Base title="Validando acceso…">
+  <main class="mx-auto max-w-xl px-4 py-16 text-center">
+    <h1 class="text-2xl font-semibold">Validando acceso…</h1>
+    <p class="mt-2 text-slate-500">Un momento por favor.</p>
+  </main>
+
+  <!-- Pasamos ENABLE_MINUTES al script vía data-m -->
+  <script type="module" data-m={ENABLE_MINUTES}>
+    import { enablePrivate, setGrantProducts } from '../lib/privado.ts';
+
+    // Lee minutos desde data-m (del frontmatter) con fallback a 120
+    const DEFAULT_MIN = Number(document.currentScript?.dataset.m || '120');
+
+    function resolvePath(p) {
+      try {
+        const base = document.querySelector('base')?.getAttribute('href') || '/';
+        const clean = base.endsWith('/') ? base.slice(0, -1) : base;
+        return clean + p;
+      } catch { return p; }
+    }
+
+    (async function () {
+      try {
+        const u = new URL(location.href);
+        const m = Number(u.searchParams.get('m') || DEFAULT_MIN);
+        enablePrivate(m);
+
+        const p = u.searchParams.get('p');
+        const ids = p ? p.split(',').map(s => s.trim()).filter(Boolean) : [];
+        setGrantProducts(ids);
+      } catch {}
+
+      // pequeña espera para asegurar que storage/cookie esté escrita
+      await new Promise(r => setTimeout(r, 40));
+      location.replace(resolvePath('/privado'));
+    })();
+  </script>
+</Base>

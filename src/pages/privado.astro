@@ -1,0 +1,68 @@
+---
+// /privado — landing privada (sin SSR cookies, sin CORS)
+export const prerender = true;
+
+import Base from '../layouts/Base.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import HomeHero from '../components/HomeHero.astro';
+
+const PAGE_TITLE = 'Inbolsa — Zona privada';
+---
+<Base title={PAGE_TITLE}>
+  <Header />
+
+  <main>
+    <section class="relative">
+      <HomeHero />
+    </section>
+
+    <section class="mx-auto max-w-6xl px-4 py-12">
+      <div class="grid gap-8 md:grid-cols-3">
+        <div>
+          <h3 class="text-xl font-semibold">Productos (zona privada)</h3>
+          <p class="mt-2 text-slate-600">Accede al catálogo privado habilitado por tu QR.</p>
+          <div class="mt-3">
+            <!-- Solo ver productos; nunca panel -->
+            <a href="/productos" class="underline">Ver productos</a>
+          </div>
+        </div>
+        <div>
+          <h3 class="text-xl font-semibold">Industrias</h3>
+          <p class="mt-2 text-slate-600">Contenido privado para industrias clave.</p>
+        </div>
+        <div>
+          <h3 class="text-xl font-semibold">Historia</h3>
+          <p class="mt-2 text-slate-600">Mensaje exclusivo para visitantes con QR.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <Footer />
+
+  <!-- GUARD cliente con base-aware home -->
+  <script type="module">
+    import { isPrivateEnabled } from '../lib/privado.ts';
+
+    (function () {
+      function homeHref() {
+        try {
+          const base = document.querySelector('base')?.getAttribute('href') || '/';
+          // si base es '/inbolsaNeo/', úsala como home
+          return base;
+        } catch { return '/'; }
+      }
+
+      try {
+        if (!isPrivateEnabled()) {
+          location.replace(homeHref()); // redirige al home correcto de tu subcarpeta
+          return;
+        }
+      } catch {
+        location.replace(homeHref());
+        return;
+      }
+    })();
+  </script>
+</Base>

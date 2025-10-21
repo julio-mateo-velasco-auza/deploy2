@@ -1,0 +1,146 @@
+---
+import Base from '../layouts/Base.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+
+
+/* Mapa manual de imágenes del mosaico (mezcla .jpg y .JPG permitida) */
+const BG = [
+  '/public/img/landing1.jpg',
+  '/public/img/landing2.jpg',
+  '/public/img/landing3.JPG',
+  '/public/img/landing4.jpg',
+  '/public/img/landing5.JPG',
+  '/public/img/landing6.jpg',
+  '/public/img/landing7.jpg',
+  '/public/img/landing8.jpg',
+  '/public/img/landing9.jpg',
+  '/public/img/landing10.jpg',
+  '/public/img/landing11.jpg',
+  '/public/img/landing12.jpg',
+  '/public/img/landing13.jpg',
+  '/public/img/landing14.jpg',
+  '/public/img/landing15.jpg',
+];
+---
+
+<Base title="Contacto — Inbolsa">
+  <Header />
+
+  <!-- Fondo mosaico -->
+  <section class="relative">
+    <!-- grid absoluto de fondo -->
+    <div class="absolute inset-0 -z-10 overflow-hidden">
+      <div class="pointer-events-none absolute inset-0 bg-gradient-to-b from-slate-900/10 via-white/0 to-white"></div>
+
+      <div class="mx-auto h-full w-full max-w-7xl px-4">
+        <div
+          class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-3 md:gap-4
+                 auto-rows-[110px] sm:auto-rows-[140px] md:auto-rows-[160px] pt-20 pb-28"
+        >
+          {
+            /* Repite las piezas suficiente para cubrir */
+            Array.from({ length: 36 }).map((_, i) => {
+              const src = BG[i % BG.length];
+              // patrón de tamaños variado
+              const mod = i % 10;
+              const span =
+                mod === 0 ? 'md:col-span-2 md:row-span-2' :
+                mod === 3 ? 'md:col-span-2 md:row-span-1' :
+                mod === 6 ? 'md:col-span-1 md:row-span-2' :
+                'md:col-span-1 md:row-span-1';
+
+              return (
+                <div
+                  class={`rounded-2xl border border-white/40 bg-white/40
+                          backdrop-blur-[1px] shadow-sm overflow-hidden ${span}`}
+                  style={`background-image:url('${src}'); background-size:cover; background-position:center;`}
+                >
+                  <div class="h-full w-full bg-white/10"></div>
+                </div>
+              );
+            })
+          }
+        </div>
+      </div>
+
+      <!-- velo superior para legibilidad -->
+      <div class="absolute inset-0 bg-gradient-to-b from-white/60 via-white/65 to-white/85"></div>
+    </div>
+
+    <!-- Contenido principal -->
+    <div class="mx-auto max-w-7xl px-4 py-12 md:py-16">
+      <div class="grid md:grid-cols-5 gap-6 md:gap-8 items-start">
+
+        <!-- Tarjeta Formulario -->
+        <section
+          class="md:col-span-3 rounded-3xl border border-white/50 bg-white/85 backdrop-blur
+                 shadow-[0_10px_30px_rgba(2,6,23,0.08)] p-6 md:p-8"
+        >
+          <h1 class="text-3xl font-semibold tracking-tight text-slate-900">Contacto</h1>
+          <p class="mt-1 text-slate-600">Cuéntanos qué necesitas y un asesor te responderá.</p>
+
+          <form class="mt-6 space-y-4" onsubmit="event.preventDefault()">
+            <div class="grid md:grid-cols-2 gap-3">
+              <input type="text" placeholder="Nombre"
+                class="rounded-xl border border-slate-300/80 bg-white/90 px-4 py-3 outline-none focus:ring-2 focus:ring-brand-300" />
+              <input type="email" placeholder="Email"
+                class="rounded-xl border border-slate-300/80 bg-white/90 px-4 py-3 outline-none focus:ring-2 focus:ring-brand-300" />
+            </div>
+
+            <input type="text" placeholder="Empresa (opcional)"
+              class="w-full rounded-xl border border-slate-300/80 bg-white/90 px-4 py-3 outline-none focus:ring-2 focus:ring-brand-300" />
+
+            <textarea rows="6" placeholder="Mensaje"
+              class="w-full rounded-xl border border-slate-300/80 bg-white/90 px-4 py-3 outline-none focus:ring-2 focus:ring-brand-300 resize-y"></textarea>
+
+            <button
+              class="group relative w-full overflow-hidden rounded-xl bg-brand-600 px-6 py-3 text-white
+                     shadow hover:bg-brand-700 transition"
+              type="submit"
+            >
+              <span class="relative z-10">Enviar</span>
+              <span class="absolute inset-0 -z-0 bg-white/0 group-hover:bg-white/10 transition"></span>
+            </button>
+          </form>
+
+          <p class="mt-4 text-xs text-slate-500">
+            <strong>Horario:</strong> Lun–Vie 11:00–17:00 (America/La_Paz) ·
+            <strong> WhatsApp:</strong> Próximamente
+          </p>
+        </section>
+
+        <!-- Tarjeta Oficinas -->
+        <aside
+          class="md:col-span-2 rounded-3xl border border-white/50 bg-white/80 backdrop-blur
+                 shadow-[0_10px_30px_rgba(2,6,23,0.08)] p-6 md:p-8 space-y-6"
+        >
+          <div class="rounded-xl bg-emerald-50 border border-emerald-200 px-4 py-3 text-emerald-800 text-sm">
+            <span class="font-medium">Escríbenos por WhatsApp</span>
+            <span class="text-emerald-700/70"> · Próximamente</span>
+          </div>
+
+          <h2 class="text-slate-900 font-semibold">Oficinas</h2>
+
+          <div class="space-y-6 text-slate-700">
+            <div class="rounded-2xl border border-slate-200/70 bg-white/70 p-4">
+              <h3 class="font-medium text-slate-900">La Paz</h3>
+              <p class="text-sm mt-1">Tel: (591) 2 123 456</p>
+              <p class="text-sm">Email: info@inbolsa.bo</p>
+              <p class="text-xs text-slate-500 mt-1">Horario: Lun–Vie 11:00–17:00</p>
+            </div>
+
+            <div class="rounded-2xl border border-slate-200/70 bg-white/70 p-4">
+              <h3 class="font-medium text-slate-900">Santa Cruz</h3>
+              <p class="text-sm mt-1">Tel: (591) 3 123 456</p>
+              <p class="text-sm">Email: scz@inbolsa.bo</p>
+              <p class="text-xs text-slate-500 mt-1">Atención: Próximamente</p>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  <Footer />
+</Base>

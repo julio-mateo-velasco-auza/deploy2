@@ -1,0 +1,145 @@
+---
+type NavLink = { href: string; label: string };
+
+const { transparent = false } = Astro.props as { transparent?: boolean };
+const isActive = (href: string) => Astro.url.pathname === href;
+
+// NO dependemos de cookies; el client script usará isPrivateEnabled()
+const baseLinks: NavLink[] = [
+  { href: '/', label: 'Home' },
+  // Productos se controlará por JS (no lo pintamos por SSR)
+  { href: '/valores', label: 'Valores' },
+  { href: '/industrias', label: 'Industrias' },
+  { href: '/historia', label: 'Historia' },
+  { href: '/contacto', label: 'Contacto' },
+];
+const otherLinks = baseLinks.filter(l => l.href !== '/');
+---
+
+<header
+  id="siteHeader"
+  class={`${transparent ? 'fixed' : 'sticky'} inset-x-0 top-0 z-50 border-b transition-all duration-300
+          ${transparent ? 'bg-transparent text-white border-transparent' : 'bg-white/85 text-slate-800 backdrop-blur-md border-slate-200 shadow-sm'}`}
+>
+  <div class="mx-auto max-w-7xl px-6 h-24 md:h-28 flex items-center justify-between">
+    <a href="/" class="inline-flex items-center gap-4" aria-label="Inbolsa">
+      <img
+        id="siteLogo"
+        src={transparent ? '/logo.png' : '/Black.png'}
+        data-logo-white="/logo.png"
+        data-logo-black="/Black.png"
+        alt="Inbolsa"
+        class="h-20 md:h-20 w-auto transition-opacity duration-300"
+      />
+      <span class="sr-only">Inbolsa</span>
+    </a>
+
+    <nav id="main-nav" class="hidden md:flex items-center gap-8 text-base md:text-lg">
+      {(() => {
+        const l = { href: '/', label: 'Home' };
+        const active = isActive(l.href);
+        return (
+          <a
+            href={l.href}
+            aria-current={active ? 'page' : undefined}
+            class={`${transparent
+                ? `relative pb-1 hover:opacity-90 ${active ? 'after:absolute after:left-0 after:right-0 after:-bottom-0.5 after:h-0.5 after:bg-white/70' : ''}`
+                : `hover:text-brand-700 ${active ? 'text-brand-700 font-medium' : ''}`
+              }`}
+          >
+            {l.label}
+          </a>
+        );
+      })()}
+
+      <!-- “Productos” se inyectará por JS cuando el QR esté activo -->
+      <span id="priv-links" class="hidden"></span>
+
+      {otherLinks.map((l) => {
+        const active = isActive(l.href);
+        return (
+          <a
+            href={l.href}
+            aria-current={active ? 'page' : undefined}
+            class={`${transparent
+                ? `relative pb-1 hover:opacity-90 ${active ? 'after:absolute after:left-0 after:right-0 after:-bottom-0.5 after:h-0.5 after:bg-white/70' : ''}`
+                : `hover:text-brand-700 ${active ? 'text-brand-700 font-medium' : ''}`
+              }`}
+          >
+            {l.label}
+          </a>
+        );
+      })}
+
+      <a
+        id="ctaHeader"
+        href="/contacto"
+        class={`${transparent
+          ? 'rounded-2xl border border-white/70 bg-white/10 hover:bg-white/20 text-white px-5 py-2.5 md:px-6 md:py-3 transition'
+          : 'rounded-2xl bg-brand-600 hover:bg-brand-700 text-white px-5 py-2.5 md:px-6 md:py-3 transition'
+        }`}
+      >
+        Contáctanos
+      </a>
+    </nav>
+  </div>
+
+  {transparent && (
+    // IIFE local para NO redeclarar const/funciones entre montajes/HMR
+    <script is:inline>
+      (function HeaderScrollInit(){
+        var header = document.getElementById('siteHeader');
+        var logo   = document.getElementById('siteLogo');
+        var cta    = document.getElementById('ctaHeader');
+
+        var whiteSrc = logo && logo.getAttribute('data-logo-white');
+        var blackSrc = logo && logo.getAttribute('data-logo-black');
+
+        function setSolidLocal(s) {
+          if (!header) return;
+          if (s) {
+            header.classList.add('bg-white/85','backdrop-blur-md','text-slate-800','border-slate-200','shadow-sm');
+            header.classList.remove('bg-transparent','text-white','border-transparent');
+            if (logo && blackSrc) logo.setAttribute('src', blackSrc);
+            if (cta) cta.className = 'rounded-2xl bg-brand-600 hover:bg-brand-700 text-white px-5 py-2.5 md:px-6 md:py-3 transition';
+          } else {
+            header.classList.add('bg-transparent','text-white','border-transparent');
+            header.classList.remove('bg-white/85','backdrop-blur-md','text-slate-800','border-slate-200','shadow-sm');
+            if (logo && whiteSrc) logo.setAttribute('src', whiteSrc);
+            if (cta) cta.className = 'rounded-2xl border border-white/70 bg-white/10 hover:bg-white/20 text-white px-5 py-2.5 md:px-6 md:py-3 transition';
+          }
+        }
+
+        var onScrollLocal = function(){ setSolidLocal(window.scrollY > 16); };
+        onScrollLocal();
+        window.addEventListener('scroll', onScrollLocal, { passive: true });
+      })();
+    </script>
+  )}
+
+  <!-- Habilitar “Productos” SOLO si el QR está activo (bandera local) -->
+  <script type="module">
+    import { isPrivateEnabled } from '../lib/privado.ts';
+    (function HeaderProductsInit(){
+      try {
+        var nav = document.getElementById('main-nav');
+        var cta = document.getElementById('ctaHeader');
+
+        // Limpia si ya existe un link "Productos" previo (HMR/navegación)
+        Array.from(nav?.querySelectorAll('a') || []).forEach(function(a){
+          if ((a.textContent || '').trim().toLowerCase() === 'productos') a.remove();
+        });
+
+        if (isPrivateEnabled() || location.pathname === '/privado') {
+          var link = document.createElement('a');
+          link.href = '/productos'; // nunca /app/panel
+          link.textContent = 'Productos';
+          link.className = `${'text-slate-700 hover:text-slate-900'} ${location.pathname === '/productos' ? 'font-medium text-brand-700' : ''}`;
+
+          if (cta && nav) nav.insertBefore(link, cta);
+          else if (nav) nav.appendChild(link);
+        }
+      } catch(e) {}
+    })();
+  </script>
+</header>

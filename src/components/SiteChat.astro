@@ -1,0 +1,237 @@
+---
+/**
+ * SiteChat.astro
+ * Chat web embebido (sin WhatsApp). Polling con backend PHP.
+ * - Saludo según hora
+ * - Opción “Conocer Inbolsa” y “Hablar con un asesor”
+ * - Selección de ciudad (La Paz / Santa Cruz)
+ * - Guarda y lee mensajes vía /api/chat/*
+ */
+
+const BRAND = import.meta.env.PUBLIC_BRAND || 'Inbolsa';
+---
+
+<style>
+  .chat-fade-in {
+    animation: chat-fade-in .2s ease;
+  }
+  @keyframes chat-fade-in {
+    from { opacity: 0; transform: translateY(4px) }
+    to   { opacity: 1; transform: translateY(0) }
+  }
+</style>
+
+<div id="sitechat-root" class="fixed z-[60] bottom-5 right-5 md:bottom-6 md:right-6">
+  <!-- Panel -->
+  <div
+    id="sitechat-panel"
+    class="hidden translate-y-2 opacity-0 transition-all duration-300 ease-out w-[92vw] max-w-[380px] mb-3"
+    aria-hidden="true"
+  >
+    <div class="rounded-2xl border border-slate-200 shadow-xl bg-white overflow-hidden">
+      <!-- Header -->
+      <div class="flex items-center gap-2 px-4 py-3 border-b bg-white">
+        <div class="h-2 w-2 rounded-full bg-emerald-500 animate-pulse"></div>
+        <p class="text-sm text-slate-600">
+          <span id="sitechat-greet" class="font-medium">Hola</span>, soy el asistente de <span class="font-semibold">{BRAND}</span>
+        </p>
+        <button id="sitechat-close" class="ml-auto text-slate-400 hover:text-slate-600 transition" aria-label="Cerrar">✕</button>
+      </div>
+
+      <!-- Mensajes -->
+      <div id="sitechat-scroll" class="px-3 py-3 max-h-[60vh] overflow-y-auto bg-slate-50/60">
+        <div id="sitechat-msgs" class="space-y-2"></div>
+      </div>
+
+      <!-- Acciones rápidas -->
+      <div id="sitechat-quick" class="px-3 py-3 border-t bg-white">
+        <div class="text-xs text-slate-500 mb-2">Elige una opción:</div>
+        <div class="grid grid-cols-1 gap-2">
+          <button data-q="info"
+            class="rounded-xl border px-3 py-2 text-left text-sm hover:border-brand-400 hover:text-brand-700 transition">
+            Conocer sobre {BRAND}
+          </button>
+          <button data-q="sales"
+            class="rounded-xl border px-3 py-2 text-left text-sm hover:border-brand-400 hover:text-brand-700 transition">
+            Hablar con un asesor
+          </button>
+        </div>
+
+        <!-- Ciudad -->
+        <div id="sitechat-city" class="hidden pt-3 mt-3 border-t">
+          <p class="text-xs text-slate-500 mb-1">Selecciona tu ciudad:</p>
+          <div class="flex gap-2">
+            <button data-city="La Paz"
+              class="rounded-lg border px-3 py-2 text-sm hover:border-brand-400 hover:text-brand-700 transition">
+              La Paz
+            </button>
+            <button data-city="Santa Cruz"
+              class="rounded-lg border px-3 py-2 text-sm hover:border-brand-400 hover:text-brand-700 transition">
+              Santa Cruz
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Composer -->
+      <form id="sitechat-form" class="flex items-center gap-2 px-3 py-3 border-t bg-white">
+        <input id="sitechat-input" type="text" autocomplete="off" placeholder="Escribe tu mensaje…"
+          class="flex-1 rounded-xl border px-3 py-2 outline-none focus:ring-2 focus:ring-brand-300" />
+        <button
+          class="rounded-xl bg-brand-600 text-white px-4 py-2 hover:bg-brand-700 transition"
+          aria-label="Enviar"
+        >Enviar</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Botón flotante -->
+  <button
+    id="sitechat-fab"
+    class="relative shadow-lg bg-brand-600 hover:bg-brand-700 text-white h-14 w-14 rounded-full flex items-center justify-center"
+    aria-label="Abrir chat"
+  >
+    <!-- icono chat -->
+    <svg viewBox="0 0 24 24" class="h-7 w-7 fill-white" aria-hidden="true"><path d="M20 2H4a2 2 0 0 0-2 2v18l4-4h14a2 2 0 0 0 2-2V4c0-1.103-.897-2-2-2zM6 9h12v2H6V9zm8 5H6v-2h8v2zm4-6H6V6h12v2z"/></svg>
+  </button>
+</div>
+
+<script is:inline>
+  const $ = (s, r=document)=>r.querySelector(s);
+  const panel = $('#sitechat-panel');
+  const fab   = $('#sitechat-fab');
+  const close = $('#sitechat-close');
+  const greet = $('#sitechat-greet');
+  const msgsEl= $('#sitechat-msgs');
+  const scrollEl = $('#sitechat-scroll');
+  const quick = $('#sitechat-quick');
+  const cityBlock = $('#sitechat-city');
+  const form  = $('#sitechat-form');
+  const input = $('#sitechat-input');
+
+  let sessionId = null;
+  let lastId = 0;
+  let polling = null;
+  let selectedCity = null;
+
+  function setGreet(){
+    try {
+      const h = new Date().getHours();
+      greet.textContent = (h>=5 && h<12) ? 'Buenos días' : (h<19 ? 'Buenas tardes' : 'Buenas noches');
+    } catch {}
+  }
+
+  function showPanel(){
+    panel.classList.remove('hidden');
+    panel.setAttribute('aria-hidden','false');
+    requestAnimationFrame(()=>{
+      panel.classList.remove('translate-y-2','opacity-0');
+      panel.classList.add('translate-y-0','opacity-100');
+    });
+  }
+  function hidePanel(){
+    panel.classList.add('translate-y-2','opacity-0');
+    panel.classList.remove('translate-y-0','opacity-100');
+    setTimeout(()=>{
+      panel.classList.add('hidden');
+      panel.setAttribute('aria-hidden','true');
+    }, 200);
+  }
+
+  function esc(t){ return String(t ?? '')
+    .replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;')
+    .replaceAll('"','&quot;').replaceAll("'","&#039;");
+  }
+  function pushMsg(role, text){
+    const wrap = document.createElement('div');
+    const isUser = role === 'user';
+    wrap.className = `chat-fade-in flex ${isUser?'justify-end':''}`;
+    wrap.innerHTML = `
+      <div class="${isUser?'bg-brand-600 text-white':'bg-white border text-slate-800'} max-w-[85%] rounded-2xl px-3 py-2 shadow-sm">
+        <div class="text-xs ${isUser?'text-white/80':'text-slate-500'} mb-0.5">${isUser?'Tú':'Asistente'}</div>
+        <div class="text-sm leading-snug">${esc(text).replaceAll('\n','<br/>')}</div>
+      </div>`;
+    msgsEl.appendChild(wrap);
+    scrollEl.scrollTop = scrollEl.scrollHeight;
+  }
+
+  async function apiStart(){
+    const r = await fetch('/api/chat/start.php');
+    const d = await r.json();
+    if (d?.ok !== false) sessionId = d.session_id;
+  }
+  async function apiSend(text){
+    if (!sessionId) return;
+    await fetch('/api/chat/send.php', {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ session_id: sessionId, role:'user', text, city: selectedCity })
+    });
+  }
+  async function apiPoll(){
+    if (!sessionId) return;
+    const r = await fetch(`/api/chat/poll.php?session_id=${encodeURIComponent(sessionId)}&after_id=${lastId}`);
+    const d = await r.json().catch(()=>({}));
+    if (!d?.ok) return;
+    (d.items||[]).forEach(it=>{
+      lastId = it.id;
+      if (it.role === 'agent') pushMsg('agent', it.text);
+    });
+  }
+
+  function bootPoll(){
+    if (polling) clearInterval(polling);
+    polling = setInterval(apiPoll, 1800);
+  }
+
+  // Quick actions
+  quick.addEventListener('click', async (e)=>{
+    const btn = e.target.closest('button'); if (!btn) return;
+    if (btn.dataset.q === 'info') {
+      const msg = `Quiero conocer más sobre ${BRAND}.`;
+      pushMsg('user', msg);
+      await apiSend(msg);
+    }
+    if (btn.dataset.q === 'sales') {
+      cityBlock.classList.remove('hidden');
+    }
+  });
+
+  // Choose city
+  cityBlock.addEventListener('click', async (e)=>{
+    const b = e.target.closest('button'); if (!b) return;
+    selectedCity = b.dataset.city || null;
+    if (selectedCity) {
+      const msg = `Quiero hablar con un asesor (${selectedCity}).`;
+      pushMsg('user', msg);
+      await apiSend(msg);
+      // Ocultamos selección para no repetir
+      cityBlock.classList.add('hidden');
+    }
+  });
+
+  // Send form
+  form.addEventListener('submit', async (e)=>{
+    e.preventDefault();
+    const text = (input.value||'').trim();
+    if (!text) return;
+    pushMsg('user', text);
+    input.value = '';
+    await apiSend(text);
+  });
+
+  fab?.addEventListener('click', ()=>{
+    if (panel.classList.contains('hidden')) showPanel(); else hidePanel();
+  });
+  close?.addEventListener('click', hidePanel);
+  document.addEventListener('keydown', (e)=>{ if (e.key === 'Escape') hidePanel(); });
+
+  // Init
+  setGreet();
+  (async ()=>{
+    await apiStart();
+    bootPoll();
+    // Mensaje inicial del asistente (desde frontend)
+    pushMsg('agent', `¡Hola! Soy el asistente de ${BRAND}. ¿Cómo quieres que te ayudemos? Puedes conocer más sobre la empresa o hablar con un asesor.`);
+  })();
+</script>

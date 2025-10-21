@@ -1,0 +1,32 @@
+---
+import Base from '../layouts/Base.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+
+const industries = [
+  { name: 'Agro', text: 'Arroz, café, soya, azúcar, fertilizantes, pet food.' },
+  { name: 'Metales & Químicos', text: 'Minería, litio, químicos a granel.' },
+  { name: 'Construcción', text: 'Cemento, escombros, telas técnicas.' },
+  { name: 'Ganadería', text: 'Cobertores, telas pesadas y UV.' },
+  { name: 'Costura', text: 'Hilos, sogas y suministros para producción.' },
+];
+---
+<Base title="Industrias — Inbolsa">
+  <Header />
+  <main class="mx-auto max-w-7xl px-4 py-14">
+    <h1 class="text-3xl md:text-4xl font-semibold">Industrias que atendemos</h1>
+    <p class="mt-3 text-slate-600 max-w-2xl">
+      Soluciones en polipropileno para sectores exigentes.
+    </p>
+    <div class="mt-10 grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      {industries.map((i) => (
+        <div class="rounded-2xl bg-white border border-slate-200 p-6 hover:shadow-md transition">
+          <div class="h-10 w-10 rounded-xl bg-brand-600/10 mb-3"></div>
+          <h3 class="font-semibold">{i.name}</h3>
+          <p class="mt-1 text-sm text-slate-600">{i.text}</p>
+        </div>
+      ))}
+    </div>
+  </main>
+  <Footer />
+</Base>
