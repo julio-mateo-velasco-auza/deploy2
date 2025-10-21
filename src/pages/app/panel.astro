@@ -183,22 +183,37 @@ const CATALOG = [
         }
 
         const payload = isAll
-          ? { section:'productos', allow:'all', label }
-          : { section:'productos', allow:'include', products: Array.from(selected), label };
+          ? { section:'productos', allow:'all', label: label || null }
+          : { section:'productos', allow:'include', products: Array.from(selected), label: label || null };
 
         try {
           genMsg.textContent = 'Creando...';
+          
+          // Log para depuración
+          console.log("Enviando payload:", {
+            type: 'landing-access',
+            payload,
+            expires_at: expiresRaw ? new Date(expiresRaw).toISOString() : null,
+            usage_limit: usageRaw ? Number(usageRaw) : null
+          });
+          
           const res = await api.qrCreate({
             type: 'landing-access',
             payload,
-            expires_at: expiresRaw ? new Date(expiresRaw).toISOString() : undefined,
-            usage_limit: usageRaw ? Number(usageRaw) : undefined
+            expires_at: expiresRaw ? new Date(expiresRaw).toISOString() : null,
+            usage_limit: usageRaw ? parseInt(usageRaw, 10) || null : null
           });
+          
           genMsg.textContent = `QR creado: ${res?.code ?? ''}`;
           (document.getElementById('recipientName')||{}).value = '';
           await loadList();
+          
+          // Mostrar código QR automáticamente
+          if (res?.code) {
+            openQRModal(res.code);
+          }
         } catch (err) {
-          // Mostrar el mensaje que viene del back si lo trae
+          console.error("Error al crear QR:", err);
           genMsg.textContent = err?.message || 'No se pudo crear';
         }
       });
@@ -220,8 +235,8 @@ const CATALOG = [
             ? '<span class="text-green-700 border border-green-200 px-2 py-0.5 rounded-full text-xs">active</span>'
             : '<span class="text-red-700 border border-red-200 px-2 py-0.5 rounded-full text-xs">revoked</span>';
 
-          // BUG FIX: antes usabas "code" (variable inexistente). Debe ser item.code
-          const openUrl = `http://localhost/inbolsa-api/api/qr/open?code=${encodeURIComponent(item.code)}`;
+          // URL del QR (usando item.code)
+          const openUrl = `${BACK_BASE}/qr/open?code=${encodeURIComponent(item.code)}`;
 
           const card=document.createElement('div');
           card.className='rounded-xl border p-3 hover:shadow transition flex flex-col h-full';
@@ -257,8 +272,15 @@ const CATALOG = [
       }
 
       async function loadList(){
-        try{ const d = await api.qrList(); allItems = Array.isArray(d?.items)? d.items:[]; page=1; renderPage(); }
-        catch{ document.getElementById('list').innerHTML='<div class="text-slate-600">Error cargando.</div>'; }
+        try{ 
+          const d = await api.qrList(); 
+          allItems = Array.isArray(d?.items)? d.items:[]; 
+          page=1; 
+          renderPage(); 
+        }
+        catch{ 
+          document.getElementById('list').innerHTML='<div class="text-slate-600">Error cargando.</div>'; 
+        }
       }
 
       // Eventos globales de la lista
@@ -269,7 +291,19 @@ const CATALOG = [
         if(codeRevoke){
           e.preventDefault();
           if(!confirm('¿Revocar este QR?\n'+codeRevoke)) return;
-          try{ await api.qrRevoke(codeRevoke); await loadList(); }catch{ alert('Error al revocar'); }
+          try{ 
+            // Revocar en el backend solamente
+            await api.qrRevoke(codeRevoke); 
+            
+            // Mostrar mensaje de éxito
+            alert('QR revocado exitosamente. Usuarios existentes perderán acceso en su próxima visita.');
+            
+            // Recargar lista
+            await loadList(); 
+          } catch(e){ 
+            console.error("Error al revocar:", e);
+            alert('Error al revocar: ' + (e.message || 'Desconocido')); 
+          }
           return;
         }
 

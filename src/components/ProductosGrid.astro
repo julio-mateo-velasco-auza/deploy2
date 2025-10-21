@@ -37,7 +37,7 @@ const CATALOG = [
 <script is:inline>
 (function(){
   var BACK_BASE = 'http://localhost/inbolsa-api/api';
-  var DEBUG = false; // true para caja de debug
+  var DEBUG = true; // true para caja de debug
 
   function $all(s,root){return Array.prototype.slice.call((root||document).querySelectorAll(s));}
   function $(s,root){return (root||document).querySelector(s);}
@@ -52,41 +52,93 @@ const CATALOG = [
     b.style.cssText='position:fixed;left:12px;bottom:12px;z-index:99999;background:rgba(0,0,0,.85);color:#fff;padding:10px 12px;border-radius:10px;font:12px/1.35 ui-sans-serif,system-ui,Segoe UI,Roboto;max-width:420px';
     b.innerHTML=msg;
     document.body.appendChild(b);
-    setTimeout(function(){ try{ b.remove(); }catch(e){} }, 3500);
+    setTimeout(function(){ try{ b.remove(); }catch(e){} }, 5000);
   }
+  
   function getGrantLS(){
     try{
-      var raw = localStorage.getItem('inb_priv_grant');
-      if(!raw) return null;
-      var g = JSON.parse(raw);
-      if(!g || !g.allow) return null;
-      if(g.allow==='include' && !Array.isArray(g.products)) g.products=[];
-      return g;
-    }catch(_){ return null; }
+      // Primero intentar desde localStorage
+      var raw = localStorage.getItem('inbolsa:qr:products');
+      if(raw) {
+        box('Leyendo productos desde localStorage');
+        var products = JSON.parse(raw);
+        if(Array.isArray(products)) {
+          return { allow: 'include', products: products };
+        }
+      }
+      
+      // Si no hay en localStorage específico, probar URL params
+      var url = new URL(location.href);
+      var pParam = url.searchParams.get('p');
+      if(pParam) {
+        box('Leyendo productos desde URL params');
+        var pList = pParam.split(',').filter(Boolean);
+        if(pList.length > 0) {
+          return { allow: 'include', products: pList };
+        }
+      }
+      
+      // Último recurso: bandera genérica de privado
+      if(localStorage.getItem('inbolsa:qr:ok') === '1') {
+        box('Modo privado activo, pero sin lista específica');
+        return { allow: 'all', products: [] };
+      }
+      
+      return null;
+    } catch(e) { 
+      box('Error leyendo productos: ' + e.message);
+      return null; 
+    }
   }
-  function saveGrant(g){ try{ localStorage.setItem('inb_priv_grant', JSON.stringify(g)); }catch(_){ } }
+  
+  function saveGrant(g){ 
+    try{ 
+      box('Guardando grant: ' + JSON.stringify(g));
+      localStorage.setItem('inbolsa:qr:products', JSON.stringify(g.products || [])); 
+    } catch(e) { 
+      box('Error guardando: ' + e.message);
+    }
+  }
 
   function fetchGrantFromBackend(){
+    box('Consultando backend para productos');
     return fetch(BACK_BASE + '/access/payload', {
       credentials:'include',
       headers:{'Content-Type':'application/json'}
     })
     .then(function(r){ return r.json(); })
     .then(function(d){
-      if(!d || !d.ok || !d.qr) return null;
+      if(!d || !d.ok || !d.qr) {
+        box('Backend: sin datos válidos');
+        return null;
+      }
+      box('Backend respondió: ' + JSON.stringify(d.qr.payload));
       var g = (d.qr.payload && d.qr.payload.section==='productos')
-        ? { allow:(d.qr.payload.allow||'all'), products:Array.isArray(d.qr.payload.products)?d.qr.payload.products:[], exp:(d.payload&&d.payload.exp)||0 }
-        : { allow:'all', products:[], exp:(d.payload&&d.payload.exp)||0 };
+        ? { 
+            allow: (d.qr.payload.allow || 'all'), 
+            products: Array.isArray(d.qr.payload.products) ? d.qr.payload.products : [], 
+            exp: (d.payload && d.payload.exp) || 0 
+          }
+        : { allow:'all', products:[], exp:(d.payload && d.payload.exp) || 0 };
       saveGrant(g);
       return g;
     })
-    .catch(function(){ return null; });
+    .catch(function(error){ 
+      box('Error consultando backend: ' + error.message);
+      return null; 
+    });
   }
 
   function applyFilter(grant){
     // Unhide sección solo si hay grant (landing privada)
     var section = document.getElementById('productos');
-    if (!grant) { section.classList.add('hidden'); return; }
+    if (!grant) { 
+      box('Sin grant, ocultando sección');
+      section.classList.add('hidden'); 
+      return; 
+    }
+    
+    box('Aplicando grant, mostrando sección');
     section.classList.remove('hidden');
 
     var cards = $all('[data-product-id]');
@@ -95,48 +147,53 @@ const CATALOG = [
       return;
     }
 
-    if(grant.allow==='all'){
-      cards.forEach(function(el){ el.classList.remove('hidden'); el.style.display=''; });
+    if(grant.allow === 'all'){
+      box('<b>allow:</b> all - Mostrando todos los productos');
+      cards.forEach(function(el){ 
+        el.classList.remove('hidden'); 
+        el.style.display = ''; 
+      });
       showEmptyIfNeeded();
-      box('<b>allow:</b> all');
       return;
     }
 
+    box('<b>allow:</b> include<br><b>permitidas:</b> ' + (grant.products || []).join(', '));
     var allowed = new Set(grant.products || []);
     var hidden = [];
     cards.forEach(function(el){
       var id = el.getAttribute('data-product-id') || '';
       if(!allowed.has(id)){
         el.classList.add('hidden');
-        el.style.display='none';
+        el.style.display = 'none';
         hidden.push(id);
       } else {
         el.classList.remove('hidden');
-        el.style.display='';
+        el.style.display = '';
       }
     });
     showEmptyIfNeeded();
-    box('<b>allow:</b> include<br><b>permitidas:</b> '+(grant.products||[]).join(', '));
   }
 
   function main(){
-    if(document.readyState==='loading'){
+    if(document.readyState === 'loading'){
       document.addEventListener('DOMContentLoaded', main);
       return;
     }
+    
+    box('Inicializando ProductosGrid');
 
-    var grant = getGrantLS();
-    if(grant){ applyFilter(grant); return; }
-
-    if(!(getCookie('qrauth') || getCookie('inb_access'))){
-      // Sin cookie/token => mantenemos oculta la sección en landing pública
-      applyFilter(null);
+    // 2. Si no hay en localStorage pero hay cookies de sesión, consultar backend
+    if(getCookie('qrauth') || getCookie('inb_access')){
+      box('Cookies de sesión detectadas, consultando backend');
+      fetchGrantFromBackend().then(function(g){
+        applyFilter(g || null);
+      });
       return;
     }
-
-    fetchGrantFromBackend().then(function(g){
-      applyFilter(g || null);
-    });
+    
+    // 3. Sin cookies ni localStorage, ocultamos la sección (landing pública)
+    box('Sin cookies ni localStorage, ocultando sección');
+    applyFilter(null);
   }
 
   main();

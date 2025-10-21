@@ -7,7 +7,7 @@ const isActive = (href: string) => Astro.url.pathname === href;
 // NO dependemos de cookies; el client script usará isPrivateEnabled()
 const baseLinks: NavLink[] = [
   { href: '/', label: 'Home' },
-  // Productos se controlará por JS (no lo pintamos por SSR)
+  // Productos NO se incluye en los enlaces base (será añadido por JS solo si es privado)
   { href: '/valores', label: 'Valores' },
   { href: '/industrias', label: 'Industrias' },
   { href: '/historia', label: 'Historia' },
@@ -52,8 +52,8 @@ const otherLinks = baseLinks.filter(l => l.href !== '/');
         );
       })()}
 
-      <!-- “Productos” se inyectará por JS cuando el QR esté activo -->
-      <span id="priv-links" class="hidden"></span>
+      <!-- Contenedor para Productos (solo visible en modo privado) -->
+      <span id="products-link-container" class="hidden"></span>
 
       {otherLinks.map((l) => {
         const active = isActive(l.href);
@@ -85,7 +85,6 @@ const otherLinks = baseLinks.filter(l => l.href !== '/');
   </div>
 
   {transparent && (
-    // IIFE local para NO redeclarar const/funciones entre montajes/HMR
     <script is:inline>
       (function HeaderScrollInit(){
         var header = document.getElementById('siteHeader');
@@ -117,29 +116,81 @@ const otherLinks = baseLinks.filter(l => l.href !== '/');
     </script>
   )}
 
-  <!-- Habilitar “Productos” SOLO si el QR está activo (bandera local) -->
+  <!-- Script para mostrar/ocultar Productos solo en modo privado -->
   <script type="module">
-    import { isPrivateEnabled } from '../lib/privado.ts';
-    (function HeaderProductsInit(){
+    // Función para verificar si el modo privado está habilitado
+    function isPrivateEnabled() {
       try {
-        var nav = document.getElementById('main-nav');
-        var cta = document.getElementById('ctaHeader');
-
-        // Limpia si ya existe un link "Productos" previo (HMR/navegación)
-        Array.from(nav?.querySelectorAll('a') || []).forEach(function(a){
-          if ((a.textContent || '').trim().toLowerCase() === 'productos') a.remove();
-        });
-
-        if (isPrivateEnabled() || location.pathname === '/privado') {
-          var link = document.createElement('a');
-          link.href = '/productos'; // nunca /app/panel
-          link.textContent = 'Productos';
-          link.className = `${'text-slate-700 hover:text-slate-900'} ${location.pathname === '/productos' ? 'font-medium text-brand-700' : ''}`;
-
-          if (cta && nav) nav.insertBefore(link, cta);
-          else if (nav) nav.appendChild(link);
+        // Comprobar localStorage
+        if (localStorage.getItem('inbolsa:qr:ok') === '1') {
+          const exp = Number(localStorage.getItem('inbolsa:qr:exp') || '0');
+          if (!exp || Date.now() <= exp) {
+            return true;
+          }
         }
-      } catch(e) {}
-    })();
+        
+        // Comprobar cookies
+        const checkCookie = (name) => {
+          return document.cookie.split(';').some(c => c.trim().startsWith(name + '='));
+        };
+        
+        if (checkCookie('inbolsa:qr:ok') || 
+            checkCookie('qrauth') || 
+            checkCookie('inb_access') || 
+            checkCookie('priv_mode')) {
+          return true;
+        }
+        
+        return false;
+      } catch (e) {
+        console.error('Error al verificar acceso privado:', e);
+        return false;
+      }
+    }
+    
+    // Función para actualizar el enlace a Productos
+    function updateProductsLink() {
+      try {
+        const container = document.getElementById('products-link-container');
+        if (!container) return;
+        
+        container.innerHTML = '';
+        container.classList.add('hidden');
+        
+        // Solo mostrar el enlace si estamos en modo privado
+        if (isPrivateEnabled() || 
+            location.pathname === '/privado' || 
+            location.pathname === '/productos') {
+          
+          // Crear enlace a productos
+          const link = document.createElement('a');
+          link.href = '/productos';
+          link.textContent = 'Productos';
+          
+          // Estilos según si está activo o no
+          const isActive = location.pathname === '/productos';
+          link.className = `hover:text-brand-700 ${isActive ? 'text-brand-700 font-medium' : ''}`;
+          
+          // Mostrar el enlace
+          container.appendChild(link);
+          container.classList.remove('hidden');
+        }
+      } catch (e) {
+        console.error('Error al actualizar enlace a Productos:', e);
+      }
+    }
+    
+    // Ejecutar al cargar la página
+    updateProductsLink();
+    
+    // Verificar periódicamente si el estado privado ha cambiado
+    setInterval(updateProductsLink, 2000);
+    
+    // Escuchar eventos de storage para sincronizar entre pestañas
+    window.addEventListener('storage', (e) => {
+      if (e.key && (e.key.startsWith('inbolsa:') || e.key === 'qrauth' || e.key === 'inb_access')) {
+        updateProductsLink();
+      }
+    });
   </script>
 </header>

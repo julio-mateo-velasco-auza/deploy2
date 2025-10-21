@@ -4,15 +4,17 @@ const ENABLE_MINUTES = 120; // puedes ajustar esto
 ---
 <Base title="Validando acceso…">
   <main class="mx-auto max-w-xl px-4 py-16 text-center">
-    <h1 class="text-2xl font-semibold">Validando acceso…</h1>
-    <p class="mt-2 text-slate-500">Un momento por favor.</p>
+    <h1 class="text-2xl font-semibold" id="statusTitle">Validando acceso…</h1>
+    <p class="mt-2 text-slate-500" id="statusMsg">Un momento por favor.</p>
   </main>
 
-  <!-- Pasamos ENABLE_MINUTES al script vía data-m -->
+  <!-- Script que maneja activación y revocación de acceso privado -->
   <script type="module" data-m={ENABLE_MINUTES}>
-    import { enablePrivate, setGrantProducts } from '../lib/privado.ts';
+    import { enablePrivate, disablePrivate, setGrantProducts } from '../lib/privado.ts';
 
     const DEFAULT_MIN = Number(document.currentScript?.dataset.m || '120');
+    const statusTitle = document.getElementById('statusTitle');
+    const statusMsg = document.getElementById('statusMsg');
 
     function resolvePath(p) {
       try {
@@ -24,17 +26,44 @@ const ENABLE_MINUTES = 120; // puedes ajustar esto
 
     (async function () {
       try {
-        const u = new URL(location.href);
-        const m = Number(u.searchParams.get('m') || DEFAULT_MIN);
+        const url = new URL(location.href);
+        
+        // Comprobar si es una revocación
+        if (url.searchParams.get('revoke') === '1') {
+          if (statusTitle) statusTitle.textContent = 'Revocando acceso...';
+          if (statusMsg) statusMsg.textContent = 'Eliminando permisos de acceso privado.';
+          
+          // Revocar acceso
+          disablePrivate();
+          
+          // Esperar un momento y redirigir a home
+          await new Promise(r => setTimeout(r, 1000));
+          location.replace('/');
+          return;
+        }
+        
+        // Procesamiento normal para activar acceso
+        const m = Number(url.searchParams.get('m') || DEFAULT_MIN);
         enablePrivate(m);
 
-        const p = u.searchParams.get('p');
-        const ids = p ? p.split(',').map(s => s.trim()).filter(Boolean) : [];
-        setGrantProducts(ids);
-      } catch {}
+        // Guardar productos permitidos si vienen en URL
+        const p = url.searchParams.get('p');
+        if (p) {
+          const ids = p.split(',').map(s => s.trim()).filter(Boolean);
+          setGrantProducts(ids);
+        }
 
-      await new Promise(r => setTimeout(r, 40));
-      location.replace(resolvePath('/privado'));
+        if (statusTitle) statusTitle.textContent = 'Acceso activado';
+        if (statusMsg) statusMsg.textContent = 'Redirigiendo a contenido privado...';
+        
+        // Pequeña espera para asegurar que storage/cookie esté escrita
+        await new Promise(r => setTimeout(r, 100));
+        location.replace(resolvePath('/privado'));
+      } catch (e) {
+        console.error("Error procesando QR:", e);
+        if (statusTitle) statusTitle.textContent = 'Error de acceso';
+        if (statusMsg) statusMsg.textContent = 'No se pudo activar el acceso privado.';
+      }
     })();
   </script>
 </Base>

@@ -42,27 +42,73 @@ const PAGE_TITLE = 'Inbolsa — Zona privada';
   <Footer />
 
   <!-- GUARD cliente con base-aware home -->
-  <script type="module">
-    import { isPrivateEnabled } from '../lib/privado.ts';
+  <!-- Añadir este script en src/pages/privado.astro -->
+<script type="module">
+  import { enablePrivate, setGrantProducts } from '../lib/privado.ts';
+  import { api, BACK_BASE } from '../lib/api.ts';
 
-    (function () {
-      function homeHref() {
-        try {
-          const base = document.querySelector('base')?.getAttribute('href') || '/';
-          // si base es '/inbolsaNeo/', úsala como home
-          return base;
-        } catch { return '/'; }
-      }
-
-      try {
-        if (!isPrivateEnabled()) {
-          location.replace(homeHref()); // redirige al home correcto de tu subcarpeta
-          return;
+  (async function() {
+    try {
+      // 1. Procesar token si viene en URL
+      const params = new URLSearchParams(location.search);
+      const token = params.get('accessToken');
+      const productsParam = params.get('p');
+      
+      console.log("Token:", token ? "Presente" : "No presente");
+      console.log("Productos en URL:", productsParam);
+      
+      if (token) {
+        // Habilitar acceso privado
+        console.log("Habilitando acceso privado");
+        enablePrivate(120);
+        
+        // Si ya hay lista de productos en la URL, usarla directamente
+        if (productsParam) {
+          const productIds = productsParam.split(',').filter(Boolean);
+          console.log("Guardando productos desde URL:", productIds);
+          setGrantProducts(productIds);
+        } else {
+          // Si no, intentar obtener del backend
+          try {
+            console.log("Consultando payload del backend");
+            const payload = await api.accessPayload(token);
+            console.log("Payload recibido:", payload);
+            
+            if (payload?.qr?.payload) {
+              const p = payload.qr.payload;
+              // Si es de tipo productos y tiene lista de productos incluidos
+              if (p.section === 'productos') {
+                if (p.allow === 'include' && Array.isArray(p.products)) {
+                  console.log("Guardando productos del payload:", p.products);
+                  setGrantProducts(p.products);
+                }
+                // Si es allow:all, no necesitamos guardar productos específicos
+              }
+            }
+          } catch(error) {
+            console.error('Error al procesar token:', error);
+          }
         }
-      } catch {
-        location.replace(homeHref());
-        return;
+        
+        // Limpiar URL después de procesar
+        history.replaceState({}, document.title, '/privado');
       }
-    })();
-  </script>
+      
+      // Verificar que tengamos acceso privado, si no redirigir
+      const isPrivate = localStorage.getItem('inbolsa:qr:ok') === '1' ||
+                       document.cookie.split(';').some(c => c.trim().startsWith('inbolsa:qr:ok=')) ||
+                       document.cookie.split(';').some(c => c.trim().startsWith('qrauth=')) ||
+                       document.cookie.split(';').some(c => c.trim().startsWith('inb_access='));
+      
+      if (!isPrivate) {
+        console.log("No hay acceso privado, redirigiendo...");
+        location.href = '/';
+      } else {
+        console.log("Acceso privado verificado");
+      }
+    } catch (e) {
+      console.error('Error en inicialización privado:', e);
+    }
+  })();
+</script>
 </Base>

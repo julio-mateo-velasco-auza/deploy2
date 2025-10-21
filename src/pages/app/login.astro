@@ -27,25 +27,7 @@ import Base from '../../layouts/Base.astro';
   </main>
 
   <script type="module">
-    import { api, API_BASE } from '../../lib/api.ts';
-
-    // Manejo de reveal (si usabas animación)
-    document.querySelectorAll('.reveal')?.forEach((el) => {
-      el.style.opacity = '0';
-      el.style.transform = 'translateY(18px)';
-      el.style.transition = 'opacity .6s ease, transform .6s ease';
-      const io = new IntersectionObserver((entries) => {
-        entries.forEach((e) => {
-          if (e.isIntersecting) {
-            e.target.style.opacity = '1';
-            e.target.style.transform = 'translateY(0)';
-            io.unobserve(e.target);
-          }
-        });
-      }, { threshold: 0.15 });
-      io.observe(el);
-    });
-
+    // Script directo sin importar módulos
     const params = new URLSearchParams(location.search);
     const next = params.get('next') || '/app/panel';
 
@@ -54,30 +36,39 @@ import Base from '../../layouts/Base.astro';
 
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
-      err.classList.add('hidden'); err.textContent = '';
+      err.classList.add('hidden'); 
+      err.textContent = '';
 
-      const email = (document.getElementById('email')).value.trim().toLowerCase();
-      const password = (document.getElementById('password')).value;
+      const email = document.getElementById('email').value.trim().toLowerCase();
+      const password = document.getElementById('password').value;
 
       try {
-        await api.login(email, password);  // backend setea cookie de sesión
-        location.href = next;
+        const response = await fetch('http://localhost/inbolsa-api/api/auth/login', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ email, password }),
+          credentials: 'include'
+        });
+
+        const data = await response.json();
+        
+        if (response.ok && data.ok) {
+          location.href = next;
+        } else {
+          err.textContent = data.error || 'Error de autenticación';
+          err.classList.remove('hidden');
+        }
       } catch (ex) {
+        console.error('Error en login:', ex);
         err.textContent = ex?.message || 'Error de autenticación';
         err.classList.remove('hidden');
       }
     });
 
-    // (Opcional) Validación de acceso vía token guardado — corregida
-    // Si quieres mostrar/ocultar enlaces según un token QR previo:
-    const tokenKey = 'inb_access_token';
-    const saved = localStorage.getItem(tokenKey);
-    if (saved) {
-      try {
-        const r = await fetch(`${API_BASE}/access/payload?token=${encodeURIComponent(saved)}`, { credentials: 'include' });
-        const j = await r.json().catch(() => ({}));
-        if (!j?.ok) localStorage.removeItem(tokenKey);
-      } catch { /* silencioso */ }
-    }
+    // Prellenado para desarrollo
+    document.getElementById('email').value = 'admin@inbolsa.com';
+    document.getElementById('password').value = '123456';
   </script>
 </Base>
