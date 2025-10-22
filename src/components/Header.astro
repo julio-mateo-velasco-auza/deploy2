@@ -13,7 +13,17 @@ const baseLinks: NavLink[] = [
   { href: '/historia', label: 'Historia' },
   { href: '/contacto', label: 'Contacto' },
 ];
-const otherLinks = baseLinks.filter(l => l.href !== '/');
+
+// Quitamos Valores e Historia del render principal (van al dropdown)
+const otherLinks = baseLinks.filter(
+  (l) => l.href !== '/' && l.href !== '/valores' && l.href !== '/historia'
+);
+
+// Links del dropdown
+const dropdownLinks: NavLink[] = [
+  { href: '/valores', label: 'Valores' },
+  { href: '/historia', label: 'Historia' },
+];
 ---
 
 <header
@@ -54,6 +64,74 @@ const otherLinks = baseLinks.filter(l => l.href !== '/');
 
       <!-- Contenedor para Productos (solo visible en modo privado) -->
       <span id="products-link-container" class="hidden"></span>
+
+      <!-- Dropdown “Nosotros” — diseño glass/pill, clic estable -->
+      {(() => {
+        const anyActive = dropdownLinks.some(d => isActive(d.href));
+
+        const triggerBase = transparent
+          ? `relative pb-1 hover:opacity-90 ${anyActive ? 'after:absolute after:left-0 after:right-0 after:-bottom-0.5 after:h-0.5 after:bg-white/70' : ''}`
+          : `hover:text-brand-700 ${anyActive ? 'text-brand-700 font-medium' : ''}`;
+
+        const panelBase = transparent
+          ? 'bg-white/75 text-slate-800 border-white/40 backdrop-blur-xl'
+          : 'bg-white text-slate-800 border-slate-200';
+
+        return (
+          <div id="nosotros-wrap" class="relative">
+            <button
+              id="nosotros-btn"
+              type="button"
+              aria-haspopup="menu"
+              aria-expanded={anyActive ? 'true' : 'false'}
+              class={`${triggerBase} inline-flex items-center gap-2 select-none rounded-xl px-2 py-1
+                      ${transparent ? 'hover:bg-white/10' : 'hover:bg-slate-50'}`}
+            >
+              <span>Nosotros</span>
+              <svg class={`h-4 w-4 transition-transform duration-200 ${anyActive ? 'rotate-180' : 'rotate-0'}`} viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 10.94l3.71-3.71a.75.75 0 111.08 1.04l-4.25 4.25a.75.75 0 01-1.08 0L5.21 8.27a.75.75 0 01.02-1.06z" clip-rule="evenodd" />
+              </svg>
+            </button>
+
+            <!-- Panel glass con caret -->
+            <div
+              id="nosotros-menu"
+              role="menu"
+              aria-label="Submenú Nosotros"
+              class={`absolute left-0 mt-3 w-60 rounded-2xl border shadow-xl z-50
+                      origin-top transition-all duration-150
+                      invisible opacity-0 scale-95 pointer-events-none
+                      ${panelBase}`}
+            >
+              <!-- caret -->
+              <div class={`absolute -top-2 left-6 h-4 w-4 rotate-45 ${transparent ? 'bg-white/75 border-l border-t border-white/40' : 'bg-white border-l border-t border-slate-200'}`}></div>
+
+              <div class="py-2">
+                {dropdownLinks.map((dl) => {
+                  const active = isActive(dl.href);
+                  return (
+                    <a
+                      role="menuitem"
+                      href={dl.href}
+                      class={`group relative mx-2 my-1 flex items-center gap-3 rounded-xl px-4 py-2.5
+                              transition
+                              ${transparent
+                                ? `hover:bg-white/70 ${active ? 'font-medium' : ''}`
+                                : `hover:bg-slate-50 ${active ? 'text-brand-700 font-medium' : ''}`
+                              }`}
+                    >
+                      <!-- indicador lateral -->
+                      <span class={`absolute left-0 top-1/2 -translate-y-1/2 h-6 w-1 rounded-r-full
+                                    ${active ? 'bg-brand-600' : 'bg-transparent group-hover:bg-brand-500/70'}`}></span>
+                      <span class="text-[15px] leading-none">{dl.label}</span>
+                    </a>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
+        );
+      })()}
 
       {otherLinks.map((l) => {
         const active = isActive(l.href);
@@ -118,79 +196,82 @@ const otherLinks = baseLinks.filter(l => l.href !== '/');
 
   <!-- Script para mostrar/ocultar Productos solo en modo privado -->
   <script type="module">
-    // Función para verificar si el modo privado está habilitado
     function isPrivateEnabled() {
       try {
-        // Comprobar localStorage
         if (localStorage.getItem('inbolsa:qr:ok') === '1') {
           const exp = Number(localStorage.getItem('inbolsa:qr:exp') || '0');
-          if (!exp || Date.now() <= exp) {
-            return true;
-          }
+          if (!exp || Date.now() <= exp) { return true; }
         }
-        
-        // Comprobar cookies
-        const checkCookie = (name) => {
-          return document.cookie.split(';').some(c => c.trim().startsWith(name + '='));
-        };
-        
-        if (checkCookie('inbolsa:qr:ok') || 
-            checkCookie('qrauth') || 
-            checkCookie('inb_access') || 
-            checkCookie('priv_mode')) {
+        const checkCookie = (name) => document.cookie.split(';').some(c => c.trim().startsWith(name + '='));
+        if (checkCookie('inbolsa:qr:ok') || checkCookie('qrauth') || checkCookie('inb_access') || checkCookie('priv_mode')) {
           return true;
         }
-        
         return false;
-      } catch (e) {
-        console.error('Error al verificar acceso privado:', e);
-        return false;
-      }
+      } catch (e) { return false; }
     }
-    
-    // Función para actualizar el enlace a Productos
+
     function updateProductsLink() {
       try {
         const container = document.getElementById('products-link-container');
         if (!container) return;
-        
-        container.innerHTML = '';
-        container.classList.add('hidden');
-        
-        // Solo mostrar el enlace si estamos en modo privado
-        if (isPrivateEnabled() || 
-            location.pathname === '/privado' || 
-            location.pathname === '/productos') {
-          
-          // Crear enlace a productos
+        container.innerHTML = ''; container.classList.add('hidden');
+
+        if (isPrivateEnabled() || location.pathname === '/privado' || location.pathname === '/productos') {
           const link = document.createElement('a');
           link.href = '/productos';
           link.textContent = 'Productos';
-          
-          // Estilos según si está activo o no
-          const isActive = location.pathname === '/productos';
-          link.className = `hover:text-brand-700 ${isActive ? 'text-brand-700 font-medium' : ''}`;
-          
-          // Mostrar el enlace
+          const isAct = location.pathname === '/productos';
+          link.className = `hover:text-brand-700 ${isAct ? 'text-brand-700 font-medium' : ''}`;
           container.appendChild(link);
           container.classList.remove('hidden');
         }
-      } catch (e) {
-        console.error('Error al actualizar enlace a Productos:', e);
-      }
+      } catch {}
     }
-    
-    // Ejecutar al cargar la página
     updateProductsLink();
-    
-    // Verificar periódicamente si el estado privado ha cambiado
     setInterval(updateProductsLink, 2000);
-    
-    // Escuchar eventos de storage para sincronizar entre pestañas
     window.addEventListener('storage', (e) => {
-      if (e.key && (e.key.startsWith('inbolsa:') || e.key === 'qrauth' || e.key === 'inb_access')) {
-        updateProductsLink();
-      }
+      if (e.key && (e.key.startsWith('inbolsa:') || e.key === 'qrauth' || e.key === 'inb_access')) updateProductsLink();
     });
+  </script>
+
+  <!-- Script del dropdown “Nosotros” (click, fuera/ESC, transiciones) -->
+  <script is:inline>
+    (function(){
+      var wrap = document.getElementById('nosotros-wrap');
+      var btn  = document.getElementById('nosotros-btn');
+      var menu = document.getElementById('nosotros-menu');
+      if (!wrap || !btn || !menu) return;
+
+      var open = false;
+      function apply() {
+        if (open) {
+          menu.classList.remove('invisible','opacity-0','scale-95','pointer-events-none');
+          menu.classList.add('visible','opacity-100','scale-100','pointer-events-auto');
+          btn.setAttribute('aria-expanded','true');
+        } else {
+          menu.classList.add('invisible','opacity-0','scale-95','pointer-events-none');
+          menu.classList.remove('visible','opacity-100','scale-100','pointer-events-auto');
+          btn.setAttribute('aria-expanded','false');
+        }
+      }
+      function toggle(){ open = !open; apply(); }
+      function close(){ if (!open) return; open = false; apply(); }
+
+      btn.addEventListener('click', function(e){
+        e.stopPropagation();
+        toggle();
+      });
+
+      document.addEventListener('click', function(e){
+        if (!open) return;
+        if (!wrap.contains(e.target)) close();
+      });
+
+      document.addEventListener('keydown', function(e){
+        if (e.key === 'Escape') close();
+      });
+
+      apply();
+    })();
   </script>
 </header>

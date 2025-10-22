@@ -3,287 +3,283 @@ import Base from '../layouts/Base.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 
-const HERO_SLIDES = [
-  'public/img/landing10.jpg',
-  'public/img/landing11.jpg',
-  'public/img/landing14.jpg',
-];
-
-type Item = {
-  year: string;
-  title: string;
-  body: string;
-  imgs: string[];
-  captions?: string[];
-};
-
-const TIMELINE: Item[] = [
+const milestones = [
   {
     year: '1974',
-    title: 'Fundado en 1974',
-    body:
-      'Desde 1974 INBOLSA Ltda. trabaja de forma continua, fabricando envases tejidos de polipropileno de alta calidad, resistencia y precios competitivos.',
-    imgs: ['public/img/landing16.jpg', 'public/img/landing20.jpg'],
-    captions: ['Inicios de la línea de producción (archivo histórico)', 'Producción inicial · archivo'],
+    title: 'Fundación de Inbolsa',
+    description: 'Iniciamos operaciones fabricando envases tejidos de polipropileno de alta calidad.',
+    imageLeft: '/img/landing16.jpg',
+    imageRight: '/img/landing20.jpg'
   },
   {
     year: '1992',
-    title: 'Actualización de infraestructura 1992',
-    body:
-      'En 1992 tomamos un paso adelante en tecnología y maquinaria, transformándonos en una compañía competitiva nacional e internacionalmente, incrementando nuestra capacidad y elevando nuestros estándares.',
-    imgs: ['public/img/landing19.JPG', 'public/img/landing12.jpg'],
-    captions: ['Modernización de equipos y procesos', 'Estandarización y control de calidad'],
+    title: 'Modernización y expansión',
+    description: 'Actualización significativa de infraestructura y maquinaria.',
+    imageLeft: '/img/landing19.JPG',
+    imageRight: '/img/landing12.jpg'
+  },
+  {
+    year: '2000',
+    title: 'Crecimiento sostenido',
+    description: 'Consolidación en el mercado boliviano con nuevos clientes y productos.',
+    imageLeft: '/img/landing12.jpg',
+    imageRight: '/img/landing18.jpg'
   },
   {
     year: '2016',
-    title: 'Certificación OEA 2016',
-    body:
-      'Primera certificación de Operador Económico Autorizado (OEA), tras una auditoría que acredita el cumplimiento de requisitos y medidas de seguridad en la cadena logística internacional.',
-    imgs: ['public/img/landing12.jpg'],
-    captions: ['Cumplimiento y seguridad en toda la cadena'],
+    title: 'Certificación OEA',
+    description: 'Primera certificación como Operador Económico Autorizado.',
+    imageLeft: '/img/landing18.jpg',
+    imageRight: '/img/landing21.jpg'
   },
   {
     year: '2017',
-    title: 'Planta dedicada a Big Bag 2017',
-    body:
-      'Nuestra segunda planta en Alto Ochiay se dedica exclusivamente a la producción de Big Bag. Producimos cada componente en casa: cinta, eslingas y armado; un producto 100% boliviano.',
-    imgs: ['public/img/landing18.jpg', 'public/img/landing21.jpg'],
-    captions: ['Planta Big Bag · producción end-to-end', 'Eslingas y armado en sitio'],
+    title: 'Planta Big Bag',
+    description: 'Inauguración de planta dedicada exclusivamente a Big Bags.',
+    imageLeft: '/img/landing21.jpg',
+    imageRight: '/img/landing14.jpg'
   },
   {
     year: '2024',
-    title: 'Nueva planta moderna en Warnes 2024',
-    body:
-      'Nuestro paso más grande desde 1992: inauguramos una planta moderna en Warnes, Santa Cruz, impulsando la capacidad, la creación de empleo y nuevas relaciones con clientes.',
-    imgs: ['public/img/landing14.jpg', 'public/img/landing13.jpg'],
-    captions: ['Planta Warnes · capacidad y crecimiento', 'Líneas modernas y mayor eficiencia'],
+    title: 'Nueva planta en Warnes',
+    description: 'Planta moderna en Warnes, Santa Cruz.',
+    imageLeft: '/img/landing14.jpg',
+    imageRight: '/img/landing13.jpg'
   },
   {
     year: '2025',
-    title: 'Línea de Bolsas Block 2025',
-    body:
-      'Presentamos bolsas con fondo cuadrado (Block Bottom). Tecnología de punta con acabado fino y moderno, ideal para múltiples industrias. En cemento: más resistentes, durables y económicas.',
-    imgs: ['public/img/landing25.jpg', 'public/img/landing24.JPG'],
-    captions: ['Nueva línea Block Bottom', 'Versatilidad y acabado superior'],
-  },
+    title: 'Innovación Block Bottom',
+    description: 'Lanzamiento de bolsas con fondo cuadrado.',
+    imageLeft: '/img/landing25.jpg',
+    imageRight: '/img/landing24.JPG'
+  }
 ];
 ---
 
+<style>
+  .timeline-slider {
+    scroll-behavior: smooth;
+    scrollbar-width: none;
+  }
+  .timeline-slider::-webkit-scrollbar {
+    display: none;
+  }
+
+  .timeline-dot {
+    transition: all 0.3s ease;
+  }
+
+  .timeline-dot.active {
+    background-color: #3E7DD2;
+    transform: scale(1.3);
+  }
+</style>
+
 <Base title="Historia — Inbolsa">
-  <Header transparent />
+  <Header />
 
-  <main class="bg-white text-slate-800">
-
-    <!-- HERO rotativo -->
-    <section
-      id="heroRot"
-      class="relative h-[58vh] min-h-[440px] w-full overflow-hidden isolate"
-      style={`background-image:url('${HERO_SLIDES[0]}'); background-size:cover; background-position:center;`}
-      aria-label="Historia Inbolsa"
-    >
-      <div class="absolute inset-0 bg-slate-900/55"></div>
-
-      <div class="relative z-10 mx-auto max-w-7xl px-4 h-full flex flex-col items-start justify-center text-white">
-        <span class="text-sm md:text-base text-brand-200/90">Desde 1974</span>
-        <h1 class="mt-2 text-4xl md:text-6xl font-semibold tracking-tight drop-shadow">
-          Nuestra Historia
-        </h1>
-        <p class="mt-3 max-w-3xl text-white/90">
-          Tejiendo productos de alta calidad, con innovación, excelencia operativa y relaciones de largo plazo.
+  <main class="bg-slate-900">
+    <!-- Hero Section -->
+    <section class="py-20 text-center text-white">
+      <div class="mx-auto max-w-7xl px-4">
+        <p class="text-brand-400 font-semibold mb-2 uppercase tracking-wide text-sm">Nuestra trayectoria</p>
+        <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold mb-6">Historia</h1>
+        <p class="text-xl text-slate-300 max-w-3xl mx-auto">
+          Más de 50 años de excelencia en la industria del polipropileno.
         </p>
-        <div class="mt-6 flex gap-3">
-          <a href="/valores" class="rounded-xl bg-brand-600 px-5 py-3 text-white hover:bg-brand-700 transition">
-            Conócenos
+      </div>
+    </section>
+
+    <!-- Timeline Slider Section -->
+    <section class="pb-20">
+      <div class="mx-auto max-w-[1600px] px-4">
+        <!-- Contenedor del slide actual -->
+        <div id="timeline-slider" class="relative">
+          <!-- Slide Container -->
+          <div class="bg-slate-800 rounded-3xl overflow-hidden shadow-2xl">
+            <div class="grid md:grid-cols-2 gap-0 items-center min-h-[500px]">
+              <!-- Imagen Izquierda -->
+              <div class="h-full">
+                <img 
+                  id="slide-img-left" 
+                  src={milestones[0].imageLeft}
+                  alt="Historia" 
+                  class="w-full h-full object-cover min-h-[400px] md:min-h-[500px]"
+                />
+              </div>
+
+              <!-- Contenido Central -->
+              <div class="relative px-8 md:px-16 py-12 text-white">
+                <!-- Año grande -->
+                <div class="flex items-center gap-4 mb-6">
+                  <h2 id="slide-year" class="text-6xl md:text-8xl font-bold text-brand-400">
+                    {milestones[0].year}
+                  </h2>
+                  <svg class="w-16 h-16 text-brand-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
+                  </svg>
+                </div>
+
+                <!-- Título -->
+                <h3 id="slide-title" class="text-3xl md:text-4xl font-bold mb-4">
+                  {milestones[0].title}
+                </h3>
+
+                <!-- Descripción -->
+                <p id="slide-description" class="text-lg text-slate-300 leading-relaxed">
+                  {milestones[0].description}
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Controles de navegación -->
+          <div class="flex justify-between items-center mt-8">
+            <button 
+              id="prev-btn"
+              class="p-3 rounded-full bg-slate-700 text-white hover:bg-brand-600 transition disabled:opacity-30 disabled:cursor-not-allowed"
+              aria-label="Anterior"
+            >
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+              </svg>
+            </button>
+
+            <button 
+              id="next-btn"
+              class="p-3 rounded-full bg-slate-700 text-white hover:bg-brand-600 transition"
+              aria-label="Siguiente"
+            >
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- Timeline Navigation (años en la parte inferior) -->
+        <div class="mt-12 overflow-x-auto">
+          <div class="flex items-center justify-between min-w-max mx-auto px-4 gap-4">
+            {milestones.map((milestone, index) => (
+              <div class="flex items-center">
+                <button 
+                  class="timeline-year-btn flex flex-col items-center group"
+                  data-index={index}
+                >
+                  <span class="text-white text-lg font-bold mb-3 opacity-50 group-hover:opacity-100 transition">
+                    {milestone.year}
+                  </span>
+                  <div class="timeline-dot w-4 h-4 rounded-full bg-slate-600 group-hover:bg-brand-500"></div>
+                </button>
+                {index < milestones.length - 1 && (
+                  <div class="w-24 md:w-32 h-0.5 bg-slate-700 mx-2"></div>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="bg-slate-800 py-16">
+      <div class="mx-auto max-w-4xl px-4 text-center text-white">
+        <h2 class="text-3xl md:text-4xl font-bold mb-4">
+          Construyendo el futuro juntos
+        </h2>
+        <p class="text-lg text-slate-300 mb-8">
+          Conoce más sobre nuestros valores y compromisos.
+        </p>
+        <div class="flex flex-wrap justify-center gap-4">
+          <a href="/valores" class="px-8 py-3 bg-brand-600 text-white rounded-xl font-semibold hover:bg-brand-700 transition shadow-lg">
+            Nuestros Valores
           </a>
-          <a href="/contacto" class="rounded-xl border border-white/30 px-5 py-3 hover:bg-white/10 transition">
+          <a href="/contacto" class="px-8 py-3 border-2 border-slate-600 text-white rounded-xl font-semibold hover:border-brand-600 hover:bg-slate-700 transition">
             Contáctanos
           </a>
         </div>
       </div>
     </section>
-
-    <!-- TIMELINE + preview -->
-    <section class="py-14 md:py-18">
-      <div class="mx-auto max-w-7xl px-4">
-        <header class="mb-8 md:mb-12">
-          <h2 class="text-2xl md:text-3xl font-semibold tracking-tight">Nuestra historia en hitos</h2>
-        </header>
-
-        <div class="grid md:grid-cols-12 gap-8 md:gap-10">
-          <!-- Lista -->
-          <div class="md:col-span-7 relative pl-6 md:pl-8">
-            <div class="absolute left-3 md:left-4 top-0 bottom-0 w-px bg-slate-200"></div>
-
-            <ul class="space-y-8 md:space-y-10">
-              {TIMELINE.map((it) => (
-                <li
-                  class="group relative"
-                  data-tl-item
-                  data-imgs={JSON.stringify(it.imgs)}
-                  data-caps={JSON.stringify(it.captions || [])}
-                >
-                  <div class="absolute -left-[6px] md:-left-[7px] mt-2 h-3.5 w-3.5 rounded-full ring-4 ring-white bg-brand-600 shadow"></div>
-
-                  <article class="rounded-2xl border border-slate-200/80 bg-white/95 shadow-sm hover:shadow-md transition p-5 md:p-6">
-                    <div class="text-brand-700 font-medium">{it.year}</div>
-                    <h3 class="mt-1 text-xl md:text-2xl font-semibold tracking-tight">{it.title}</h3>
-                    <p class="mt-2 text-slate-700 leading-relaxed">{it.body}</p>
-
-                    <!-- Móvil: imagen dentro del item -->
-                    <details class="mt-4 md:hidden rounded-xl border bg-white/90">
-                      <summary class="cursor-pointer select-none list-none px-4 py-3 text-sm font-medium flex items-center gap-2">
-                        <span class="i-lucide-image h-4 w-4"></span> Ver imagen
-                      </summary>
-                      <div class="p-3 pt-0 space-y-3">
-                        {it.imgs.map((src, k) => (
-                          <figure class="overflow-hidden rounded-xl border shadow-sm">
-                            <img src={src} alt={(it.captions?.[k] || it.title)} class="w-full h-56 object-cover" loading="lazy" />
-                            {(it.captions?.[k] || it.title) && (
-                              <figcaption class="px-3 py-2 text-xs text-slate-600 bg-slate-50">
-                                {it.captions?.[k] || it.title}
-                              </figcaption>
-                            )}
-                          </figure>
-                        ))}
-                      </div>
-                    </details>
-                  </article>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          <!-- Panel sticky (desktop) -->
-          <aside class="md:col-span-5 hidden md:block">
-            <div class="sticky top-28">
-              <figure class="relative group rounded-3xl overflow-hidden border border-slate-200 shadow-xl">
-                <img
-                  id="tlPrevImg"
-                  src={TIMELINE[0].imgs[0]}
-                  alt={(TIMELINE[0].captions?.[0] || TIMELINE[0].title)}
-                  class="w-full h-[340px] lg:h-[420px] object-cover transition-transform duration-500 group-hover:scale-[1.02]"
-                />
-                <button
-                  id="tlPrevPrev"
-                  class="absolute left-2 top-1/2 -translate-y-1/2 rounded-full bg-black/35 text-white w-9 h-9 grid place-items-center opacity-0 group-hover:opacity-100 transition"
-                  aria-label="Anterior"
-                >‹</button>
-                <button
-                  id="tlPrevNext"
-                  class="absolute right-2 top-1/2 -translate-y-1/2 rounded-full bg-black/35 text-white w-9 h-9 grid place-items-center opacity-0 group-hover:opacity-100 transition"
-                  aria-label="Siguiente"
-                >›</button>
-                <figcaption id="tlPrevCap" class="px-4 py-3 text-xs text-slate-600 bg-white/85 backdrop-blur">
-                  {TIMELINE[0].captions?.[0] || TIMELINE[0].title}
-                </figcaption>
-              </figure>
-            </div>
-          </aside>
-        </div>
-      </div>
-    </section>
-
   </main>
 
   <Footer />
 
-  <!-- Datos seguros para JS (evitamos ${} dentro del script) -->
-  <script id="heroSlidesData" type="application/json">
-    {JSON.stringify(HERO_SLIDES)}
-  </script>
-
-  <!-- SCRIPT: sin interpolaciones -->
-  <script type="module" is:inline>
-    // HERO rotation
-    const hero = document.getElementById('heroRot');
-    const heroDataEl = document.getElementById('heroSlidesData');
-    let heroSlides = [];
-    try {
-      heroSlides = JSON.parse(heroDataEl?.textContent || '[]');
-    } catch (e) { heroSlides = []; }
-
-    if (hero && heroSlides.length) {
-      let i = 0;
-      setInterval(() => {
-        i = (i + 1) % heroSlides.length;
-        const url = heroSlides[i];
-        hero.animate([{ opacity: 1 }, { opacity: 0.25 }, { opacity: 1 }], { duration: 600, easing: 'ease', fill: 'both' });
-        // sin template literals para evitar confusiones con ASTRO
-        hero.style.backgroundImage = 'url(' + url + ')';
-      }, 6000);
-    }
-
-    // Timeline preview sticky
-    const img = document.getElementById('tlPrevImg');
-    const cap = document.getElementById('tlPrevCap');
-    const prevBtn = document.getElementById('tlPrevPrev');
-    const nextBtn = document.getElementById('tlPrevNext');
-
-    let currentImages = [];
-    let currentCaptions = [];
+  <script define:vars={{ milestones }}>
     let currentIndex = 0;
+    const totalSlides = milestones.length;
 
-    function renderPreview() {
-      if (!img || !currentImages.length) return;
-      const src = currentImages[currentIndex] || currentImages[0];
-      const text = currentCaptions[currentIndex] || currentCaptions[0] || '';
-      img.animate([{ opacity: 0.2 }, { opacity: 1 }], { duration: 200, easing: 'ease-out', fill: 'both' });
-      img.setAttribute('src', src);
-      if (cap) cap.textContent = text;
+    const slideImgLeft = document.getElementById('slide-img-left');
+    const slideYear = document.getElementById('slide-year');
+    const slideTitle = document.getElementById('slide-title');
+    const slideDescription = document.getElementById('slide-description');
+    const prevBtn = document.getElementById('prev-btn');
+    const nextBtn = document.getElementById('next-btn');
+    const dots = document.querySelectorAll('.timeline-dot');
+    const yearButtons = document.querySelectorAll('.timeline-year-btn');
 
-      const many = currentImages.length > 1;
-      if (prevBtn) prevBtn.style.display = many ? 'grid' : 'none';
-      if (nextBtn) nextBtn.style.display = many ? 'grid' : 'none';
+    function updateSlide(index) {
+      const milestone = milestones[index];
+      
+      // Actualizar contenido con fade
+      slideImgLeft.style.opacity = '0';
+      slideYear.style.opacity = '0';
+      slideTitle.style.opacity = '0';
+      slideDescription.style.opacity = '0';
+
+      setTimeout(() => {
+        slideImgLeft.src = milestone.imageLeft;
+        slideYear.textContent = milestone.year;
+        slideTitle.textContent = milestone.title;
+        slideDescription.textContent = milestone.description;
+
+        slideImgLeft.style.opacity = '1';
+        slideYear.style.opacity = '1';
+        slideTitle.style.opacity = '1';
+        slideDescription.style.opacity = '1';
+      }, 300);
+
+      // Actualizar dots
+      dots.forEach((dot, i) => {
+        if (i === index) {
+          dot.classList.add('active');
+        } else {
+          dot.classList.remove('active');
+        }
+      });
+
+      // Actualizar botones
+      prevBtn.disabled = index === 0;
+      nextBtn.disabled = index === totalSlides - 1;
+
+      currentIndex = index;
     }
 
-    function setFrom(el) {
-      try {
-        currentImages = JSON.parse(el.getAttribute('data-imgs') || '[]') || [];
-        currentCaptions = JSON.parse(el.getAttribute('data-caps') || '[]') || [];
-      } catch (e) {
-        currentImages = [];
-        currentCaptions = [];
+    // Transición suave
+    slideImgLeft.style.transition = 'opacity 0.3s ease';
+    slideYear.style.transition = 'opacity 0.3s ease';
+    slideTitle.style.transition = 'opacity 0.3s ease';
+    slideDescription.style.transition = 'opacity 0.3s ease';
+
+    prevBtn.addEventListener('click', () => {
+      if (currentIndex > 0) {
+        updateSlide(currentIndex - 1);
       }
-      currentIndex = 0;
-      renderPreview();
-    }
-
-    // Inicial: primer item
-    const firstItem = document.querySelector('[data-tl-item]');
-    if (firstItem) setFrom(firstItem);
-
-    // Eventos hover/focus/touch
-    document.querySelectorAll('[data-tl-item]').forEach((el) => {
-      el.setAttribute('tabindex', '0');
-      const activate = () => setFrom(el);
-      el.addEventListener('mouseenter', activate);
-      el.addEventListener('focus', activate);
-      el.addEventListener('touchstart', activate, { passive: true });
     });
 
-    // IntersectionObserver para cambiar al item visible
-    const io = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting && entry.intersectionRatio > 0.35) {
-            setFrom(entry.target);
-          }
-        });
-      },
-      { root: null, rootMargin: '0px 0px -30% 0px', threshold: [0, 0.35, 0.6, 1] }
-    );
-    document.querySelectorAll('[data-tl-item]').forEach((el) => io.observe(el));
+    nextBtn.addEventListener('click', () => {
+      if (currentIndex < totalSlides - 1) {
+        updateSlide(currentIndex + 1);
+      }
+    });
 
-    // Navegación cuando hay 2 imágenes
-    prevBtn?.addEventListener('click', () => {
-      if (currentImages.length <= 1) return;
-      currentIndex = (currentIndex - 1 + currentImages.length) % currentImages.length;
-      renderPreview();
+    yearButtons.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const index = parseInt(btn.dataset.index);
+        updateSlide(index);
+      });
     });
-    nextBtn?.addEventListener('click', () => {
-      if (currentImages.length <= 1) return;
-      currentIndex = (currentIndex + 1) % currentImages.length;
-      renderPreview();
-    });
+
+    // Inicializar primer dot
+    updateSlide(0);
   </script>
 </Base>
