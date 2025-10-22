@@ -14,10 +14,8 @@ export function enablePrivate(minutes = 120) {
     localStorage.setItem(PRIVATE_FLAG_KEY, '1');
     const exp = Date.now() + minutes * 60_000;
     localStorage.setItem(PRIVATE_EXPIRES_KEY, String(exp));
-    // Cookie local para fallback UI
     document.cookie = `${PRIVATE_FLAG_KEY}=1; path=/; SameSite=Lax; max-age=${minutes * 60}`;
     
-    // Emitir evento personalizado para sincronizar componentes
     window.dispatchEvent(new CustomEvent('inbolsa:private:change', { 
       detail: { enabled: true } 
     }));
@@ -29,23 +27,19 @@ export function enablePrivate(minutes = 120) {
 export function disablePrivate() {
   try {
     console.log("Deshabilitando modo privado");
-    // Eliminar de localStorage
     localStorage.removeItem(PRIVATE_FLAG_KEY);
     localStorage.removeItem(PRIVATE_EXPIRES_KEY);
     localStorage.removeItem(PRIVATE_PRODUCTS_KEY);
     
-    // Eliminar cookies
     document.cookie = `${PRIVATE_FLAG_KEY}=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT`;
     document.cookie = `qrauth=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT`;
     document.cookie = `inb_access=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT`;
     document.cookie = `priv_mode=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT`;
     
-    // Emitir evento personalizado para sincronizar componentes
     window.dispatchEvent(new CustomEvent('inbolsa:private:change', { 
       detail: { enabled: false } 
     }));
     
-    // Si estamos en página privada, redirigir a home
     if (location.pathname === '/privado' || location.pathname === '/productos') {
       location.href = '/';
     }
@@ -56,27 +50,23 @@ export function disablePrivate() {
 
 export function isPrivateEnabled(): boolean {
   try {
-    // 1) localStorage
     if (localStorage.getItem(PRIVATE_FLAG_KEY) === '1') {
       const exp = Number(localStorage.getItem(PRIVATE_EXPIRES_KEY) || '0');
       if (!exp || Date.now() <= exp) {
         return true;
       }
-      disablePrivate(); // expirado
+      disablePrivate();
       return false;
     }
-    // 2) cookies locales
     if (hasCookie(PRIVATE_FLAG_KEY)) {
       return true;
     }
-    // 3) compat: cookies antiguas del back
     if (hasCookie('qrauth') || hasCookie('inb_access') || hasCookie('priv_mode')) {
       return true;
     }
     return false;
   } catch (e) {
     console.error("Error verificando privado:", e);
-    // Último recurso, cookies
     return hasCookie(PRIVATE_FLAG_KEY) || hasCookie('qrauth') || hasCookie('inb_access') || hasCookie('priv_mode');
   }
 }
@@ -87,7 +77,6 @@ export function setGrantProducts(ids: string[]) {
     const arr = Array.isArray(ids) ? ids.filter(Boolean) : [];
     localStorage.setItem(PRIVATE_PRODUCTS_KEY, JSON.stringify(arr));
     
-    // Evento para notificar cambios
     window.dispatchEvent(new CustomEvent('inbolsa:products:change', { 
       detail: { products: arr } 
     }));
@@ -98,20 +87,17 @@ export function setGrantProducts(ids: string[]) {
 
 export function getGrantProducts(): string[] {
   try {
-    // Primero intentar desde localStorage
     const raw = localStorage.getItem(PRIVATE_PRODUCTS_KEY);
     if (raw) {
       const arr = JSON.parse(raw);
       return Array.isArray(arr) ? arr : [];
     }
     
-    // Si no hay en localStorage, intentar desde URL params
     try {
       const params = new URLSearchParams(window.location.search);
       const pParam = params.get('p');
       if (pParam) {
         const products = pParam.split(',').filter(Boolean);
-        // Guardar para futuras referencias
         setGrantProducts(products);
         return products;
       }
@@ -124,28 +110,38 @@ export function getGrantProducts(): string[] {
   }
 }
 
-// Función para verificar periódicamente si el token sigue siendo válido
+// Función para verificar si el acceso sigue siendo válido
+export async function checkAccessValid(): Promise<boolean> {
+  try {
+    const response = await fetch('http://localhost/inbolsa-api/api/access/payload', {
+      credentials: 'include'
+    });
+    
+    if (!response.ok) {
+      return false;
+    }
+    
+    const data = await response.json();
+    return data.ok === true;
+  } catch (e) {
+    console.error("Error verificando acceso:", e);
+    return false;
+  }
+}
+
+// Función para iniciar verificación periódica
 export function startRevocationCheck() {
-  // Verificar cada 30 segundos
-  setInterval(() => {
-    // Solo verificar si hay un token activo
+  setInterval(async () => {
     if (!isPrivateEnabled()) return;
     
     try {
-      console.log("Verificando validez del token...");
-      // Esto usa las cookies existentes automáticamente
-      fetch('http://localhost/inbolsa-api/api/access/payload', {
-        credentials: 'include'
-      })
-      .then(response => {
-        if (!response.ok) {
-          console.log("Token revocado o inválido, deshabilitando acceso");
-          disablePrivate();
-        }
-      })
-      .catch(err => {
-        console.error("Error verificando token:", err);
-      });
+      console.log("Verificando validez del acceso...");
+      const isValid = await checkAccessValid();
+      
+      if (!isValid) {
+        console.log("Acceso revocado o inválido, deshabilitando acceso");
+        disablePrivate();
+      }
     } catch (e) {
       console.error("Error en verificación de revocación:", e);
     }
@@ -154,7 +150,6 @@ export function startRevocationCheck() {
 
 // Iniciar verificación si estamos en el navegador
 if (typeof window !== 'undefined') {
-  // Iniciar después de un pequeño retraso para no interferir con la carga inicial
   setTimeout(() => {
     startRevocationCheck();
   }, 5000);

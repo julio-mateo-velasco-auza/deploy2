@@ -1,179 +1,397 @@
 ---
 /**
- * Chat flotante en página (sin redirección obligatoria a WhatsApp).
- * - Saludo según hora
- * - Rutas: Conocer Inbolsa / Hablar con asesor
- * - Derivación por ciudad: La Paz / Santa Cruz
- * - Solo UI (100% front-end)
- * - Usa Tailwind (brand-600/700 ya existen en tu tema)
+ * ChatWidget.astro - Chat moderno simplificado
+ * Directo a WhatsApp sin selección de ciudad
  */
-
 export const prerender = true;
 
-const OFFICES = [
-  {
-    id: 'lp',
-    name: 'La Paz',
-    phone: '+591 2 000000',  // ← cámbialo
-    wa: 'https://wa.me/59170000000?text=Hola%20Inbolsa%20La%20Paz%2C%20quisiera%20m%C3%A1s%20informaci%C3%B3n',
-    email: 'ventas.lapaz@inbolsa.bo',
-  },
-  {
-    id: 'scz',
-    name: 'Santa Cruz',
-    phone: '+591 3 000000',  // ← cámbialo
-    wa: 'https://wa.me/59171000000?text=Hola%20Inbolsa%20Santa%20Cruz%2C%20quisiera%20m%C3%A1s%20informaci%C3%B3n',
-    email: 'ventas.scz@inbolsa.bo',
-  },
-];
+const WHATSAPP = {
+  number: '59170000000', // ← CAMBIA A TU NÚMERO DE WHATSAPP
+  message: 'Hola Inbolsa, quisiera más información sobre productos'
+};
+
+const INFO_EMPRESA = {
+  sobre: 'Somos Inbolsa, fabricantes de productos de polipropileo desde 1974. Ofrecemos bolsas, hilos y soluciones de embalaje industrial de alta calidad.',
+  productos: 'Fabricamos bolsas de polipropileno (chicas, grandes, enormes), hilos de algodón y nylon, y Big Bags para industria. Todos con certificación OEA.',
+  contacto: 'Tenemos oficinas en La Paz y Santa Cruz. Horario: Lun-Vie 11:00-17:00.'
+};
 ---
 
-<div id="inb-chat" class="pointer-events-none">
+<style>
+  @keyframes slideUp {
+    from {
+      opacity: 0;
+      transform: translateY(20px) scale(0.95);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+
+  @keyframes bubbleIn {
+    0% {
+      opacity: 0;
+      transform: translateY(10px) scale(0.9);
+    }
+    50% {
+      transform: translateY(-2px) scale(1.02);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+
+  @keyframes float {
+    0%, 100% {
+      transform: translateY(0px);
+    }
+    50% {
+      transform: translateY(-5px);
+    }
+  }
+
+  @keyframes pulse-ring {
+    0% {
+      transform: scale(1);
+      opacity: 1;
+    }
+    100% {
+      transform: scale(1.5);
+      opacity: 0;
+    }
+  }
+
+  @keyframes shimmer {
+    0% {
+      background-position: -1000px 0;
+    }
+    100% {
+      background-position: 1000px 0;
+    }
+  }
+
+  .chat-panel-hidden {
+    display: none;
+  }
+
+  .chat-panel-visible {
+    display: block;
+    animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .chat-bubble-appear {
+    animation: bubbleIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  .chat-fab-float {
+    animation: float 3s ease-in-out infinite;
+  }
+
+  .pulse-ring {
+    animation: pulse-ring 2s cubic-bezier(0.455, 0.03, 0.515, 0.955) infinite;
+  }
+
+  .gradient-shimmer {
+    background: linear-gradient(
+      90deg,
+      rgba(255, 255, 255, 0) 0%,
+      rgba(255, 255, 255, 0.2) 50%,
+      rgba(255, 255, 255, 0) 100%
+    );
+    background-size: 1000px 100%;
+    animation: shimmer 3s infinite;
+  }
+
+  #chat-messages::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  #chat-messages::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.05);
+    border-radius: 10px;
+  }
+
+  #chat-messages::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, #3E7DD2, #2563eb);
+    border-radius: 10px;
+  }
+
+  #chat-messages::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(180deg, #2563eb, #1d4ed8);
+  }
+
+  .btn-hover-lift {
+    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  .btn-hover-lift:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px -5px rgba(62, 125, 210, 0.3);
+  }
+
+  .btn-hover-lift:active {
+    transform: translateY(0);
+  }
+</style>
+
+<div id="chat-widget-root" class="fixed bottom-6 right-6 z-[9999] pointer-events-none">
+  <!-- Panel del chat -->
+  <div
+    id="chat-panel"
+    class="chat-panel-hidden pointer-events-auto mb-4 w-[min(92vw,400px)] rounded-3xl overflow-hidden shadow-2xl bg-white"
+    role="dialog"
+    aria-labelledby="chat-title"
+    aria-hidden="true"
+    style="box-shadow: 0 25px 50px -12px rgba(62, 125, 210, 0.25);"
+  >
+    <!-- Header con logo de Inbolsa -->
+    <div class="relative overflow-hidden bg-gradient-to-br from-brand-600 via-brand-700 to-brand-600 px-5 py-4">
+      <div class="absolute inset-0 gradient-shimmer opacity-20"></div>
+      
+      <div class="relative flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <!-- Logo de Inbolsa -->
+          <div class="relative">
+            <div class="absolute inset-0 pulse-ring rounded-2xl bg-white opacity-30"></div>
+            <div class="relative flex h-12 w-12 items-center justify-center rounded-2xl bg-white shadow-lg overflow-hidden">
+              <img 
+                src="/logo.png" 
+                alt="Inbolsa" 
+                class="h-10 w-10 object-contain"
+                onerror="this.style.display='none'; this.nextElementSibling.style.display='block';"
+              />
+              <!-- Fallback si no carga la imagen -->
+              <span style="display: none;" class="font-bold text-brand-600 text-xl">IB</span>
+            </div>
+          </div>
+          <div>
+            <h3 id="chat-title" class="font-bold text-white text-base leading-tight">
+              Inbolsa
+            </h3>
+            <p class="text-xs text-white/90 flex items-center gap-1.5 mt-0.5">
+              <span class="inline-block h-2 w-2 rounded-full bg-emerald-400 animate-pulse shadow-sm shadow-emerald-300"></span>
+              <span>Asistente en línea</span>
+            </p>
+          </div>
+        </div>
+        <button 
+          id="chat-close" 
+          class="rounded-xl p-2 hover:bg-white/20 transition-all duration-300" 
+          aria-label="Cerrar chat"
+        >
+          <svg class="h-5 w-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Área de mensajes con fondo sólido -->
+    <div 
+      id="chat-messages" 
+      class="h-[min(60vh,450px)] overflow-y-auto bg-slate-50 p-4 space-y-3"
+    >
+      <!-- Los mensajes se agregarán aquí -->
+    </div>
+
+    <!-- Área de acciones con fondo blanco sólido -->
+    <div id="chat-quick-actions" class="bg-white border-t border-slate-200 p-4 space-y-2">
+      <!-- Los botones se agregarán aquí -->
+    </div>
+  </div>
+
   <!-- Botón flotante -->
   <button
-    data-chat-open
+    id="chat-fab"
+    class="pointer-events-auto chat-fab-float relative h-16 w-16 rounded-full bg-gradient-to-br from-brand-600 to-brand-700 text-white shadow-2xl hover:shadow-brand-500/50 transition-all duration-500 group"
     aria-label="Abrir chat"
-    class="pointer-events-auto fixed bottom-5 right-5 z-50 grid h-14 w-14 place-items-center rounded-full bg-brand-600 text-white shadow-lg transition hover:bg-brand-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-300"
+    style="box-shadow: 0 20px 40px -12px rgba(62, 125, 210, 0.4);"
   >
-    <svg viewBox="0 0 24 24" class="h-7 w-7" aria-hidden="true">
-      <path fill="currentColor" d="M2 5a3 3 0 0 1 3-3h14a3 3 0 0 1 3 3v9a3 3 0 0 1-3 3H9.83L5.41 21.41A1 1 0 0 1 4 20.59V17H5a3 3 0 0 1-3-3z"/>
-    </svg>
+    <div class="absolute inset-0 rounded-full bg-brand-500 opacity-0 group-hover:opacity-20 blur-xl transition-opacity duration-500"></div>
+    
+    <span class="absolute inset-0 flex items-center justify-center">
+      <svg class="h-8 w-8 group-hover:scale-110 transition-transform duration-300" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
+      </svg>
+    </span>
+    
+    <span 
+      id="chat-badge" 
+      style="display: none;" 
+      class="absolute -top-1 -right-1 h-6 w-6 rounded-full bg-gradient-to-br from-red-500 to-red-600 text-white text-xs font-bold flex items-center justify-center shadow-lg animate-bounce"
+    >
+      1
+    </span>
   </button>
-
-  <!-- Panel -->
-  <section
-    data-chat-panel
-    class="pointer-events-auto fixed bottom-24 right-5 z-50 hidden w-[min(92vw,380px)] overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-xl"
-    role="dialog"
-    aria-labelledby="inb-chat-title"
-    aria-modal="true"
-  >
-    <!-- Header -->
-    <header class="flex items-center justify-between bg-gradient-to-r from-brand-600 to-brand-700 px-4 py-3 text-white">
-      <div class="flex items-center gap-2">
-        <span class="inline-block h-2.5 w-2.5 rounded-full bg-emerald-400"></span>
-        <h3 id="inb-chat-title" class="font-semibold">Asistente Inbolsa</h3>
-      </div>
-      <div class="flex items-center gap-2">
-        <button data-chat-min class="rounded-lg px-2 py-1 text-white/90 hover:bg-white/10" aria-label="Minimizar">–</button>
-        <button data-chat-close class="rounded-lg px-2 py-1 text-white/90 hover:bg-white/10" aria-label="Cerrar">×</button>
-      </div>
-    </header>
-
-    <!-- Conversación -->
-    <div class="grid max-h-[60vh] grid-rows-[1fr_auto]">
-      <div data-chat-body class="space-y-3 overflow-auto px-3 py-3 text-sm"></div>
-      <div data-quick class="border-t bg-slate-50/50 p-3"></div>
-    </div>
-  </section>
 </div>
 
-<!-- Exponemos OFFICES al script (evita ${} en Astro): -->
-<script type="module" define:vars={{ OFFICES }}>
-  const root   = document.getElementById('inb-chat');
-  const openBt = root.querySelector('[data-chat-open]');
-  const panel  = root.querySelector('[data-chat-panel]');
-  const closeBt= root.querySelector('[data-chat-close]');
-  const minBt  = root.querySelector('[data-chat-min]');
-  const body   = root.querySelector('[data-chat-body]');
-  const quick  = root.querySelector('[data-quick]');
+<script type="module" define:vars={{ WHATSAPP, INFO_EMPRESA }}>
+  let isOpen = false;
+  let conversationState = 'initial';
+  
+  const fab = document.getElementById('chat-fab');
+  const panel = document.getElementById('chat-panel');
+  const closeBtn = document.getElementById('chat-close');
+  const messagesContainer = document.getElementById('chat-messages');
+  const quickActions = document.getElementById('chat-quick-actions');
+  const badge = document.getElementById('chat-badge');
 
-  function salutation(){
-    const h = new Date().getHours();
-    if (h < 12) return '¡Buenos días!';
-    if (h < 19) return '¡Buenas tardes!';
+  function getSaludo() {
+    const hora = new Date().getHours();
+    if (hora >= 5 && hora < 12) return '¡Buenos días!';
+    if (hora >= 12 && hora < 19) return '¡Buenas tardes!';
     return '¡Buenas noches!';
   }
-  function scrollToEnd(){ requestAnimationFrame(()=> body.scrollTop = body.scrollHeight); }
 
-  function bubble(side, html){
-    const wrap = document.createElement('div');
-    wrap.className = side === 'bot' ? 'flex items-start gap-2' : 'flex items-start justify-end gap-2';
-    wrap.innerHTML = side === 'bot'
-      ? `<div class="grid h-8 w-8 place-items-center rounded-full bg-brand-600 text-white text-xs font-semibold">i</div>
-         <div class="max-w-[85%] rounded-2xl bg-slate-100 px-3 py-2 text-slate-800">${html}</div>`
-      : `<div class="max-w-[85%] rounded-2xl bg-brand-600 px-3 py-2 text-white">${html}</div>`;
-    body.appendChild(wrap);
-    scrollToEnd();
-  }
-
-  function setQuick(buttons){
-    quick.innerHTML = '';
-    if (!buttons || !buttons.length) return;
-    const row = document.createElement('div');
-    row.className = 'flex flex-wrap gap-2';
-    buttons.forEach(b=>{
-      const btn = document.createElement('button');
-      btn.className = 'rounded-full border px-3 py-1.5 text-sm hover:bg-slate-50';
-      btn.textContent = b.label;
-      btn.addEventListener('click', b.onClick);
-      row.appendChild(btn);
-    });
-    quick.appendChild(row);
-  }
-
-  function start(){
-    body.innerHTML = '';
-    bubble('bot', `${salutation()} Soy el asistente virtual de Inbolsa. ¿En qué te ayudo hoy?`);
-    setQuick([
-      { label: 'Conocer sobre Inbolsa', onClick: flowAbout },
-      { label: 'Hablar con un asesor',  onClick: flowSales },
-    ]);
-  }
-
-  function flowAbout(){
-    bubble('user','Conocer sobre Inbolsa');
-    bubble('bot', `Aquí tienes algunas secciones recomendadas:`);
-    body.insertAdjacentHTML('beforeend', `
-      <div class="ml-10 grid gap-2">
-        <a href="/valores"  class="rounded-lg border px-3 py-2 hover:bg-slate-50">• Valores</a>
-        <a href="/historia" class="rounded-lg border px-3 py-2 hover:bg-slate-50">• Historia</a>
-        <a href="/contacto" class="rounded-lg border px-3 py-2 hover:bg-slate-50">• Contacto</a>
+  function addMessage(text, isBot = true) {
+    const bubble = document.createElement('div');
+    bubble.className = `chat-bubble-appear ${isBot ? 'flex' : 'flex justify-end'}`;
+    
+    const bgClass = isBot 
+      ? 'bg-white text-slate-800 shadow-md border border-slate-200' 
+      : 'bg-gradient-to-br from-brand-600 to-brand-700 text-white shadow-lg shadow-brand-500/20';
+    
+    const iconBot = `<svg class="h-4 w-4" fill="currentColor" viewBox="0 0 24 24">
+      <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z"/>
+    </svg>`;
+    
+    const iconUser = `<svg class="h-4 w-4" fill="currentColor" viewBox="0 0 24 24">
+      <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+    </svg>`;
+    
+    bubble.innerHTML = `
+      <div class="${bgClass} max-w-[85%] rounded-2xl px-4 py-3">
+        <div class="text-xs ${isBot ? 'text-slate-500' : 'text-white/80'} mb-1.5 font-medium flex items-center gap-2">
+          ${isBot ? iconBot : iconUser}
+          <span>${isBot ? 'Asistente Inbolsa' : 'Tú'}</span>
+        </div>
+        <div class="text-sm leading-relaxed">${text}</div>
       </div>
-    `);
-    scrollToEnd();
-    setQuick([
-      { label: 'Hablar con un asesor', onClick: flowSales },
-      { label: 'Volver al inicio',     onClick: start },
-    ]);
+    `;
+    
+    messagesContainer.appendChild(bubble);
+    messagesContainer.scrollTop = messagesContainer.scrollHeight;
   }
 
-  function flowSales(){
-    bubble('user','Hablar con un asesor');
-    bubble('bot','Elige tu ciudad para contactarte con nuestro equipo de ventas:');
-    setQuick([
-      { label: 'La Paz',     onClick: ()=> city('lp') },
-      { label: 'Santa Cruz', onClick: ()=> city('scz') },
-      { label: 'Volver',     onClick: start },
-    ]);
+  function clearQuickActions() {
+    quickActions.innerHTML = '';
   }
 
-  function city(id){
-    const o = OFFICES.find(x => x.id === id);
-    if(!o){ start(); return; }
-    bubble('user', o.name);
-    bubble('bot', `
-      <div class="grid gap-2">
-        <div><strong>Teléfono:</strong> <a class="text-brand-700 underline" href="tel:${o.phone}">${o.phone}</a></div>
-        <div><strong>Email:</strong> <a class="text-brand-700 underline" href="mailto:${o.email}">${o.email}</a></div>
-        ${o.wa ? `<div><strong>WhatsApp:</strong> <a class="text-brand-700 underline" target="_blank" rel="noopener" href="${o.wa}">Abrir WhatsApp</a></div>` : ``}
-      </div>
-    `);
-    setQuick([
-      { label: 'Otra ciudad',     onClick: flowSales },
-      { label: 'Volver al inicio', onClick: start },
-    ]);
+  function addQuickAction(label, onClick, variant = 'default', icon = '') {
+    const button = document.createElement('button');
+    
+    if (variant === 'primary') {
+      button.className = 'btn-hover-lift w-full rounded-xl bg-gradient-to-r from-brand-600 to-brand-700 text-white px-4 py-3.5 hover:from-brand-700 hover:to-brand-600 transition-all text-sm font-semibold shadow-lg shadow-brand-500/20';
+    } else {
+      button.className = 'btn-hover-lift w-full rounded-xl border-2 border-slate-200 bg-white px-4 py-3 hover:border-brand-300 hover:bg-brand-50 transition-all text-sm text-left font-medium text-slate-700 hover:text-brand-700';
+    }
+    
+    button.innerHTML = icon ? `<span class="flex items-center gap-2">${icon} <span>${label}</span></span>` : label;
+    button.addEventListener('click', onClick);
+    quickActions.appendChild(button);
   }
 
-  function open(){ panel.classList.remove('hidden'); localStorage.setItem('inb_chat_open','1'); }
-  function close(){ panel.classList.add('hidden');  localStorage.removeItem('inb_chat_open'); }
-  function toggle(){ panel.classList.contains('hidden') ? open() : close(); }
+  function openWhatsApp() {
+    const url = `https://wa.me/${WHATSAPP.number}?text=${encodeURIComponent(WHATSAPP.message)}`;
+    window.open(url, '_blank', 'noopener,noreferrer');
+    
+    addMessage('¡Perfecto! Abriendo WhatsApp para conectarte con nuestro equipo de ventas...', true);
+    setTimeout(() => {
+      addMessage('¿Hay algo más en lo que pueda ayudarte?', true);
+      showInitialOptions();
+    }, 2000);
+  }
 
-  openBt.addEventListener('click', toggle);
-  closeBt.addEventListener('click', close);
-  minBt.addEventListener('click', close);
+  const icons = {
+    info: '<svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>',
+    agent: '<svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg>',
+    box: '<svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg>',
+    building: '<svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>',
+    phone: '<svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>',
+    back: '<svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>'
+  };
 
-  if (localStorage.getItem('inb_chat_open') === '1') open();
+  function showInitialOptions() {
+    conversationState = 'initial';
+    clearQuickActions();
+    addQuickAction('Conocer sobre Inbolsa', () => {
+      addMessage('Conocer sobre Inbolsa', false);
+      showInfoOptions();
+    }, 'default', icons.info);
+    addQuickAction('Hablar con asesor de ventas', () => {
+      addMessage('Hablar con asesor de ventas', false);
+      openWhatsApp();
+    }, 'primary', icons.agent);
+  }
 
-  start();
+  function showInfoOptions() {
+    conversationState = 'info-mode';
+    clearQuickActions();
+    
+    addQuickAction('¿Qué productos fabrican?', () => {
+      addMessage('¿Qué productos fabrican?', false);
+      addMessage(INFO_EMPRESA.productos, true);
+      setTimeout(showInfoOptions, 500);
+    }, 'default', icons.box);
+    
+    addQuickAction('Sobre la empresa', () => {
+      addMessage('Sobre la empresa', false);
+      addMessage(INFO_EMPRESA.sobre, true);
+      setTimeout(showInfoOptions, 500);
+    }, 'default', icons.building);
+    
+    addQuickAction('Información de contacto', () => {
+      addMessage('Información de contacto', false);
+      addMessage(INFO_EMPRESA.contacto, true);
+      setTimeout(showInfoOptions, 500);
+    }, 'default', icons.phone);
+    
+    addQuickAction('Volver al inicio', () => {
+      addMessage('Volver al inicio', false);
+      showInitialOptions();
+    }, 'default', icons.back);
+  }
+
+  function initChat() {
+    addMessage(`${getSaludo()} Soy tu asistente virtual de Inbolsa.`, true);
+    setTimeout(() => {
+      addMessage('¿En qué puedo ayudarte hoy?', true);
+      showInitialOptions();
+    }, 600);
+  }
+
+  function toggleChat() {
+    isOpen = !isOpen;
+    if (isOpen) {
+      panel.classList.remove('chat-panel-hidden');
+      panel.classList.add('chat-panel-visible');
+      panel.setAttribute('aria-hidden', 'false');
+      if (badge) badge.style.display = 'none';
+      
+      if (messagesContainer.children.length === 0) {
+        initChat();
+      }
+    } else {
+      panel.classList.remove('chat-panel-visible');
+      panel.classList.add('chat-panel-hidden');
+      panel.setAttribute('aria-hidden', 'true');
+    }
+  }
+
+  fab?.addEventListener('click', toggleChat);
+  closeBtn?.addEventListener('click', toggleChat);
+  
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && isOpen) {
+      toggleChat();
+    }
+  });
+
+  setTimeout(() => {
+    if (!isOpen && badge) {
+      badge.style.display = 'flex';
+    }
+  }, 5000);
 </script>

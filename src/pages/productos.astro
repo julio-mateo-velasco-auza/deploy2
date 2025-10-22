@@ -8,11 +8,10 @@ import Footer from '../components/Footer.astro';
 
 const pageTitle = 'Productos';
 
-// Mantén/ajusta tus IDs EXACTOS (data-product-id)
 const CATALOG = [
   { cat: 'Bolsas', items: [
     { id:'bolsa-chica',   name:'Bolsa chica',   img:'/imgs/bolsa-chica.jpg' },
-    { id:'bolsa-mediana', name:'Bolsa mediana', img:'/imgs/bolsa-mediana.jpg' },
+    { id:'bolsa-grande', name:'Bolsa grande', img:'/imgs/bolsa-mediana.jpg' },
     { id:'bolsa-enorme',  name:'Bolsa enorme',  img:'/imgs/bolsa-enorme.jpg' },
   ]},
   { cat: 'Hilos', items: [
@@ -50,20 +49,26 @@ const CATALOG = [
 
   <Footer />
 
-  <!-- Guardia + FILTRO ESTRICTO (si no hay lista => no muestra nada) -->
   <script type="module">
-    import { isPrivateEnabled, getGrantProducts } from '../lib/privado.ts';
+    import { isPrivateEnabled, getGrantProducts, disablePrivate, checkAccessValid } from '../lib/privado.ts';
 
     (function(){
       // 1) Bloquea si no hay acceso privado
-      try { if (!isPrivateEnabled()) { location.replace('/'); return; } }
-      catch { location.replace('/'); return; }
+      try { 
+        if (!isPrivateEnabled()) { 
+          location.replace('/'); 
+          return; 
+        } 
+      }
+      catch { 
+        location.replace('/'); 
+        return; 
+      }
 
-      // 2) Recupera lista de productos desde storage o query (?p=)
+      // 2) Recupera lista de productos
       let allowIds = [];
       try {
         allowIds = getGrantProducts();
-        // fallback: admitir ?p= en la propia URL por si no se guardó
         if (!Array.isArray(allowIds) || !allowIds.length) {
           const u = new URL(location.href);
           const p = u.searchParams.get('p');
@@ -71,25 +76,56 @@ const CATALOG = [
         }
       } catch {}
 
-      // 3) Si NO hay lista => NO mostrar nada
+      // 3) Aplicar filtro inicial
       const cards = Array.from(document.querySelectorAll('[data-product-id]'));
       const empty = document.getElementById('empty-msg');
 
-      if (!Array.isArray(allowIds) || allowIds.length === 0) {
-        cards.forEach(el => { el.classList.add('hidden'); el.style.display = 'none'; });
-        if (empty) empty.classList.remove('hidden');
-        return;
+      function applyFilter() {
+        if (!Array.isArray(allowIds) || allowIds.length === 0) {
+          cards.forEach(el => { el.classList.add('hidden'); el.style.display = 'none'; });
+          if (empty) empty.classList.remove('hidden');
+          return;
+        }
+
+        const allow = new Set(allowIds);
+        let anyVisible = false;
+        cards.forEach(el => {
+          const id = el.getAttribute('data-product-id') || '';
+          if (!allow.has(id)) { 
+            el.classList.add('hidden'); 
+            el.style.display = 'none'; 
+          } else { 
+            el.classList.remove('hidden'); 
+            el.style.display = ''; 
+            anyVisible = true; 
+          }
+        });
+        if (empty) empty.classList.toggle('hidden', anyVisible);
       }
 
-      // 4) Mostrar únicamente los IDs autorizados
-      const allow = new Set(allowIds);
-      let anyVisible = false;
-      cards.forEach(el => {
-        const id = el.getAttribute('data-product-id') || '';
-        if (!allow.has(id)) { el.classList.add('hidden'); el.style.display = 'none'; }
-        else { el.classList.remove('hidden'); el.style.display = ''; anyVisible = true; }
-      });
-      if (empty) empty.classList.toggle('hidden', anyVisible);
+      applyFilter();
+
+      // 4) Verificar periódicamente si el acceso sigue válido
+      async function verifyAccess() {
+        try {
+          console.log("Verificando validez del acceso en productos...");
+          const isValid = await checkAccessValid();
+          
+          if (!isValid) {
+            console.log("Acceso revocado, redirigiendo...");
+            disablePrivate();
+            window.location.href = '/';
+          }
+        } catch (e) {
+          console.error("Error verificando acceso:", e);
+        }
+      }
+
+      // Verificar cada 10 segundos (más frecuente en productos)
+      setInterval(verifyAccess, 10000);
+      
+      // Primera verificación inmediata después de 2 segundos
+      setTimeout(verifyAccess, 2000);
     })();
   </script>
 </Base>

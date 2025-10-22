@@ -2,6 +2,8 @@
 
 const { title = 'Inbolsa' } = Astro.props;
 import '../styles/tailwind.css';
+import ChatWidget from '../components/ChatWidget.astro';
+
 
 ---
 <html lang="es" class="h-full">
@@ -15,6 +17,7 @@ import '../styles/tailwind.css';
     <main class="min-h-dvh">
       <slot />
     </main>
-    
+      <ChatWidget />
+
   </body>
 </html>

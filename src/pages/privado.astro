@@ -23,7 +23,6 @@ const PAGE_TITLE = 'Inbolsa — Zona privada';
           <h3 class="text-xl font-semibold">Productos (zona privada)</h3>
           <p class="mt-2 text-slate-600">Accede al catálogo privado habilitado por tu QR.</p>
           <div class="mt-3">
-            <!-- Solo ver productos; nunca panel -->
             <a href="/productos" class="underline">Ver productos</a>
           </div>
         </div>
@@ -41,74 +40,90 @@ const PAGE_TITLE = 'Inbolsa — Zona privada';
 
   <Footer />
 
-  <!-- GUARD cliente con base-aware home -->
-  <!-- Añadir este script en src/pages/privado.astro -->
-<script type="module">
-  import { enablePrivate, setGrantProducts } from '../lib/privado.ts';
-  import { api, BACK_BASE } from '../lib/api.ts';
+  <script type="module">
+    import { enablePrivate, setGrantProducts, disablePrivate, checkAccessValid } from '../lib/privado.ts';
+    import { api } from '../lib/api.ts';
 
-  (async function() {
-    try {
-      // 1. Procesar token si viene en URL
-      const params = new URLSearchParams(location.search);
-      const token = params.get('accessToken');
-      const productsParam = params.get('p');
-      
-      console.log("Token:", token ? "Presente" : "No presente");
-      console.log("Productos en URL:", productsParam);
-      
-      if (token) {
-        // Habilitar acceso privado
-        console.log("Habilitando acceso privado");
-        enablePrivate(120);
+    (async function() {
+      try {
+        // 1. Procesar token si viene en URL
+        const params = new URLSearchParams(location.search);
+        const token = params.get('accessToken');
+        const productsParam = params.get('p');
         
-        // Si ya hay lista de productos en la URL, usarla directamente
-        if (productsParam) {
-          const productIds = productsParam.split(',').filter(Boolean);
-          console.log("Guardando productos desde URL:", productIds);
-          setGrantProducts(productIds);
-        } else {
-          // Si no, intentar obtener del backend
-          try {
-            console.log("Consultando payload del backend");
-            const payload = await api.accessPayload(token);
-            console.log("Payload recibido:", payload);
-            
-            if (payload?.qr?.payload) {
-              const p = payload.qr.payload;
-              // Si es de tipo productos y tiene lista de productos incluidos
-              if (p.section === 'productos') {
-                if (p.allow === 'include' && Array.isArray(p.products)) {
-                  console.log("Guardando productos del payload:", p.products);
-                  setGrantProducts(p.products);
+        console.log("Token:", token ? "Presente" : "No presente");
+        console.log("Productos en URL:", productsParam);
+        
+        if (token) {
+          console.log("Habilitando acceso privado");
+          enablePrivate(120);
+          
+          if (productsParam) {
+            const productIds = productsParam.split(',').filter(Boolean);
+            console.log("Guardando productos desde URL:", productIds);
+            setGrantProducts(productIds);
+          } else {
+            try {
+              console.log("Consultando payload del backend");
+              const payload = await api.accessPayload(token);
+              console.log("Payload recibido:", payload);
+              
+              if (payload?.qr?.payload) {
+                const p = payload.qr.payload;
+                if (p.section === 'productos') {
+                  if (p.allow === 'include' && Array.isArray(p.products)) {
+                    console.log("Guardando productos del payload:", p.products);
+                    setGrantProducts(p.products);
+                  }
                 }
-                // Si es allow:all, no necesitamos guardar productos específicos
               }
+            } catch(error) {
+              console.error('Error al procesar token:', error);
             }
-          } catch(error) {
-            console.error('Error al procesar token:', error);
           }
+          
+          history.replaceState({}, document.title, '/privado');
         }
         
-        // Limpiar URL después de procesar
-        history.replaceState({}, document.title, '/privado');
-      }
-      
-      // Verificar que tengamos acceso privado, si no redirigir
-      const isPrivate = localStorage.getItem('inbolsa:qr:ok') === '1' ||
-                       document.cookie.split(';').some(c => c.trim().startsWith('inbolsa:qr:ok=')) ||
-                       document.cookie.split(';').some(c => c.trim().startsWith('qrauth=')) ||
-                       document.cookie.split(';').some(c => c.trim().startsWith('inb_access='));
-      
-      if (!isPrivate) {
-        console.log("No hay acceso privado, redirigiendo...");
-        location.href = '/';
-      } else {
+        // 2. Verificar que tengamos acceso privado
+        const isPrivate = localStorage.getItem('inbolsa:qr:ok') === '1' ||
+                         document.cookie.split(';').some(c => c.trim().startsWith('inbolsa:qr:ok=')) ||
+                         document.cookie.split(';').some(c => c.trim().startsWith('qrauth=')) ||
+                         document.cookie.split(';').some(c => c.trim().startsWith('inb_access='));
+        
+        if (!isPrivate) {
+          console.log("No hay acceso privado, redirigiendo...");
+          location.href = '/';
+          return;
+        }
+        
         console.log("Acceso privado verificado");
+        
+        // 3. Verificar periódicamente si el acceso sigue válido
+        async function verifyAccess() {
+          try {
+            console.log("Verificando validez del acceso en privado...");
+            const isValid = await checkAccessValid();
+            
+            if (!isValid) {
+              console.log("Acceso revocado, redirigiendo...");
+              disablePrivate();
+              window.location.href = '/';
+            }
+          } catch (e) {
+            console.error("Error verificando acceso:", e);
+          }
+        }
+
+        // Verificar cada 15 segundos
+        setInterval(verifyAccess, 15000);
+        
+        // Primera verificación después de 3 segundos
+        setTimeout(verifyAccess, 3000);
+        
+      } catch (e) {
+        console.error('Error en inicialización privado:', e);
       }
-    } catch (e) {
-      console.error('Error en inicialización privado:', e);
-    }
-  })();
-</script>
+    })();
+  </script>
 </Base>
