@@ -1,4 +1,5 @@
 ﻿---
+// TODO(claude): Página de productos privados accesibles solo con QR
 // src/pages/productos.astro
 export const prerender = true;
 
@@ -10,13 +11,13 @@ const pageTitle = 'Productos';
 
 const CATALOG = [
   { cat: 'Bolsas', items: [
-    { id:'bolsa-chica',   name:'Bolsa chica',   img:'/imgs/bolsa-chica.jpg' },
-    { id:'bolsa-grande', name:'Bolsa grande', img:'/imgs/bolsa-mediana.jpg' },
-    { id:'bolsa-enorme',  name:'Bolsa enorme',  img:'/imgs/bolsa-enorme.jpg' },
+    { id:'bolsa-chica',   name:'Bolsa chica',   img:'/inbolsaNeo/imgs/bolsa-chica.jpg' },
+    { id:'bolsa-grande', name:'Bolsa grande', img:'/inbolsaNeo/imgs/bolsa-mediana.jpg' },
+    { id:'bolsa-enorme',  name:'Bolsa enorme',  img:'/inbolsaNeo/imgs/bolsa-enorme.jpg' },
   ]},
   { cat: 'Hilos', items: [
-    { id:'hilo-algodon',  name:'Hilo de algodón', img:'/imgs/hilo-algodon.jpg' },
-    { id:'hilo-nylon',    name:'Hilo de nylon',   img:'/imgs/hilo-nylon.jpg' },
+    { id:'hilo-algodon',  name:'Hilo de algodón', img:'/inbolsaNeo/imgs/hilo-algodon.jpg' },
+    { id:'hilo-nylon',    name:'Hilo de nylon',   img:'/inbolsaNeo/imgs/hilo-nylon.jpg' },
   ]},
 ];
 ---
@@ -50,18 +51,21 @@ const CATALOG = [
   <Footer />
 
   <script type="module">
+    // TODO(claude): subcarpeta /inbolsaNeo para importaciones
     import { isPrivateEnabled, getGrantProducts, disablePrivate, checkAccessValid } from '/inbolsaNeo/lib/privado.js';
 
     (function(){
       // 1) Bloquea si no hay acceso privado
       try { 
         if (!isPrivateEnabled()) { 
-          location.replace('/'); 
+          // TODO(claude): subcarpeta /inbolsaNeo para redirección
+          location.replace('/inbolsaNeo/'); 
           return; 
         } 
       }
       catch { 
-        location.replace('/'); 
+        // TODO(claude): subcarpeta /inbolsaNeo para redirección
+        location.replace('/inbolsaNeo/'); 
         return; 
       }
 
@@ -114,7 +118,8 @@ const CATALOG = [
           if (!isValid) {
             console.log("Acceso revocado, redirigiendo...");
             disablePrivate();
-            window.location.href = '/';
+            // TODO(claude): subcarpeta /inbolsaNeo para redirección
+            window.location.href = '/inbolsaNeo/';
           }
         } catch (e) {
           console.error("Error verificando acceso:", e);

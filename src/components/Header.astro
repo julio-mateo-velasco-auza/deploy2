@@ -4,6 +4,7 @@ type NavLink = { href: string; label: string };
 const { transparent = false } = Astro.props as { transparent?: boolean };
 const isActive = (href: string) => Astro.url.pathname === href;
 
+// TODO(claude): ajustar subpath /inbolsaNeo para enlaces, mantener consistencia
 // NO dependemos de cookies; el client script usará isPrivateEnabled()
 const baseLinks: NavLink[] = [
   { href: '/inbolsaNeo/', label: 'Home' },
@@ -11,17 +12,23 @@ const baseLinks: NavLink[] = [
   { href: '/inbolsaNeo/industrias', label: 'Industrias' },
   { href: '/inbolsaNeo/historia', label: 'Historia' },
   { href: '/inbolsaNeo/contacto', label: 'Contacto' },
+  // TODO(claude): agregada nueva página soluciones
+  { href: '/inbolsaNeo/soluciones', label: 'Soluciones' },
 ];
 
 // Quitamos Valores e Historia del render principal (van al dropdown)
 const otherLinks = baseLinks.filter(
-  (l) => l.href !== '/inbolsaNeo/' && l.href !== '/inbolsaNeo/valores' && l.href !== '/inbolsaNeo/historia'
+  (l) => l.href !== '/inbolsaNeo/' && 
+         l.href !== '/inbolsaNeo/valores' && 
+         l.href !== '/inbolsaNeo/historia' &&
+         l.href !== '/inbolsaNeo/soluciones'
 );
 
 // Links del dropdown
 const dropdownLinks: NavLink[] = [
    { href: '/inbolsaNeo/valores', label: 'Valores' },
    { href: '/inbolsaNeo/historia', label: 'Historia' },
+   { href: '/inbolsaNeo/soluciones', label: 'Soluciones' },
 ];
 ---
 
@@ -34,9 +41,9 @@ const dropdownLinks: NavLink[] = [
   <a href="/inbolsaNeo/" class="inline-flex items-center gap-4" aria-label="Inbolsa">      
   <img
         id="siteLogo"
-        src={transparent ? '/logo.png' : '/Black.png'}
-        data-logo-white="/logo.png"
-        data-logo-black="/Black.png"
+        src={transparent ? '/inbolsaNeo/logo.png' : '/inbolsaNeo/Black.png'}
+        data-logo-white="/inbolsaNeo/logo.png"
+        data-logo-black="/inbolsaNeo/Black.png"
         alt="Inbolsa"
         class="h-20 md:h-20 w-auto transition-opacity duration-300"
       />
@@ -45,7 +52,7 @@ const dropdownLinks: NavLink[] = [
 
     <nav id="main-nav" class="hidden md:flex items-center gap-8 text-base md:text-lg">
       {(() => {
-        const l = { href: '/', label: 'Home' };
+        const l = { href: '/inbolsaNeo/', label: 'Home' };
         const active = isActive(l.href);
         return (
           <a
@@ -64,7 +71,7 @@ const dropdownLinks: NavLink[] = [
       <!-- Contenedor para Productos (solo visible en modo privado) -->
       <span id="products-link-container" class="hidden"></span>
 
-      <!-- Dropdown “Nosotros” — diseño glass/pill, clic estable -->
+      <!-- Dropdown "Nosotros" — diseño glass/pill, clic estable -->
       {(() => {
         const anyActive = dropdownLinks.some(d => isActive(d.href));
 
@@ -195,6 +202,7 @@ const dropdownLinks: NavLink[] = [
 
   <!-- Script para mostrar/ocultar Productos solo en modo privado -->
   <script type="module">
+    // TODO(claude): compat subcarpeta para rutas al verificar modo privado
     function isPrivateEnabled() {
       try {
         if (localStorage.getItem('inbolsa:qr:ok') === '1') {
@@ -215,11 +223,16 @@ const dropdownLinks: NavLink[] = [
         if (!container) return;
         container.innerHTML = ''; container.classList.add('hidden');
 
-        if (isPrivateEnabled() || location.pathname === '/privado' || location.pathname === '/productos') {
+        // TODO(claude): uso de rutas correctas para productos con subcarpeta
+        // Verificar patrones de ruta que incluyan la subcarpeta o la ruta relativa
+        const isPrivadoPage = location.pathname.endsWith('/privado') || location.pathname.includes('/inbolsaNeo/privado');
+        const isProductosPage = location.pathname.endsWith('/productos') || location.pathname.includes('/inbolsaNeo/productos');
+        
+        if (isPrivateEnabled() || isPrivadoPage || isProductosPage) {
           const link = document.createElement('a');
-          link.href = '/productos';
+          link.href = '/inbolsaNeo/productos';
           link.textContent = 'Productos';
-          const isAct = location.pathname === '/productos';
+          const isAct = isProductosPage;
           link.className = `hover:text-brand-700 ${isAct ? 'text-brand-700 font-medium' : ''}`;
           container.appendChild(link);
           container.classList.remove('hidden');
@@ -233,7 +246,7 @@ const dropdownLinks: NavLink[] = [
     });
   </script>
 
-  <!-- Script del dropdown “Nosotros” (click, fuera/ESC, transiciones) -->
+  <!-- Script del dropdown "Nosotros" (click, fuera/ESC, transiciones) -->
   <script is:inline>
     (function(){
       var wrap = document.getElementById('nosotros-wrap');

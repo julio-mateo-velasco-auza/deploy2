@@ -1,0 +1,252 @@
+---
+// TODO(claude): Página pública /soluciones (catálogo general, no privado)
+export const prerender = true;
+
+import Base from '../layouts/Base.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+
+const pageTitle = 'Soluciones';
+
+// Catálogo general (no restringido)
+const CATALOG = [
+  { 
+    cat: 'Embalaje Industrial', 
+    description: 'Soluciones de alta resistencia para industria pesada',
+    items: [
+      { 
+        id: 'big-bag-standard', 
+        name: 'Big Bag Estándar', 
+        description: 'Capacidad: 1000kg. Dimensiones: 90x90x110cm. Material: Polipropileno de alta resistencia.',
+        img: '/inbolsaNeo/imgs/bolsa-grande.jpg' 
+      },
+      { 
+        id: 'big-bag-reforzado', 
+        name: 'Big Bag Reforzado', 
+        description: 'Capacidad: 1500kg. Dimensiones: 90x90x120cm. Asas reforzadas para cargas pesadas.',
+        img: '/inbolsaNeo/imgs/bolsa-enorme.jpg' 
+      },
+      { 
+        id: 'bolsa-valvula', 
+        name: 'Bolsa con Válvula', 
+        description: 'Sistema de llenado y vaciado por válvula. Cierre hermético para materiales granulados.',
+        img: '/inbolsaNeo/imgs/bolsa-chica.jpg' 
+      },
+    ]
+  },
+  { 
+    cat: 'Agro', 
+    description: 'Productos específicos para agricultura y ganadería',
+    items: [
+      { 
+        id: 'saco-grano', 
+        name: 'Saco para Granos', 
+        description: 'Protección contra humedad y resistente a UV. Ideal para almacenamiento a largo plazo.',
+        img: '/inbolsaNeo/imgs/hilo-algodon.jpg' 
+      },
+      { 
+        id: 'tela-invernadero', 
+        name: 'Tela para Invernadero', 
+        description: 'Tejido técnico con protección UV. Permeable y resistente a las condiciones climáticas.',
+        img: '/inbolsaNeo/imgs/hilo-nylon.jpg' 
+      },
+    ]
+  },
+  { 
+    cat: 'Construcción', 
+    description: 'Soluciones para el sector de construcción',
+    items: [
+      { 
+        id: 'saco-cemento', 
+        name: 'Saco para Cemento', 
+        description: 'Doble capa con protección contra humedad. Alta resistencia a la manipulación.',
+        img: '/inbolsaNeo/imgs/bolsa-mediana.jpg' 
+      },
+      { 
+        id: 'saco-escombros', 
+        name: 'Saco para Escombros', 
+        description: 'Capacidad de 1 tonelada. Tejido reforzado para materiales cortantes.',
+        img: '/inbolsaNeo/imgs/bolsa-grande.jpg' 
+      },
+    ]
+  },
+];
+
+// Características destacadas para la sección de beneficios
+const FEATURES = [
+  { 
+    icon: '🔒', 
+    title: 'Certificación OEA',
+    description: 'Todos nuestros productos cuentan con certificación de Operador Económico Autorizado.'
+  },
+  { 
+    icon: '♻️', 
+    title: 'Materiales Reciclables',
+    description: 'Comprometidos con el medio ambiente: nuestros productos son 100% reciclables.'
+  },
+  { 
+    icon: '⚙️', 
+    title: 'Personalización',
+    description: 'Adaptamos nuestros productos a las necesidades específicas de cada cliente.'
+  },
+  { 
+    icon: '📦', 
+    title: 'Entrega rápida',
+    description: 'Contamos con stock permanente y logística eficiente para entregas inmediatas.'
+  },
+];
+---
+
+<Base title={`${pageTitle} — Inbolsa`}>
+  <Header />
+
+  <main class="bg-white">
+    <!-- Hero Section -->
+    <section class="relative overflow-hidden bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
+      <!-- Patrón de fondo -->
+      <div class="absolute inset-0 opacity-10">
+        <div class="absolute inset-0" style="background-image: radial-gradient(circle at 2px 2px, white 1px, transparent 0); background-size: 40px 40px;"></div>
+      </div>
+      
+      <!-- Círculos decorativos -->
+      <div class="absolute top-20 -left-20 w-96 h-96 bg-brand-500/20 rounded-full blur-3xl animate-pulse"></div>
+      <div class="absolute bottom-20 -right-20 w-96 h-96 bg-brand-400/20 rounded-full blur-3xl animate-pulse" style="animation-delay: 1s;"></div>
+      
+      <div class="relative mx-auto max-w-7xl px-4 py-20 md:py-28">
+        <div class="text-center max-w-3xl mx-auto">
+          <span class="inline-flex items-center gap-2 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 px-4 py-2 text-sm text-white/90">
+            <span class="relative flex h-2 w-2">
+              <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+              <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+            </span>
+            Catálogo General
+          </span>
+          
+          <h1 class="mt-6 text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight text-white">
+            Nuestras Soluciones
+          </h1>
+          
+          <p class="mt-6 text-lg md:text-xl text-white/80 leading-relaxed">
+            Descubre nuestra amplia gama de productos de polipropileno para diferentes industrias.
+            Calidad y resistencia garantizada para tus proyectos.
+          </p>
+          
+          <div class="mt-10">
+            <a 
+              href="#catalogo" 
+              class="inline-flex items-center gap-2 rounded-xl bg-brand-600 px-8 py-4 text-white font-medium hover:bg-brand-700 transition-all shadow-xl shadow-brand-500/20"
+            >
+              Ver catálogo
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+              </svg>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Wave divisor -->
+      <div class="absolute bottom-0 left-0 right-0">
+        <svg viewBox="0 0 1440 100" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-full">
+          <path d="M0 0L60 8.33C120 16.7 240 33.3 360 41.7C480 50 600 50 720 45C840 40 960 30 1080 28.3C1200 26.7 1320 33.3 1380 36.7L1440 40V100H1380C1320 100 1200 100 1080 100C960 100 840 100 720 100C600 100 480 100 360 100C240 100 120 100 60 100H0V0Z" fill="white"/>
+        </svg>
+      </div>
+    </section>
+
+    <!-- Características/Beneficios -->
+    <section class="py-16 bg-white">
+      <div class="mx-auto max-w-7xl px-4">
+        <h2 class="text-3xl font-bold text-center mb-12">¿Por qué elegir Inbolsa?</h2>
+        
+        <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+          {FEATURES.map(feature => (
+            <div class="rounded-xl border border-slate-200 p-6 hover:shadow-lg transition-all hover:border-brand-200">
+              <div class="text-4xl mb-4">{feature.icon}</div>
+              <h3 class="text-xl font-semibold mb-2">{feature.title}</h3>
+              <p class="text-slate-600">{feature.description}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- Catálogo -->
+    <section id="catalogo" class="py-16 bg-slate-50">
+      <div class="mx-auto max-w-7xl px-4">
+        <h2 class="text-3xl font-bold text-center mb-4">Catálogo de Productos</h2>
+        <p class="text-slate-600 text-center max-w-3xl mx-auto mb-12">
+          Contamos con una amplia variedad de soluciones para distintas industrias.
+          Todos nuestros productos son fabricados con materiales de primera calidad.
+        </p>
+
+        {CATALOG.map((category, index) => (
+          <div class={`mb-16 ${index % 2 === 1 ? 'md:flex-row-reverse' : ''}`}>
+            <h3 class="text-2xl font-semibold mb-3">{category.cat}</h3>
+            <p class="text-slate-600 mb-6">{category.description}</p>
+            
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {category.items.map(product => (
+                <article class="rounded-xl border bg-white p-5 shadow-sm hover:shadow-md transition group">
+                  <div class="aspect-[4/3] w-full overflow-hidden rounded-lg bg-slate-100 mb-4">
+                    <img 
+                      src={product.img} 
+                      alt={product.name} 
+                      class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" 
+                      loading="lazy" 
+                    />
+                  </div>
+                  <h4 class="text-lg font-semibold">{product.name}</h4>
+                  <p class="text-sm text-slate-600 mt-2">{product.description}</p>
+                  
+                  <div class="mt-4 pt-4 border-t border-slate-100">
+                    <a 
+                      href="/inbolsaNeo/contacto" 
+                      class="inline-flex items-center gap-1.5 text-sm font-medium text-brand-600 hover:text-brand-800"
+                    >
+                      Solicitar información
+                      <svg class="w-4 h-4" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M12.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd" />
+                      </svg>
+                    </a>
+                  </div>
+                </article>
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="py-16 bg-gradient-to-br from-brand-600 to-brand-700 text-white">
+      <div class="mx-auto max-w-4xl px-4 text-center">
+        <h2 class="text-3xl font-bold mb-4">¿Necesitas una solución personalizada?</h2>
+        <p class="text-white/90 text-lg mb-8">
+          Contáctanos y diseñaremos un producto que se adapte perfectamente a tus necesidades específicas.
+        </p>
+        <div class="flex flex-wrap justify-center gap-4">
+          <a 
+            href="/inbolsaNeo/contacto" 
+            class="rounded-xl bg-white px-8 py-4 text-brand-700 font-semibold hover:bg-slate-100 transition-colors shadow-xl"
+          >
+            Solicitar asesoría
+          </a>
+          <a 
+            href="/inbolsaNeo/industrias" 
+            class="rounded-xl border-2 border-white/70 bg-white/10 px-8 py-4 text-white font-semibold hover:bg-white/20 transition-colors"
+          >
+            Ver industrias
+          </a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <Footer />
+  
+  <style>
+    html {
+      scroll-behavior: smooth;
+    }
+  </style>
+</Base>
