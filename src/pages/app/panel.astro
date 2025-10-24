@@ -127,7 +127,7 @@ const CATALOG = [
   </div>
 
   <script type="module">
-  import { api, BACK_BASE } from '../../lib/api.ts';
+  import { api, BACK_BASE } from '/inbolsaNeo/lib/api.js';
 
   // util seguro
   const esc = (t) => String(t??'')
@@ -138,7 +138,7 @@ const CATALOG = [
     try {
       // Guard de sesión
       const me = await api.me().catch(()=>null);
-      if (!me?.auth) { location.href = '/app/login?next=' + encodeURIComponent('/app/panel'); return; }
+      if (!me?.auth) { location.href = '/inbolsaNeo/app/login?next=' + encodeURIComponent('/app/panel'); return; }
 
       // ====== Picker de productos ======
       const selected = new Set();
@@ -365,7 +365,7 @@ const CATALOG = [
       document.querySelector('#qrModal [data-close]')?.addEventListener('click', ()=> close('qrModal'));
 
       // Logout
-      document.getElementById('logoutBtn')?.addEventListener('click', async ()=>{ try{ await api.logout(); }catch{} location.href='/app/login'; });
+      document.getElementById('logoutBtn')?.addEventListener('click', async ()=>{ try{ await api.logout(); }catch{} location.href='inbolsaNeo/app/login'; });
 
       // Cargar lista
       await loadList();

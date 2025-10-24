@@ -10,7 +10,7 @@ const ENABLE_MINUTES = 120; // puedes ajustar esto
 
   <!-- Script que maneja activación y revocación de acceso privado -->
   <script type="module" data-m={ENABLE_MINUTES}>
-    import { enablePrivate, disablePrivate, setGrantProducts } from '../lib/privado.ts';
+    import { enablePrivate, disablePrivate, setGrantProducts } from '/inbolsaNeo/lib/privado.js';
 
     const DEFAULT_MIN = Number(document.currentScript?.dataset.m || '120');
     const statusTitle = document.getElementById('statusTitle');

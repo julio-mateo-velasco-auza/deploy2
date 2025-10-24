@@ -36,7 +36,8 @@ const CATALOG = [
 
 <script is:inline>
 (function(){
-  var BACK_BASE = 'http://localhost/inbolsa-api/api';
+  const API_BASE = '/inbolsaNeo/inbolsa-api/api';
+  const BACK_BASE = API_BASE.replace(/\/api$/, '');
   var DEBUG = true; // true para caja de debug
 
   function $all(s,root){return Array.prototype.slice.call((root||document).querySelectorAll(s));}

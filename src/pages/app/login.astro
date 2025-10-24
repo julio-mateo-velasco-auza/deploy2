@@ -29,7 +29,7 @@ import Base from '../../layouts/Base.astro';
   <script type="module">
     // Script directo sin importar módulos
     const params = new URLSearchParams(location.search);
-    const next = params.get('next') || '/app/panel';
+    const next = params.get('next') || '/inbolsaNeo/app/panel'; // <-- ruta corregida
 
     const form = document.getElementById('loginForm');
     const err  = document.getElementById('err');
@@ -43,7 +43,7 @@ import Base from '../../layouts/Base.astro';
       const password = document.getElementById('password').value;
 
       try {
-        const response = await fetch('http://localhost/inbolsa-api/api/auth/login', {
+        const response = await fetch('/inbolsaNeo/inbolsa-api/api/auth/login', { // <-- ruta corregida (mismo origen)
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'

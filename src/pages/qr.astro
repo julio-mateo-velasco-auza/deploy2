@@ -10,7 +10,7 @@ const ENABLE_MINUTES = 120; // puedes ajustar esto
 
   <!-- Pasamos ENABLE_MINUTES al script vía data-m -->
   <script type="module" data-m={ENABLE_MINUTES}>
-    import { enablePrivate, setGrantProducts } from '../lib/privado.ts';
+    import { enablePrivate, setGrantProducts } from '/inbolsaNeo/lib/privado.js';
 
     // Lee minutos desde data-m (del frontmatter) con fallback a 120
     const DEFAULT_MIN = Number(document.currentScript?.dataset.m || '120');

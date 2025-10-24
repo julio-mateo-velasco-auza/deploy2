@@ -113,7 +113,8 @@ export function getGrantProducts(): string[] {
 // Función para verificar si el acceso sigue siendo válido
 export async function checkAccessValid(): Promise<boolean> {
   try {
-    const response = await fetch('http://localhost/inbolsa-api/api/access/payload', {
+    // Actualizado para iPage: uso de ruta relativa en lugar de URL absoluta
+    const response = await fetch('/inbolsaNeo/inbolsa-api/api/access/payload', {
       credentials: 'include'
     });
     
