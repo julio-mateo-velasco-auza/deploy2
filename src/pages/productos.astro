@@ -10,17 +10,600 @@ import Footer from '../components/Footer.astro';
 const pageTitle = 'Productos';
 
 const CATALOG = [
-  { cat: 'Bolsas', items: [
-    { id:'bolsa-chica',   name:'Bolsa chica',   img:'/inbolsaNeo/imgs/bolsa-chica.jpg' },
-    { id:'bolsa-grande', name:'Bolsa grande', img:'/inbolsaNeo/imgs/bolsa-mediana.jpg' },
-    { id:'bolsa-enorme',  name:'Bolsa enorme',  img:'/inbolsaNeo/imgs/bolsa-enorme.jpg' },
+  { cat: 'Sacos PP', items: [
+    { id:'sacos-convencionales',   name:'Sacos Convencionales',   img:'/inbolsaNeo/imgs/bolsa-chica.jpg' },
+    { id:'sacos-red', name:'Sacos de red', img:'/inbolsaNeo/imgs/bolsa-mediana.jpg' },
+    { id:'sacos-laminados',  name:'Sacos laminados',  img:'/inbolsaNeo/imgs/bolsa-enorme.jpg' },
+    { id:'sacos-laminacion-premium',  name:'Sacos con laminacion premium',  img:'/inbolsaNeo/imgs/bolsa-enorme.jpg' },
+    { id:'sacos-planos',  name:'Sacos planos',  img:'/inbolsaNeo/imgs/bolsa-enorme.jpg' },
+    { id:'sacos-fondo-cuadrado',  name:'Sacos con fondo cuadrado',  img:'/inbolsaNeo/imgs/bolsa-enorme.jpg' },
   ]},
-  { cat: 'Hilos', items: [
-    { id:'hilo-algodon',  name:'Hilo de algodón', img:'/inbolsaNeo/imgs/hilo-algodon.jpg' },
-    { id:'hilo-nylon',    name:'Hilo de nylon',   img:'/inbolsaNeo/imgs/hilo-nylon.jpg' },
+  { cat: 'Big Bag', items: [
+    { id:'big-bag-tubular',  name:'Big Bag Tubular', img:'/inbolsaNeo/imgs/hilo-algodon.jpg' },
+    { id:'big-bag-u-panel',    name:'Big Bag U Panel',   img:'/inbolsaNeo/imgs/hilo-nylon.jpg' },
+    { id:'big-bag-cuadripanel',    name:'Big Bag cuadripanel',   img:'/inbolsaNeo/imgs/hilo-nylon.jpg' },
+    { id:'big-bag-compartimentada',    name:'Big Bag compartimentada',   img:'/inbolsaNeo/imgs/hilo-nylon.jpg' },
+    { id:'sling-bag',    name:'Sling Bag',   img:'/inbolsaNeo/imgs/hilo-nylon.jpg' },
+  ]},
+  { cat: 'Telas', items: [
+    { id:'tela-plana',  name:'Tela plana', img:'/inbolsaNeo/imgs/hilo-algodon.jpg' },
+    { id:'tela-tubular',    name:'Tela tubular',   img:'/inbolsaNeo/imgs/hilo-nylon.jpg' },
+  ]},
+  { cat: 'Hilos y sogas', items: [
+    { id:'hilo-plano',  name:'Hilo Plano', img:'/inbolsaNeo/imgs/hilo-algodon.jpg' },
+    { id:'hilo-multifilamentado',    name:'Hilo multifilamento',   img:'/inbolsaNeo/imgs/hilo-nylon.jpg' },
+    { id:'hilo-reforzado-pp',    name:'Hilo reforzado pp',   img:'/inbolsaNeo/imgs/hilo-nylon.jpg' },
+    { id:'hilo-reforzado-multifilamento',    name:'Hilo reforzado multifilamento',   img:'/inbolsaNeo/imgs/hilo-nylon.jpg' },
+    { id:'amarres',    name:'Amarres',   img:'/inbolsaNeo/imgs/hilo-nylon.jpg' },
   ]},
 ];
+
+const PRODUCT_DETAILS = {
+  'sacos-convencionales': {
+    name: 'Sacos Convencionales',
+    category: 'Sacos PP',
+    cover: '/inbolsaNeo/imgs/bolsa-chica.jpg',
+    shortDescription: 'Saco de rafia versátil para cargas a granel y productos agroindustriales.',
+    summary: 'Bolsa tejida en polipropileno virgen con tratamiento anti UV y costuras reforzadas para garantizar ciclos de reutilización.',
+    description: [
+      'El saco convencional es la solución de entrada para movimientos de granos, harinas y productos sólidos. Su tejido uniforme y permeabilidad controlada evitan condensaciones y protegen la mercadería durante el transporte.',
+      'Fabricamos sobre pedido, con opciones de laminado interior, tratamientos antipolvo y personalización flexográfica hasta tres colores por cara.'
+    ],
+    features: [
+      'Polipropileno virgen con aditivo anti UV para 800 h de exposición solar.',
+      'Costura de doble hilo en refuerzos laterales para evitar desgarros.',
+      'Opción de fuelle lateral y laminado interior para productos finos.',
+      'Se entrega plegado y termoencogido para optimizar almacenamiento.'
+    ],
+    applications: [
+      'Granos y cereales a granel.',
+      'Alimentos balanceados y harinas.',
+      'Resinas y productos químicos granulados.'
+    ],
+    specs: [
+      { label: 'Gramaje disponible', value: '70 a 110 g/m²' },
+      { label: 'Capacidad de carga', value: '25 a 50 kg' },
+      { label: 'Formato', value: 'Plano con opción de fuelles' },
+      { label: 'Impresión', value: 'Flexografía hasta 3 colores por cara' }
+    ],
+    gallery: [
+      '/inbolsaNeo/imgs/bolsa-chica.jpg',
+      '/inbolsaNeo/imgs/bolsa-mediana.jpg'
+    ]
+  },
+  'sacos-red': {
+    name: 'Sacos de red',
+    category: 'Sacos PP',
+    cover: '/inbolsaNeo/imgs/bolsa-mediana.jpg',
+    shortDescription: 'Bolsa mallada con excelente ventilación para frutas y hortalizas.',
+    summary: 'La estructura tramada permite flujo de aire constante, ideal para productos que continúan respirando en postcosecha.',
+    description: [
+      'Nuestros sacos de red mantienen la firmeza del producto gracias a la elasticidad controlada del monofilamento. Disponibles en colores personalizados para identidades de marca o codificación de calibres.',
+      'La red se ofrece en piezas continuas o cortadas y cosidas, con opciones de cierre mediante cordón, fleje o etiqueta térmica integrable.'
+    ],
+    features: [
+      'Monofilamento estabilizado para evitar decoloración bajo luz solar.',
+      'Estructura que soporta impactos sin deformar la mercadería.',
+      'Compatible con envasadoras automáticas y semiautomáticas.',
+      'Posibilidad de incluir etiqueta lateral o cinta térmica.'
+    ],
+    applications: [
+      'Cebollas, cítricos y tubérculos.',
+      'Envases secundarios para pack promocional.',
+      'Segmentación visual en centros de distribución.'
+    ],
+    specs: [
+      { label: 'Anchos disponibles', value: '30 a 60 cm' },
+      { label: 'Metraje por rollo', value: '100 a 600 m' },
+      { label: 'Carga recomendada', value: '5 a 20 kg' },
+      { label: 'Colores', value: 'Personalizados, opaco o bicolor' }
+    ],
+    gallery: [
+      '/inbolsaNeo/imgs/bolsa-mediana.jpg'
+    ]
+  },
+  'sacos-laminados': {
+    name: 'Sacos laminados',
+    category: 'Sacos PP',
+    cover: '/inbolsaNeo/imgs/bolsa-enorme.jpg',
+    shortDescription: 'Saco tejido laminado en coextrusión para proteger contra humedad y polvo.',
+    summary: 'Combina rafia de resistencia mecánica con film coex para lograr barrera ante finos y agentes climáticos.',
+    description: [
+      'La laminación coex reduce la migración de finos y minimiza entradas de humedad en almacenajes prolongados. Es ideal para productos sensibles al agua o aromatizados.',
+      'Se entrega impreso en alta resolución y con diversas opciones de válvulas o fuelles para optimizar procesos de llenado.'
+    ],
+    features: [
+      'Coeficiente de fricción calibrado para apilado seguro.',
+      'Barrera de polietileno coex de 25 micras como estándar.',
+      'Opción de microperforado o microventeo para cargas calientes.',
+      'Personalización total de dimensiones y densidad del tejido.'
+    ],
+    applications: [
+      'Harinas y mezclas preparadas.',
+      'Suplementos minerales y premixes.',
+      'Productos químicos pulverulentos.'
+    ],
+    specs: [
+      { label: 'Gramaje tejido', value: '80 a 120 g/m²' },
+      { label: 'Espesor film', value: '20 a 40 micras' },
+      { label: 'Capacidades', value: '15 a 50 kg' },
+      { label: 'Formatos disponibles', value: 'Plano, con fuelles o valvulado' }
+    ],
+    gallery: [
+      '/inbolsaNeo/imgs/bolsa-enorme.jpg'
+    ]
+  },
+  'sacos-laminacion-premium': {
+    name: 'Sacos con laminación premium',
+    category: 'Sacos PP',
+    cover: '/inbolsaNeo/imgs/bolsa-enorme.jpg',
+    shortDescription: 'Acabado superior con brillo o tacto mate para productos de alto valor.',
+    summary: 'Incluye láminas coex de alto brillo, mate o soft touch y relieve localizado para resaltar la marca.',
+    description: [
+      'La versión premium agrega un film de presentación con alto impacto visual, adecuado para retail y productos diferenciados. Combinamos refuerzos interiores con tratamientos UV de larga duración.',
+      'Permite ventanas transparentes y cortes troquelados para vista del contenido sin comprometer la barrera contra polvo.'
+    ],
+    features: [
+      'Acabado brillante, mate o tacto gomoso según requerimiento.',
+      'Posibilidad de barniz selectivo y relieve en logotipo.',
+      'Compatible con costura tradicional o sellado ultrasónico.',
+      'Se suministra con certificados de contacto indirecto con alimentos.'
+    ],
+    applications: [
+      'Alimentos para mascotas premium.',
+      'Harinas especiales y mixes gourmet.',
+      'Productos de jardinería profesional.'
+    ],
+    specs: [
+      { label: 'Gramaje tejido', value: '90 a 130 g/m²' },
+      { label: 'Film decorativo', value: 'BOPP 18-25 micras' },
+      { label: 'Anchos', value: '40 a 65 cm' },
+      { label: 'Impresión', value: 'Alta definición en 8 colores' }
+    ],
+    gallery: [
+      '/inbolsaNeo/imgs/bolsa-enorme.jpg'
+    ]
+  },
+  'sacos-planos': {
+    name: 'Sacos planos',
+    category: 'Sacos PP',
+    cover: '/inbolsaNeo/imgs/bolsa-enorme.jpg',
+    shortDescription: 'Bolsa plana sin fuelles para llenado directo y apilado en estibas.',
+    summary: 'La configuración plana optimiza el llenado por gravedad y ofrece soporte uniforme en pallet.',
+    description: [
+      'Confeccionados con tejido de rafia uniformemente tensado y costuras rectas reforzadas, permiten apilado estable y reducen arrugas en el frente impreso.',
+      'Disponibles en versiones laminadas o respirables y con interior PE para líneas automatizadas.'
+    ],
+    features: [
+      'Corte por ultrasonido que evita hilachas.',
+      'Borde superior termosellado o con dobladillo de seguridad.',
+      'Marcado lateral para control de nivel durante el llenado.',
+      'Opciones de bolsa interior coex para productos finos.'
+    ],
+    applications: [
+      'Azúcares, sal y productos cristalinos.',
+      'Semillas certificadas.',
+      'Materias primas para industria química.'
+    ],
+    specs: [
+      { label: 'Anchos', value: '35 a 60 cm' },
+      { label: 'Largos', value: '55 a 110 cm' },
+      { label: 'Costura inferior', value: 'Doble cadena con refuerzo' },
+      { label: 'Tolva', value: 'Compatible con llenadoras rectas' }
+    ],
+    gallery: [
+      '/inbolsaNeo/imgs/bolsa-enorme.jpg'
+    ]
+  },
+  'sacos-fondo-cuadrado': {
+    name: 'Sacos con fondo cuadrado',
+    category: 'Sacos PP',
+    cover: '/inbolsaNeo/imgs/bolsa-enorme.jpg',
+    shortDescription: 'Formato tipo block bottom para exhibición en punto de venta.',
+    summary: 'El fondo cuadrado permite que el saco quede erguido y mejora la presentación en isla o estantería.',
+    description: [
+      'Utilizamos maquinaria AD Star para soldar las esquinas y garantizar cierre hermético sin costuras expuestas. El saco admite llenado automatizado con inyección y sellado posterior.',
+      'Se suministra con ventilación controlada y posibilidad de válvula frontal o lateral según el producto.'
+    ],
+    features: [
+      'Construcción block bottom 100% polipropileno.',
+      'Resistencia superior a cargas de impacto y vibración.',
+      'Permite apilados de hasta 8 niveles sin deformar.',
+      'Amplia superficie frontal para branding y mensajes.'
+    ],
+    applications: [
+      'Cemento, cal y mezclas secas.',
+      'Balanceados y alimentos para mascotas.',
+      'Semillas y productos agroquímicos.'
+    ],
+    specs: [
+      { label: 'Capacidades', value: '20, 25 y 50 kg' },
+      { label: 'Sistema de cierre', value: 'Válvula interna con soldado térmico' },
+      { label: 'Perforaciones', value: 'Microperforado de 0.5 mm opcional' },
+      { label: 'Línea', value: 'Compatible con llenadoras AD Star' }
+    ],
+    gallery: [
+      '/inbolsaNeo/imgs/bolsa-enorme.jpg'
+    ]
+  },
+  'big-bag-tubular': {
+    name: 'Big Bag Tubular',
+    category: 'Big Bag',
+    cover: '/inbolsaNeo/imgs/hilo-algodon.jpg',
+    shortDescription: 'FIBC de cuerpo continuo sin costuras laterales para maximizar resistencia.',
+    summary: 'Fabricado con rafia tubular de polipropileno de alta tenacidad y carga segura hasta 1500 kg.',
+    description: [
+      'El cuerpo tubular elimina costuras laterales, reduciendo puntos de falla y aportando mejor retención de polvo. Ideal para productos peligrosos o con requerimientos de limpieza superior.',
+      'Disponible en clases SF 5:1 y 6:1 con certificado para industrias alimenticias o químicas.'
+    ],
+    features: [
+      'Cuerpo continuo de tejido circular sin costura.',
+      'Refuerzo inferior cruzado para distribuir el peso.',
+      'Estructuras de asas en uno, dos o cuatro puntos.',
+      'Recubrimiento interior opcional con liner de PE.'
+    ],
+    applications: [
+      'Pigmentos y polvos finos.',
+      'Químicos peligrosos controlados.',
+      'Ingredientes de grado alimenticio.'
+    ],
+    specs: [
+      { label: 'Factor de seguridad', value: '5:1 o 6:1 según ISO 21898' },
+      { label: 'Carga recomendada', value: '500 a 1500 kg' },
+      { label: 'Boca de carga', value: 'Cilíndrica, en falda o con válvula' },
+      { label: 'Descarga', value: 'Válvula circular con amarra' }
+    ],
+    gallery: [
+      '/inbolsaNeo/imgs/hilo-algodon.jpg',
+      '/inbolsaNeo/imgs/hilo-nylon.jpg'
+    ]
+  },
+  'big-bag-u-panel': {
+    name: 'Big Bag U Panel',
+    category: 'Big Bag',
+    cover: '/inbolsaNeo/imgs/hilo-nylon.jpg',
+    shortDescription: 'Construcción en forma de U para estabilidad dimensional y armado rápido.',
+    summary: 'Tres paneles (uno en forma de U y dos laterales) que aportan capacidad de carga uniforme y excelente apilabilidad.',
+    description: [
+      'Es el modelo más versátil, recomendado para industrias de alimentos, minería y materiales de construcción. Se adapta a diferentes configuraciones de asas y liners.',
+      'La costura reforzada y pruebas de estallido garantizan seguridad en manipulación con autoelevadores o grúas.'
+    ],
+    features: [
+      'Paneles cosidos con hilo de alta tenacidad.',
+      'Refuerzos verticales que evitan deformaciones.',
+      'Puede incluir ventana de inspección o document pocket.',
+      'Compatible con llenado automático y descarga controlada.'
+    ],
+    applications: [
+      'Productos minerales y cementicios.',
+      'Alimentos para mascotas a granel.',
+      'Reciclables y residuos industriales.'
+    ],
+    specs: [
+      { label: 'Capacidad de carga', value: '500 a 2000 kg' },
+      { label: 'Dimensión estándar', value: '90 x 90 x 110 cm' },
+      { label: 'Asas', value: '4 asas de 30 o 40 cm' },
+      { label: 'Liner interno', value: 'Disponible en PE liso o sellado' }
+    ],
+    gallery: [
+      '/inbolsaNeo/imgs/hilo-nylon.jpg'
+    ]
+  },
+  'big-bag-cuadripanel': {
+    name: 'Big Bag cuadripanel',
+    category: 'Big Bag',
+    cover: '/inbolsaNeo/imgs/hilo-nylon.jpg',
+    shortDescription: 'FIBC de cuatro paneles cosidos para mantener forma cúbica.',
+    summary: 'Diseñado para optimizar espacio en contenedores y transporte terrestre gracias a caras reforzadas.',
+    description: [
+      'Cada panel se cose por separado, lo que permite controlar la elongación en cada cara y mantener la forma recta incluso con cargas densas.',
+      'Acepta tratamientos antiestáticos tipo B o C y liners con válvula para productos reactivos.'
+    ],
+    features: [
+      'Cuatro paneles independientes con refuerzo diagonal.',
+      'Costuras recubiertas para minimizar fuga de polvo.',
+      'Puede incluir faldón superior y falda inferior.',
+      'Etiqueta RFID opcional para trazabilidad.'
+    ],
+    applications: [
+      'Pigmentos y masterbatch.',
+      'Azúcares y productos granulares.',
+      'Materiales reciclados de alta densidad.'
+    ],
+    specs: [
+      { label: 'Carga útil', value: 'Hasta 1500 kg' },
+      { label: 'Factor de seguridad', value: '5:1' },
+      { label: 'Tejido', value: 'Polipropileno 160 g/m²' },
+      { label: 'Aperturas', value: 'Superior con válvula o falda completa' }
+    ],
+    gallery: [
+      '/inbolsaNeo/imgs/hilo-nylon.jpg'
+    ]
+  },
+  'big-bag-compartimentada': {
+    name: 'Big Bag compartimentada',
+    category: 'Big Bag',
+    cover: '/inbolsaNeo/imgs/hilo-nylon.jpg',
+    shortDescription: 'FIBC con tabiques internos que sostienen forma y distribuyen la carga.',
+    summary: 'Incluye paneles internos cosidos que impiden el abombamiento y favorecen apilados perfectos.',
+    description: [
+      'Los compartimentos internos crean columnas que mantienen las paredes rectas y controlan el flujo del producto. Permite aumentar la capacidad volumétrica sin comprometer la estabilidad.',
+      'Disponible con liners soldados para productos higroscópicos o sensibles a la humedad.'
+    ],
+    features: [
+      'Paneles estabilizadores internos (baffles).',
+      'Costuras dobles con refuerzo sobre tabiques.',
+      'Asas anchas para movimiento seguro con grúas.',
+      'Trampilla de descarga con cordón asegurador.'
+    ],
+    applications: [
+      'Leche en polvo y ingredientes alimenticios.',
+      'Productos farmacéuticos intermedios.',
+      'Químicos finos sensibles a la presión.'
+    ],
+    specs: [
+      { label: 'Factor de seguridad', value: '5:1 o 6:1' },
+      { label: 'Dimensión sugerida', value: '95 x 95 x 120 cm' },
+      { label: 'Boca de carga', value: 'Con válvula o tapa completa' },
+      { label: 'Boca de descarga', value: 'Válvula de 35 cm con cordón' }
+    ],
+    gallery: [
+      '/inbolsaNeo/imgs/hilo-nylon.jpg'
+    ]
+  },
+  'sling-bag': {
+    name: 'Sling Bag',
+    category: 'Big Bag',
+    cover: '/inbolsaNeo/imgs/hilo-nylon.jpg',
+    shortDescription: 'Bolsa tipo eslinga económica para cargas medianas y picking rápido.',
+    summary: 'Diseño ligero con dos asas continuas que envuelven el cuerpo para manipular sin pallets.',
+    description: [
+      'El Sling Bag reduce costos logísticos porque permite manipular cargas de hasta 1000 kg sin pallets. Las eslingas integradas se adaptan a autoelevadores o puentes grúa.',
+      'Opción de laminar el cuerpo o agregar liner interior según el producto a transportar.'
+    ],
+    features: [
+      'Cuerpo tubular o panel simple según pedido.',
+      'Eslingas integradas continuas de polipropileno.',
+      'Costuras reforzadas con hilo de poliéster.',
+      'Fácil plegado para retornos o reciclaje.'
+    ],
+    applications: [
+      'Fertilizantes y agroquímicos.',
+      'Materiales reciclables clasificados.',
+      'Alimentos a granel de rotación media.'
+    ],
+    specs: [
+      { label: 'Capacidad de carga', value: '400 a 1000 kg' },
+      { label: 'Longitud de eslinga', value: '90 a 110 cm' },
+      { label: 'Tejido', value: 'Polipropileno 140 g/m²' },
+      { label: 'Opciones', value: 'Con o sin faldón superior' }
+    ],
+    gallery: [
+      '/inbolsaNeo/imgs/hilo-nylon.jpg'
+    ]
+  },
+  'tela-plana': {
+    name: 'Tela plana',
+    category: 'Telas',
+    cover: '/inbolsaNeo/imgs/hilo-algodon.jpg',
+    shortDescription: 'Rollo tejido plano para conversión en sacos o aplicaciones industriales.',
+    summary: 'Tela de rafia PP fabricada en anchos hasta 320 cm, con tratamientos de fricción y anti UV.',
+    description: [
+      'Se suministra en rollos con mandril y film protector para facilitar el montaje en máquinas de confección. Admitimos corte longitudinal con orillo termosellado.',
+      'La superficie lisa reduce desgaste en procesos de impresión y mejora adhesión de láminas o recubrimientos.'
+    ],
+    features: [
+      'Control de gramaje ±3%.',
+      'Aditivo anti UV para almacenamiento a cielo abierto.',
+      'Posibilidad de tramado antideslizante.',
+      'Entrega en rollos de hasta 500 m lineales.'
+    ],
+    applications: [
+      'Confección de sacos industriales.',
+      'Revestimiento de estructuras temporales.',
+      'Cubiertas y protecciones de suelos.'
+    ],
+    specs: [
+      { label: 'Gramaje', value: '60 a 120 g/m²' },
+      { label: 'Anchos', value: '80 a 320 cm' },
+      { label: 'Color', value: 'Natural, blanco o según pedido' },
+      { label: 'Tratamientos', value: 'Antiestático, anti UV, corona' }
+    ],
+    gallery: [
+      '/inbolsaNeo/imgs/hilo-algodon.jpg'
+    ]
+  },
+  'tela-tubular': {
+    name: 'Tela tubular',
+    category: 'Telas',
+    cover: '/inbolsaNeo/imgs/hilo-nylon.jpg',
+    shortDescription: 'Tejido circular continuo ideal para big bags y mangas protectoras.',
+    summary: 'Se fabrica en telares circulares de última generación para lograr paredes homogéneas y alta resistencia.',
+    description: [
+      'La producción tubular evita costuras longitudinales, manteniendo la resistencia completa del material. Entregamos en rollos precortados con marcas de impresión.',
+      'Disponible con bandas de refuerzo y microperforación para ventilación controlada.'
+    ],
+    features: [
+      'Tensión del trenzado calibrada para elongación controlada.',
+      'Bobinas con identificación por código QR.',
+      'Se puede suministrar plegada para extrusión secundaria.',
+      'Compatible con procesos automatizados de conversión.'
+    ],
+    applications: [
+      'Cuerpo de big bags y sacos tubulares.',
+      'Protectores de bobinas metálicas.',
+      'Conductos flexibles y mangas de ventilación.'
+    ],
+    specs: [
+      { label: 'Diámetro plano', value: '60 a 220 cm' },
+      { label: 'Gramaje', value: '110 a 220 g/m²' },
+      { label: 'Bobina', value: 'Hasta 400 kg' },
+      { label: 'Acabados', value: 'Corona, antideslizante, anti UV' }
+    ],
+    gallery: [
+      '/inbolsaNeo/imgs/hilo-nylon.jpg'
+    ]
+  },
+  'hilo-plano': {
+    name: 'Hilo Plano',
+    category: 'Hilos y sogas',
+    cover: '/inbolsaNeo/imgs/hilo-algodon.jpg',
+    shortDescription: 'Hilo de rafia plano para costura de sacos y embalajes pesados.',
+    summary: 'Fabricado con fibras de polipropileno virgen que aseguran costuras limpias y de alto desempeño.',
+    description: [
+      'Se presenta en bobinas uniformes que aseguran tensado constante en máquinas cosedoras. Disponible con lubricación específica para altas velocidades.',
+      'Opciones en color natural o pigmentado, con resistencia certificada y baja elongación.'
+    ],
+    features: [
+      'Excelente resistencia al deshilachado.',
+      'Compatible con cosedoras portátiles y de columna.',
+      'Presentación en conos de 1 y 2 kg.',
+      'Calidad alimentaria disponible bajo pedido.'
+    ],
+    applications: [
+      'Cierre de sacos de polipropileno.',
+      'Empaques de harina y balanceados.',
+      'Atado de fardos livianos.'
+    ],
+    specs: [
+      { label: 'Título', value: '1200 a 3000 den' },
+      { label: 'Resistencia', value: 'Hasta 7.5 kg' },
+      { label: 'Color', value: 'Natural, blanco, pigmentado' },
+      { label: 'Lubricación', value: 'Seco o con acabado siliconado' }
+    ],
+    gallery: [
+      '/inbolsaNeo/imgs/hilo-algodon.jpg'
+    ]
+  },
+  'hilo-multifilamentado': {
+    name: 'Hilo multifilamento',
+    category: 'Hilos y sogas',
+    cover: '/inbolsaNeo/imgs/hilo-nylon.jpg',
+    shortDescription: 'Hilo de poliamida o polipropileno de alto número de filamentos para costuras exigentes.',
+    summary: 'Proporciona elasticidad controlada y terminaciones suaves, ideal para cosidos que requieren sellado hermético.',
+    description: [
+      'Fabricado mediante texturizado y retorcido que evita nudos y garantiza un desenrollado uniforme. Se adapta a máquinas industriales de alta velocidad.',
+      'Disponible con tratamientos antiestáticos y estabilización UV para uso exterior.'
+    ],
+    features: [
+      'Baja fricción y excelente deslizamiento en guías.',
+      'No deja residuos ni pelusa en alimentos.',
+      'Opción de color con masterbatch sólido.',
+      'Elongación controlada para absorción de impactos.'
+    ],
+    applications: [
+      'Costura de big bags.',
+      'Envasadoras automáticas de balanceados.',
+      'Atado de redes y sogas.'
+    ],
+    specs: [
+      { label: 'Título', value: '840 a 2100 den' },
+      { label: 'Resistencia', value: 'Hasta 9.5 kg' },
+      { label: 'Presentación', value: 'Bobinas de 5 kg' },
+      { label: 'Materia prima', value: 'PP o PA según requerimiento' }
+    ],
+    gallery: [
+      '/inbolsaNeo/imgs/hilo-nylon.jpg'
+    ]
+  },
+  'hilo-reforzado-pp': {
+    name: 'Hilo reforzado pp',
+    category: 'Hilos y sogas',
+    cover: '/inbolsaNeo/imgs/hilo-nylon.jpg',
+    shortDescription: 'Monofilamento de polipropileno reforzado con aditivos de alta tenacidad.',
+    summary: 'Diseñado para costuras sometidas a vibración o desgaste continuo en transporte.',
+    description: [
+      'El refuerzo proporciona mayor resistencia al corte y abrasión, lo que evita rupturas en procesos logísticos intensivos.',
+      'Recomendado para costura de sacos pesados y sujeción de empaques exportación.'
+    ],
+    features: [
+      'Alto módulo de elasticidad.',
+      'Tratamiento anti UV para transporte exterior.',
+      'Disponible con pigmento antiestático.',
+      'Bobinas selladas al vacío para mayor vida útil.'
+    ],
+    applications: [
+      'Costura de sacos laminados.',
+      'Cierres de sacos block bottom.',
+      'Atado de componentes industriales.'
+    ],
+    specs: [
+      { label: 'Título', value: '1500 a 2600 den' },
+      { label: 'Resistencia', value: 'Hasta 11 kg' },
+      { label: 'Presentación', value: 'Bobina de 4 a 6 kg' },
+      { label: 'Color', value: 'Natural o pigmentado según Pantone' }
+    ],
+    gallery: [
+      '/inbolsaNeo/imgs/hilo-nylon.jpg'
+    ]
+  },
+  'hilo-reforzado-multifilamento': {
+    name: 'Hilo reforzado multifilamento',
+    category: 'Hilos y sogas',
+    cover: '/inbolsaNeo/imgs/hilo-nylon.jpg',
+    shortDescription: 'Cordones de finos filamentos torsionados para un cierre hermético y resistente.',
+    summary: 'Combina la flexibilidad del multifilamento con un alma reforzada para cargas extremas.',
+    description: [
+      'El alma central aporta rigidez mientras que la cobertura externa mantiene un tacto suave, evitando daños en costuras aparentes.',
+      'Ideal para packaging exportación donde se requieren costuras certificadas y pruebas de esfuerzo repetitivas.'
+    ],
+    features: [
+      'Resistencia a la abrasión superior.',
+      'Se adapta a máquinas de costura doble aguja.',
+      'Disponible con previa calibración de tensión.',
+      'No absorbe humedad y mantiene peso constante.'
+    ],
+    applications: [
+      'Costura de big bags premium.',
+      'Fijación de liners en FIBC.',
+      'Sogas para atado en camiones.'
+    ],
+    specs: [
+      { label: 'Título', value: '1800 a 3200 den' },
+      { label: 'Resistencia', value: 'Hasta 12 kg' },
+      { label: 'Presentación', value: 'Conos de 5 kg' },
+      { label: 'Acabado', value: 'Lubricado o seco' }
+    ],
+    gallery: [
+      '/inbolsaNeo/imgs/hilo-nylon.jpg'
+    ]
+  },
+  'amarres': {
+    name: 'Amarres',
+    category: 'Hilos y sogas',
+    cover: '/inbolsaNeo/imgs/hilo-nylon.jpg',
+    shortDescription: 'Cintas y sogas trenzadas para asegurar cargas y cierres rápidos.',
+    summary: 'Fabricadas en polipropileno de alta densidad o polietileno de baja memoria, según la aplicación requerida.',
+    description: [
+      'Producimos amarres planos, redondos o retorcidos con calibres específicos, ideales para sujeción de sacos, pallets y lonas.',
+      'Disponibles en rollos cortados o en lazos preformados con terminal termoencogible.'
+    ],
+    features: [
+      'Resistencia comprobada en ensayos de tracción.',
+      'Alta flexibilidad para nudos rápidos.',
+      'Colores codificados para procesos Lean.',
+      'Resistentes a la humedad y agentes químicos.'
+    ],
+    applications: [
+      'Atado de sacos en transporte.',
+      'Fijación de mercadería en pallets.',
+      'Operaciones de cosecha y atado en campo.'
+    ],
+    specs: [
+      { label: 'Diámetros', value: '3 a 12 mm' },
+      { label: 'Resistencia', value: '120 a 650 kg' },
+      { label: 'Presentación', value: 'Rollos de 200 o 500 m' },
+      { label: 'Colores', value: 'Natural, negro, azul, rojo' }
+    ],
+    gallery: [
+      '/inbolsaNeo/imgs/hilo-nylon.jpg'
+    ]
+  }
+} as const;
+
+type ProductId = keyof typeof PRODUCT_DETAILS;
 ---
+
 <Base title={pageTitle}>
   <Header />
 
@@ -31,14 +614,29 @@ const CATALOG = [
       <section class="mt-8">
         <h2 class="text-xl font-semibold">{group.cat}</h2>
         <div class="mt-4 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {group.items.map((p) => (
-            <article data-product-id={p.id} class="rounded-xl border border-slate-200/40 bg-white/5 p-4 shadow-sm">
-              <div class="aspect-[4/3] w-full overflow-hidden rounded-lg bg-slate-100">
-                <img src={p.img} alt={p.name} class="h-full w-full object-cover" loading="lazy" />
-              </div>
-              <h3 class="mt-3 text-lg font-medium">{p.name}</h3>
-            </article>
-          ))}
+          {group.items.map((p) => {
+            const detail = PRODUCT_DETAILS[p.id as ProductId];
+            return (
+              <article data-product-id={p.id} class="flex flex-col rounded-xl border border-slate-200/40 bg-white/5 p-4 shadow-sm">
+                <div class="aspect-[4/3] w-full overflow-hidden rounded-lg bg-slate-100">
+                  <img src={p.img} alt={p.name} class="h-full w-full object-cover" loading="lazy" />
+                </div>
+                <h3 class="mt-3 text-lg font-medium">{p.name}</h3>
+                {detail?.shortDescription && (
+                  <p class="mt-2 text-sm text-slate-600">{detail.shortDescription}</p>
+                )}
+                <div class="mt-4 flex flex-wrap gap-3">
+                  <button
+                    type="button"
+                    data-product-modal={p.id}
+                    class="inline-flex items-center justify-center rounded-lg bg-brand-600 px-3 py-2 text-sm font-semibold text-white transition hover:bg-brand-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2"
+                  >
+                    Ver más
+                  </button>
+                </div>
+              </article>
+            );
+          })}
         </div>
       </section>
     ))}
@@ -50,23 +648,182 @@ const CATALOG = [
 
   <Footer />
 
+  <div
+    id="productModal"
+    class="fixed inset-0 z-50 hidden items-center justify-center px-4 py-10"
+    role="dialog"
+    aria-modal="true"
+  >
+    <div class="absolute inset-0 bg-slate-900/70 backdrop-blur-sm" data-close></div>
+    <div class="relative z-10 max-h-[85vh] w-full max-w-4xl overflow-hidden rounded-2xl bg-slate-50 shadow-2xl">
+      <div class="flex items-center justify-between border-b border-slate-200 bg-white px-5 py-3">
+        <h2 class="text-base font-semibold text-slate-900">Detalle del producto</h2>
+        <button
+          type="button"
+          class="rounded-lg border border-transparent px-2 text-xl leading-none text-slate-500 transition hover:border-slate-200 hover:text-slate-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2"
+          data-close
+          aria-label="Cerrar detalle"
+        >
+          ×
+        </button>
+      </div>
+      <div id="productModalBody" class="max-h-[70vh] overflow-y-auto px-5 py-6"></div>
+    </div>
+  </div>
+
+  <div id="product-detail-templates" class="hidden" aria-hidden="true">
+    {Object.entries(PRODUCT_DETAILS).map(([id, product]) => (
+      <template id={`product-detail-${id}`}>
+        <article class="space-y-10 text-slate-700">
+          <section class="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-xl">
+            <div class="grid gap-0 lg:grid-cols-[3fr_2fr]">
+              <div class="relative bg-gradient-to-br from-sky-900 via-slate-900 to-sky-700 px-8 py-10 text-white">
+                <p class="text-xs font-semibold uppercase tracking-[0.3em] text-sky-200">{product.category}</p>
+                <h3 class="mt-3 text-3xl font-bold">{product.name}</h3>
+                <p class="mt-5 max-w-xl text-sm text-sky-100/80">{product.summary}</p>
+
+                <div class="mt-8 flex flex-wrap gap-3 text-xs font-semibold uppercase tracking-wide">
+                  {product.specs.slice(0, 3).map((spec) => (
+                    <span class="rounded-full bg-white/10 px-4 py-2 text-sky-100 backdrop-blur-sm">{spec.value}</span>
+                  ))}
+                </div>
+
+                <div class="absolute inset-x-8 bottom-0 h-1 bg-sky-400/70"></div>
+              </div>
+              <div class="relative bg-slate-50 p-6">
+                <div class="absolute inset-y-0 left-0 w-5 -skew-x-12 bg-sky-400/70"></div>
+                <div class="relative h-full rounded-2xl border border-slate-200 bg-white p-4 shadow-inner">
+                  <img
+                    src={product.cover}
+                    alt={`Imagen principal de ${product.name}`}
+                    class="h-full w-full rounded-2xl object-cover shadow-lg"
+                    loading="lazy"
+                  />
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section class="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow">
+            <header class="border-b-4 border-sky-500 bg-sky-100 px-6 py-3">
+              <h4 class="text-sm font-semibold uppercase tracking-wide text-sky-800">Descripción</h4>
+            </header>
+            <div class="space-y-4 px-6 py-6 text-sm leading-relaxed">
+              {product.description.map((paragraph) => (
+                <p>{paragraph}</p>
+              ))}
+            </div>
+          </section>
+
+          <section class="grid gap-6 lg:grid-cols-[2fr_1fr]">
+            <div class="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow">
+              <header class="border-b border-slate-200 bg-slate-50 px-6 py-3">
+                <h4 class="text-sm font-semibold uppercase tracking-wide text-slate-700">Ficha técnica</h4>
+              </header>
+              <table class="min-w-full divide-y divide-slate-200 text-sm">
+                <thead class="bg-sky-500/10 text-slate-600">
+                  <tr>
+                    <th class="px-6 py-3 text-left font-semibold">Especificación</th>
+                    <th class="px-6 py-3 text-left font-semibold">Detalle</th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-100">
+                  {product.specs.map((spec) => (
+                    <tr>
+                      <td class="px-6 py-3 font-medium text-slate-600">{spec.label}</td>
+                      <td class="px-6 py-3 text-slate-800">{spec.value}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+
+            <div class="flex flex-col gap-6">
+              <section class="rounded-2xl border border-slate-200 bg-white shadow">
+                <header class="border-b border-slate-200 bg-slate-50 px-6 py-3">
+                  <h4 class="text-sm font-semibold uppercase tracking-wide text-slate-700">Aplicaciones</h4>
+                </header>
+                <div class="space-y-2 px-6 py-5 text-sm text-slate-600">
+                  {product.applications.map((application) => (
+                    <div class="flex items-start gap-3 rounded-xl bg-sky-500/5 px-4 py-3">
+                      <span class="mt-1 inline-flex h-8 w-8 items-center justify-center rounded-full bg-sky-500 text-white shadow">{application[0]}</span>
+                      <p class="leading-snug">{application}</p>
+                    </div>
+                  ))}
+                </div>
+              </section>
+
+              <section class="rounded-2xl border border-orange-400 bg-white shadow">
+                <header class="border-b border-orange-200 bg-orange-50 px-6 py-3">
+                  <h4 class="text-sm font-semibold uppercase tracking-wide text-orange-600">Diferenciales</h4>
+                </header>
+                <ul class="space-y-2 px-6 py-5 text-sm text-slate-700">
+                  {product.features.slice(0, 3).map((feature) => (
+                    <li class="flex items-start gap-3">
+                      <span class="mt-[6px] h-2 w-2 flex-shrink-0 rounded-full bg-orange-500"></span>
+                      <span>{feature}</span>
+                    </li>
+                  ))}
+                </ul>
+              </section>
+            </div>
+          </section>
+
+          <section class="rounded-2xl border border-slate-200 bg-white shadow">
+            <header class="border-b border-slate-200 bg-slate-50 px-6 py-3">
+              <h4 class="text-sm font-semibold uppercase tracking-wide text-slate-700">Características ampliadas</h4>
+            </header>
+            <ul class="grid gap-4 px-6 py-6 text-sm text-slate-600 md:grid-cols-2">
+              {product.features.map((feature) => (
+                <li class="flex items-start gap-3 rounded-xl border border-slate-200/70 bg-slate-50 px-4 py-3 shadow-sm">
+                  <span class="mt-1 inline-flex h-8 w-8 items-center justify-center rounded-full bg-sky-500 text-white shadow-inner">✓</span>
+                  <span>{feature}</span>
+                </li>
+              ))}
+            </ul>
+          </section>
+
+          {product.gallery.length ? (
+            <section class="rounded-2xl border border-slate-200 bg-white shadow">
+              <header class="border-b border-slate-200 bg-slate-50 px-6 py-3">
+                <h4 class="text-sm font-semibold uppercase tracking-wide text-slate-700">Galería</h4>
+              </header>
+              <div class="grid gap-4 px-6 py-6 sm:grid-cols-2 lg:grid-cols-3">
+                {product.gallery.map((image, index) => (
+                  <div class="overflow-hidden rounded-2xl border border-slate-200 bg-slate-100 shadow-sm">
+                    <img
+                      src={image}
+                      alt={`${product.name} imagen ${index + 1}`}
+                      class="h-28 w-full object-cover"
+                      loading="lazy"
+                    />
+                  </div>
+                ))}
+              </div>
+            </section>
+          ) : null}
+        </article>
+      </template>
+    ))}
+  </div>
+
   <script type="module">
     // TODO(claude): subcarpeta /inbolsaNeo para importaciones
     import { isPrivateEnabled, getGrantProducts, disablePrivate, checkAccessValid } from '/inbolsaNeo/lib/privado.js';
 
     (function(){
       // 1) Bloquea si no hay acceso privado
-      try { 
-        if (!isPrivateEnabled()) { 
+      try {
+        if (!isPrivateEnabled()) {
           // TODO(claude): subcarpeta /inbolsaNeo para redirección
-          location.replace('/inbolsaNeo/'); 
-          return; 
-        } 
+          location.replace('/inbolsaNeo/');
+          return;
+        }
       }
-      catch { 
+      catch {
         // TODO(claude): subcarpeta /inbolsaNeo para redirección
-        location.replace('/inbolsaNeo/'); 
-        return; 
+        location.replace('/inbolsaNeo/');
+        return;
       }
 
       // 2) Recupera lista de productos
@@ -83,6 +840,8 @@ const CATALOG = [
       // 3) Aplicar filtro inicial
       const cards = Array.from(document.querySelectorAll('[data-product-id]'));
       const empty = document.getElementById('empty-msg');
+      const modal = document.getElementById('productModal');
+      const modalBody = document.getElementById('productModalBody');
 
       function applyFilter() {
         if (!Array.isArray(allowIds) || allowIds.length === 0) {
@@ -95,13 +854,13 @@ const CATALOG = [
         let anyVisible = false;
         cards.forEach(el => {
           const id = el.getAttribute('data-product-id') || '';
-          if (!allow.has(id)) { 
-            el.classList.add('hidden'); 
-            el.style.display = 'none'; 
-          } else { 
-            el.classList.remove('hidden'); 
-            el.style.display = ''; 
-            anyVisible = true; 
+          if (!allow.has(id)) {
+            el.classList.add('hidden');
+            el.style.display = 'none';
+          } else {
+            el.classList.remove('hidden');
+            el.style.display = '';
+            anyVisible = true;
           }
         });
         if (empty) empty.classList.toggle('hidden', anyVisible);
@@ -109,26 +868,81 @@ const CATALOG = [
 
       applyFilter();
 
+      function closeProductModal() {
+        if (!modal || !modalBody) return;
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+        modalBody.innerHTML = '';
+        modal.removeAttribute('data-open');
+        if (document.body) document.body.classList.remove('overflow-hidden');
+      }
+
+      function openProductModal(productId) {
+        if (!modal || !modalBody) return;
+        const template = document.getElementById('product-detail-' + productId);
+        if (!template) return;
+
+        const card = document.querySelector('[data-product-id="' + productId + '"]');
+        if (card && (card.classList.contains('hidden') || card.style.display === 'none')) {
+          return;
+        }
+
+        const fragment = template instanceof HTMLTemplateElement
+          ? template.content.cloneNode(true)
+          : template.cloneNode(true);
+
+        modalBody.innerHTML = '';
+        modalBody.appendChild(fragment);
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+        modal.setAttribute('data-open', productId);
+        modalBody.scrollTop = 0;
+        if (document.body) document.body.classList.add('overflow-hidden');
+      }
+
+      document.addEventListener('click', (event) => {
+        const trigger = event.target instanceof Element ? event.target.closest('[data-product-modal]') : null;
+        if (trigger) {
+          event.preventDefault();
+          const productId = trigger.getAttribute('data-product-modal');
+          if (productId) openProductModal(productId);
+          return;
+        }
+
+        if (!modal || modal.classList.contains('hidden')) return;
+        const closer = event.target instanceof Element ? event.target.closest('#productModal [data-close]') : null;
+        if (closer) {
+          event.preventDefault();
+          closeProductModal();
+        }
+      });
+
+      document.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape' && modal && !modal.classList.contains('hidden')) {
+          closeProductModal();
+        }
+      });
+
       // 4) Verificar periódicamente si el acceso sigue válido
       async function verifyAccess() {
         try {
-          console.log("Verificando validez del acceso en productos...");
+          console.log('Verificando validez del acceso en productos...');
           const isValid = await checkAccessValid();
-          
+
           if (!isValid) {
-            console.log("Acceso revocado, redirigiendo...");
+            console.log('Acceso revocado, redirigiendo...');
             disablePrivate();
             // TODO(claude): subcarpeta /inbolsaNeo para redirección
             window.location.href = '/inbolsaNeo/';
           }
         } catch (e) {
-          console.error("Error verificando acceso:", e);
+          console.error('Error verificando acceso:', e);
         }
       }
 
       // Verificar cada 10 segundos (más frecuente en productos)
       setInterval(verifyAccess, 10000);
-      
+
       // Primera verificación inmediata después de 2 segundos
       setTimeout(verifyAccess, 2000);
     })();

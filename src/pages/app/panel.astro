@@ -4,14 +4,31 @@ import AppLayout from '../../layouts/AppLayout.astro';
 
 /** Catálogo EXACTO que ya usábamos (ids deben coincidir con la landing) */
 const CATALOG = [
-  { cat: 'Bolsas', items: [
-    { id:'bolsa-chica',   name:'Bolsa chica' },
-    { id:'bolsa-grande',  name:'Bolsa grande' },
-    { id:'bolsa-enorme',  name:'Bolsa enorme' },
+  { cat: 'Sacos PP', items: [
+    { id:'sacos-convencionales',   name:'Sacos Convencionales',   img:'/inbolsaNeo/imgs/bolsa-chica.jpg' },
+    { id:'sacos-red', name:'Sacos de red', img:'/inbolsaNeo/imgs/bolsa-mediana.jpg' },
+    { id:'sacos-laminados',  name:'Sacos laminados',  img:'/inbolsaNeo/imgs/bolsa-enorme.jpg' },
+    { id:'sacos-laminacion-premium',  name:'Sacos con laminacion premium',  img:'/inbolsaNeo/imgs/bolsa-enorme.jpg' },
+    { id:'sacos-planos',  name:'Sacos planos',  img:'/inbolsaNeo/imgs/bolsa-enorme.jpg' },
+    { id:'sacos-fondo-cuadrado',  name:'Sacos con fondo cuadrado',  img:'/inbolsaNeo/imgs/bolsa-enorme.jpg' },
   ]},
-  { cat: 'Hilos', items: [
-    { id:'hilo-algodon',  name:'Hilo de algodón' },
-    { id:'hilo-nylon',    name:'Hilo de nylon' },
+  { cat: 'Big Bag', items: [
+    { id:'big-bag-tubular',  name:'Big Bag Tubular', img:'/inbolsaNeo/imgs/hilo-algodon.jpg' },
+    { id:'big-bag-u-panel',    name:'Big Bag U Panel',   img:'/inbolsaNeo/imgs/hilo-nylon.jpg' },
+    { id:'big-bag-cuadripanel',    name:'Big Bag cuadripanel',   img:'/inbolsaNeo/imgs/hilo-nylon.jpg' },
+    { id:'big-bag-compartimentada',    name:'Big Bag compartimentada',   img:'/inbolsaNeo/imgs/hilo-nylon.jpg' },
+    { id:'sling-bag',    name:'Sling Bag',   img:'/inbolsaNeo/imgs/hilo-nylon.jpg' },
+  ]},
+  { cat: 'Telas', items: [
+    { id:'tela-plana',  name:'Tela plana', img:'/inbolsaNeo/imgs/hilo-algodon.jpg' },
+    { id:'tela-tubular',    name:'Tela tubular',   img:'/inbolsaNeo/imgs/hilo-nylon.jpg' },
+  ]},
+  { cat: 'Hilos y sogas', items: [
+    { id:'hilo-plano',  name:'Hilo Plano', img:'/inbolsaNeo/imgs/hilo-algodon.jpg' },
+    { id:'hilo-multifilamentado',    name:'Hilo multifilamento',   img:'/inbolsaNeo/imgs/hilo-nylon.jpg' },
+    { id:'hilo-reforzado-pp',    name:'Hilo reforzado pp',   img:'/inbolsaNeo/imgs/hilo-nylon.jpg' },
+    { id:'hilo-reforzado-multifilamento',    name:'Hilo reforzado multifilamento',   img:'/inbolsaNeo/imgs/hilo-nylon.jpg' },
+    { id:'amarres',    name:'Amarres',   img:'/inbolsaNeo/imgs/hilo-nylon.jpg' },
   ]},
 ];
 ---
