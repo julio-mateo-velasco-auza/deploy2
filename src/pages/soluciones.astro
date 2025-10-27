@@ -1,176 +1,428 @@
 ---
-// TODO(claude): Página pública /soluciones (catálogo general, no privado)
+// src/pages/soluciones.astro
 export const prerender = true;
 
 import Base from '../layouts/Base.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
+import ChatWidget from '../components/ChatWidget.astro';
 
 const pageTitle = 'Soluciones';
 
-// Catálogo general (no restringido)
-const CATALOG = [
-  { 
-    cat: 'Sacos PP', 
-    description: 'Soluciones de alta resistencia para industria pesada',
-    items: [
-      { 
-        id: 'sacos-convecionales', 
-        name: 'Sacos Convecionales', 
-        description: 'Capacidad: 1000kg. Dimensiones: 90x90x110cm. Material: Polipropileno de alta resistencia.',
-        img: '/inbolsaNeo/imgs/bolsa-grande.jpg' 
-      },
-      { 
-        id: 'sacos-premium', 
-        name: 'Sacos Premium', 
-        description: 'Capacidad: 1500kg. Dimensiones: 90x90x120cm. Asas reforzadas para cargas pesadas.',
-        img: '/inbolsaNeo/imgs/bolsa-enorme.jpg' 
-      },
-      { 
-        id: 'sacos-fondo-cuadrado', 
-        name: 'Sacos con fondo cuadrado', 
-        description: 'Sistema de llenado y vaciado por válvula. Cierre hermético para materiales granulados.',
-        img: '/inbolsaNeo/imgs/bolsa-chica.jpg' 
-      },
-    ]
+const HERO = {
+  title: 'Embalaje Industrial',
+  lead: 'Soluciones completas en sacos, big bags, hilos y telas para todas las industrias'
+};
+
+const introBlocks = [
+  {
+    title: 'Soluciones personalizadas en rafia',
+    text: 'Diseñamos sacos, big bags, telas e hilos con especificaciones a medida para cada industria, optimizando protección, logística y presencia de marca.',
   },
-  { 
-    cat: 'Big Bag', 
-    description: 'Productos específicos para agricultura y ganadería',
-    items: [
-      { 
-        id: 'big-bag-linea-costurada', 
-        name: 'Big Bag Linea Costurada', 
-        description: 'Protección contra humedad y resistente a UV. Ideal para almacenamiento a largo plazo.',
-        img: '/inbolsaNeo/imgs/hilo-algodon.jpg' 
-      },
-      { 
-        id: 'big-bag-tubular', 
-        name: 'Big Bag tubular', 
-        description: 'Tejido técnico con protección UV. Permeable y resistente a las condiciones climáticas.',
-        img: '/inbolsaNeo/imgs/hilo-nylon.jpg' 
-      },
-      { 
-        id: 'sling-bag', 
-        name: 'Sling Bag', 
-        description: 'Tejido técnico con protección UV. Permeable y resistente a las condiciones climáticas.',
-        img: '/inbolsaNeo/imgs/hilo-nylon.jpg' 
-      },
-    ]
+  {
+    title: 'Calidad certificada',
+    text: 'Procesos auditados, laboratorio propio y trazabilidad completa garantizan estándares nacionales e internacionales en cada lote.',
   },
-  { 
-    cat: 'Telas', 
-    description: 'Productos específicos para agricultura y ganadería',
-    items: [
-      { 
-        id: 'tela-tubular', 
-        name: 'Tela Tubular', 
-        description: 'Protección contra humedad y resistente a UV. Ideal para almacenamiento a largo plazo.',
-        img: '/inbolsaNeo/imgs/hilo-algodon.jpg' 
-      },
-      { 
-        id: 'tela-plana', 
-        name: 'Tela plana', 
-        description: 'Tejido técnico con protección UV. Permeable y resistente a las condiciones climáticas.',
-        img: '/inbolsaNeo/imgs/hilo-nylon.jpg' 
-      },
-    ]
-  },
-  { 
-    cat: 'Hilos y Sogas', 
-    description: 'Soluciones para el sector de construcción',
-    items: [
-      { 
-        id: 'hilo-costura', 
-        name: 'Hilo Costura', 
-        description: 'Doble capa con protección contra humedad. Alta resistencia a la manipulación.',
-        img: '/inbolsaNeo/imgs/bolsa-mediana.jpg' 
-      },
-      { 
-        id: 'hilo-reforzado', 
-        name: 'Hilo reforzado', 
-        description: 'Capacidad de 1 tonelada. Tejido reforzado para materiales cortantes.',
-        img: '/inbolsaNeo/imgs/bolsa-grande.jpg' 
-      },
-      { 
-        id: 'ama', 
-        name: 'Amarres', 
-        description: 'Tejido técnico con protección UV. Permeable y resistente a las condiciones climáticas.',
-        img: '/inbolsaNeo/imgs/hilo-nylon.jpg' 
-      },
-      
-    ]
+  {
+    title: 'Acompañamiento integral',
+    text: 'Desde la ingeniería del embalaje hasta la implementación en planta y el abastecimiento continuo, estamos a tu lado.',
   },
 ];
 
-// Características destacadas para la sección de beneficios
-const FEATURES = [
-  { 
-    icon: '🔒', 
-    title: 'Certificación OEA',
-    description: 'Todos nuestros productos cuentan con certificación de Operador Económico Autorizado.'
+// Catálogo resumido para la vista de tarjetas
+const CATALOG = [
+  {
+    cat: 'Sacos PP',
+    items: [
+      { id: 'sacos-convencionales', name: 'Sacos Convencionales', img: '/inbolsaNeo/imgs/bolsa-chica.jpg' },
+      { id: 'sacos-premium', name: 'Sacos Premium', img: '/inbolsaNeo/imgs/bolsa-enorme.jpg' },
+      { id: 'sacos-fondo-cuadrado', name: 'Sacos Fondo Cuadrado', img: '/inbolsaNeo/imgs/bolsa-enorme.jpg' },
+    ],
   },
-  { 
-    icon: '♻️', 
-    title: 'Materiales Reciclables',
-    description: 'Comprometidos con el medio ambiente: nuestros productos son 100% reciclables.'
+  {
+    cat: 'Big Bag',
+    items: [
+      { id: 'big-bag-linea-costurada', name: 'Big Bag Línea Costurada', img: '/inbolsaNeo/imgs/hilo-algodon.jpg' },
+      { id: 'big-bag-tubular', name: 'Big Bag Tubular', img: '/inbolsaNeo/imgs/hilo-nylon.jpg' },
+      { id: 'sling-bag', name: 'Sling Bag', img: '/inbolsaNeo/imgs/hilo-nylon.jpg' },
+    ],
   },
-  { 
-    icon: '⚙️', 
-    title: 'Personalización',
-    description: 'Adaptamos nuestros productos a las necesidades específicas de cada cliente.'
+  {
+    cat: 'Hilos y Sogas',
+    items: [
+      { id: 'hilos-y-sogas', name: 'Hilos y Sogas', img: '/inbolsaNeo/imgs/hilo-nylon.jpg' },
+      { id: 'hilo-costura', name: 'Hilo de costura', img: '/inbolsaNeo/imgs/hilo-algodon.jpg' },
+      { id: 'hilo-reforzado', name: 'Hilo reforzado', img: '/inbolsaNeo/imgs/hilo-nylon.jpg' },
+      { id: 'amarres', name: 'Amarres', img: '/inbolsaNeo/imgs/hilo-nylon.jpg' },
+    ],
   },
-  { 
-    icon: '📦', 
-    title: 'Entrega rápida',
-    description: 'Contamos con stock permanente y logística eficiente para entregas inmediatas.'
+  {
+    cat: 'Telas',
+    items: [
+      { id: 'tela-tejido', name: 'Tela tejido', img: '/inbolsaNeo/imgs/hilo-algodon.jpg' },
+    ],
+  },
+];
+
+const PRODUCT_DETAILS: Record<
+  string,
+  {
+    summary: string;
+    specs: { label: string; value: string }[];
+  }
+> = {
+  'sacos-convencionales': {
+    summary: 'Saco tejido estándar con excelente respiración y resistencia para granos, harinas y materiales a granel.',
+    specs: [
+      { label: 'Gramaje estándar', value: '80 g/m²' },
+      { label: 'Capacidad', value: '25 / 40 / 50 kg' },
+      { label: 'Tratamientos', value: 'Anti UV, microperforado' },
+    ],
+  },
+  'sacos-premium': {
+    summary: 'Saco laminado con acabado brillante o mate para exhibición y productos de alto valor.',
+    specs: [
+      { label: 'Laminado', value: 'BOPP alto brillo / mate' },
+      { label: 'Impresión', value: 'Flexografía HD hasta 8 colores' },
+      { label: 'Barrera', value: 'Coex anti humedad y aromas' },
+    ],
+  },
+  'sacos-fondo-cuadrado': {
+    summary: 'Formato block bottom que mantiene el saco erguido, ideal para apilado y góndola.',
+    specs: [
+      { label: 'Sistema', value: 'Soldado AD*Star' },
+      { label: 'Capacidad', value: '20 / 25 / 50 kg' },
+      { label: 'Opciones', value: 'Válvula interna, microventeo' },
+    ],
+  },
+  'big-bag-linea-costurada': {
+    summary: 'Big bag de paneles cosidos con refuerzos y asas diseñadas para ciclos de uso repetidos.',
+    specs: [
+      { label: 'Carga segura', value: 'Hasta 1.500 kg' },
+      { label: 'Factor de seguridad', value: '5:1 · 6:1' },
+      { label: 'Asas', value: '4 asas de 30/40 cm' },
+    ],
+  },
+  'big-bag-tubular': {
+    summary: 'FIBC tubular sin costuras laterales que evita fugas de polvo y mejora la limpieza.',
+    specs: [
+      { label: 'Diámetro plano', value: '90 x 90 cm' },
+      { label: 'Altura estándar', value: '110 / 120 / 150 cm' },
+      { label: 'Accesorios', value: 'Liners coex, válvulas de carga/descarga' },
+    ],
+  },
+  'sling-bag': {
+    summary: 'Bolsa tipo sling con eslingas continuas para transporte rápido sin pallets.',
+    specs: [
+      { label: 'Capacidad', value: '500 a 1.000 kg' },
+      { label: 'Eslingas', value: 'Integradas, reforzadas' },
+      { label: 'Aplicación', value: 'Logística ágil y exportación' },
+    ],
+  },
+  'hilos-y-sogas': {
+    summary: 'Sogas trenzadas y monofilamentos de PP para atado, embalaje y aplicaciones agrícolas.',
+    specs: [
+      { label: 'Diámetros', value: '3 a 12 mm' },
+      { label: 'Resistencia', value: 'Hasta 650 kgf' },
+      { label: 'Presentación', value: 'Rollos de 200 / 500 m' },
+    ],
+  },
+  'hilo-costura': {
+    summary: 'Hilo plano lubricado para máquinas cosedoras de sacos y líneas automáticas.',
+    specs: [
+      { label: 'Título', value: '1500 / 2000 den' },
+      { label: 'Bobinas', value: '1.5 y 3 kg' },
+      { label: 'Acabado', value: 'Seco o siliconado' },
+    ],
+  },
+  'hilo-reforzado': {
+    summary: 'Hilo reforzado multifilamento con alma central de alta tenacidad.',
+    specs: [
+      { label: 'Título', value: '1800 / 2600 den' },
+      { label: 'Resistencia', value: 'Hasta 12 kgf' },
+      { label: 'Uso', value: 'Costura de sacos premium y big bags' },
+    ],
+  },
+  amarres: {
+    summary: 'Amarres trenzados y lazos preformados para asegurar cargas y fardos.',
+    specs: [
+      { label: 'Tipos', value: 'Trenzado plano / redondo' },
+      { label: 'Resistencia', value: '120 a 500 kgf' },
+      { label: 'Colores', value: 'Blanco, azul, naranja, personalizado' },
+    ],
+  },
+  'tela-tejido': {
+    summary: 'Tela tejido de rafia PP para conversión, recubrimiento y protección industrial.',
+    specs: [
+      { label: 'Gramaje', value: '70 a 200 g/m²' },
+      { label: 'Anchos', value: 'Hasta 320 cm' },
+      { label: 'Formatos', value: 'Rollo con mandril, plegado o corte' },
+    ],
+  },
+};
+
+const PRODUCT_THEME: Record<
+  string,
+  {
+    bg: string;
+    border: string;
+    accent: string;
+    badge: string;
+  }
+> = {
+  'sacos-convencionales': {
+    bg: 'bg-sky-50',
+    border: 'border-sky-200',
+    accent: 'text-sky-900',
+    badge: 'bg-sky-100 text-sky-700',
+  },
+  'sacos-premium': {
+    bg: 'bg-orange-50',
+    border: 'border-orange-200',
+    accent: 'text-orange-900',
+    badge: 'bg-orange-100 text-orange-700',
+  },
+  'sacos-fondo-cuadrado': {
+    bg: 'bg-emerald-50',
+    border: 'border-emerald-200',
+    accent: 'text-emerald-900',
+    badge: 'bg-emerald-100 text-emerald-700',
+  },
+  'big-bag-linea-costurada': {
+    bg: 'bg-indigo-50',
+    border: 'border-indigo-200',
+    accent: 'text-indigo-900',
+    badge: 'bg-indigo-100 text-indigo-700',
+  },
+  'big-bag-tubular': {
+    bg: 'bg-blue-50',
+    border: 'border-blue-200',
+    accent: 'text-blue-900',
+    badge: 'bg-blue-100 text-blue-700',
+  },
+  'sling-bag': {
+    bg: 'bg-cyan-50',
+    border: 'border-cyan-200',
+    accent: 'text-cyan-900',
+    badge: 'bg-cyan-100 text-cyan-700',
+  },
+  'hilos-y-sogas': {
+    bg: 'bg-lime-50',
+    border: 'border-lime-200',
+    accent: 'text-lime-900',
+    badge: 'bg-lime-100 text-lime-700',
+  },
+  'hilo-costura': {
+    bg: 'bg-amber-50',
+    border: 'border-amber-200',
+    accent: 'text-amber-900',
+    badge: 'bg-amber-100 text-amber-700',
+  },
+  'hilo-reforzado': {
+    bg: 'bg-purple-50',
+    border: 'border-purple-200',
+    accent: 'text-purple-900',
+    badge: 'bg-purple-100 text-purple-700',
+  },
+  amarres: {
+    bg: 'bg-rose-50',
+    border: 'border-rose-200',
+    accent: 'text-rose-900',
+    badge: 'bg-rose-100 text-rose-700',
+  },
+  'tela-tejido': {
+    bg: 'bg-slate-50',
+    border: 'border-slate-200',
+    accent: 'text-slate-900',
+    badge: 'bg-slate-100 text-slate-700',
+  },
+};
+
+const defaultTheme = {
+  bg: 'bg-white',
+  border: 'border-slate-200',
+  accent: 'text-slate-900',
+  badge: 'bg-slate-100 text-slate-700',
+};
+
+const FAMILY_HERO: Record<
+  string,
+  {
+    gradient: string;
+    accent: string;
+    chip: string;
+    circle: string;
+  }
+> = {
+  'sacos-pp': {
+    gradient: 'from-sky-200 via-sky-100 to-white',
+    accent: 'text-sky-900',
+    chip: 'bg-white text-sky-700 shadow-sm',
+    circle: 'border-sky-200',
+  },
+  'big-bag': {
+    gradient: 'from-indigo-200 via-indigo-100 to-white',
+    accent: 'text-indigo-900',
+    chip: 'bg-white text-indigo-700 shadow-sm',
+    circle: 'border-indigo-200',
+  },
+  'hilos-sogas': {
+    gradient: 'from-lime-200 via-lime-100 to-white',
+    accent: 'text-lime-900',
+    chip: 'bg-white text-lime-700 shadow-sm',
+    circle: 'border-lime-200',
+  },
+  telas: {
+    gradient: 'from-slate-200 via-slate-100 to-white',
+    accent: 'text-slate-900',
+    chip: 'bg-white text-slate-700 shadow-sm',
+    circle: 'border-slate-200',
+  },
+};
+
+const defaultFamilyHero = {
+  gradient: 'from-slate-200 via-slate-100 to-white',
+  accent: 'text-slate-900',
+  chip: 'bg-white text-slate-700 shadow-sm',
+  circle: 'border-slate-200',
+};
+
+// Detalle por familia
+const FAMILY_DETAILS = [
+  {
+    id: 'sacos-pp',
+    eyebrow: 'Sacos PP',
+    title: 'Soluciones para sacos PP',
+    heroLead: 'Sacos tejidos, laminados y block bottom customizados para agro, retail e industria.',
+    products: CATALOG[0].items,
+    description: [
+      'Sacos tejidos con opciones de laminado, fondo cuadrado y acabados premium para resaltar la marca en retail o asegurar la cadena logística de agro e industria.',
+      'Fabricamos bajo especificación, con impresiones de alta definición y refuerzos para procesos automatizados.',
+    ],
+    applications: [
+      'Sacos convencionales para granos, harinas y balanceados.',
+      'Versiones premium para exhibición y productos de alto valor.',
+      'Modelos con fondo cuadrado para apilado estable en pallets y estantería.',
+    ],
+    differentiators: [
+      'Tejido de PP virgen con aditivos anti UV.',
+      'Costuras reforzadas y sellos ultra controlados.',
+      'Microperforado y barrera coex según contenido.',
+      'Personalización flexográfica a varios colores.',
+    ],
+  },
+  {
+    id: 'big-bag',
+    eyebrow: 'Big Bag',
+    title: 'Soluciones para big bag',
+    heroLead: 'Big bags costurados, tubulares y sling bag listos para cargas de alto tonelaje con seguridad certificada.',
+    products: CATALOG[1].items,
+    description: [
+      'Big bags línea costurada, tubulares y sling bag para cargas de 500 a 2.000 kg con factores de seguridad 5:1, 6:1 y 8:1.',
+      'Disponibles con liners internos, válvulas de carga/descarga y tratamientos ESD para industrias exigentes.',
+    ],
+    applications: [
+      'Línea costurada para cargas pesadas y reutilización controlada.',
+      'Tubular para polvos finos y pigmentos.',
+      'Sling bag para logística ágil sin pallets.',
+    ],
+    differentiators: [
+      'Costuras reforzadas y pruebas de tracción certificadas.',
+      'Asas en múltiples configuraciones y anchos.',
+      'Liners coex, antiestáticos y baffles internos.',
+      'Etiquetas, doc pocket y trazabilidad integrada.',
+    ],
+  },
+  {
+    id: 'hilos-sogas',
+    eyebrow: 'Hilos y sogas',
+    title: 'Soluciones en hilos y sogas',
+    heroLead: 'Monofilamentos y multifilamentos diseñados para costura, atado y operaciones industriales exigentes.',
+    products: CATALOG[2].items,
+    description: [
+      'Monofilamentos y multifilamentos de polipropileno y poliamida para costura, atado y logística.',
+      'Disponibles en bobinas, conos y lazos preformados según el proceso productivo.',
+    ],
+    applications: [
+      'Hilo de costura para sacos de PP y tejido.',
+      'Hilo reforzado para cargas exigentes y alta vibración.',
+      'Amarres y sogas para transporte, campo y fardos.',
+    ],
+    differentiators: [
+      'Resistencia certificada con baja elongación.',
+      'Lubricación específica para máquinas de alta velocidad.',
+      'Opciones antiestáticas y tratamiento UV.',
+    ],
+  },
+  {
+    id: 'telas',
+    eyebrow: 'Telas',
+    title: 'Soluciones en telas tejidas',
+    heroLead: 'Telas de rafia PP para conversión, recubrimientos y protección con controles estrictos de gramaje.',
+    products: CATALOG[3].items,
+    description: [
+      'Tela tejido de rafia PP para conversión, protección y recubrimiento en procesos industriales.',
+      'Control de gramaje, anchos y tratamientos superficiales según requerimiento.',
+    ],
+    applications: [
+      'Confección de sacos industriales.',
+      'Revestimiento de estructuras y protección de carga.',
+    ],
+    differentiators: [
+      'Gramajes calibrados con tolerancia ±3%.',
+      'Tratamientos anti UV, antideslizante y corona opcionales.',
+      'Entrega en rollos con mandril, plegados o cortes a medida.',
+    ],
   },
 ];
 ---
 
-<Base title={`${pageTitle} — Inbolsa`}>
-  <Header />
-
+<Base title={pageTitle}>
+  <Header/>
   <main class="bg-white">
-    <!-- Hero Section -->
+    <!-- Hero Section con gradiente animado -->
     <section class="relative overflow-hidden bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
-      <!-- Patrón de fondo -->
+      <!-- Patrón de fondo animado -->
       <div class="absolute inset-0 opacity-10">
         <div class="absolute inset-0" style="background-image: radial-gradient(circle at 2px 2px, white 1px, transparent 0); background-size: 40px 40px;"></div>
       </div>
       
-      <!-- Círculos decorativos -->
+      <!-- Círculos decorativos con blur -->
       <div class="absolute top-20 -left-20 w-96 h-96 bg-brand-500/20 rounded-full blur-3xl animate-pulse"></div>
       <div class="absolute bottom-20 -right-20 w-96 h-96 bg-brand-400/20 rounded-full blur-3xl animate-pulse" style="animation-delay: 1s;"></div>
       
       <div class="relative mx-auto max-w-7xl px-4 py-20 md:py-28">
-        <div class="text-center max-w-3xl mx-auto">
+        <div class="text-center">
           <span class="inline-flex items-center gap-2 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 px-4 py-2 text-sm text-white/90">
             <span class="relative flex h-2 w-2">
               <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
               <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
             </span>
-            Catálogo General
+            Soluciones especializadas
           </span>
           
-          <h1 class="mt-6 text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight text-white">
-            Nuestras Soluciones
+          <h1 class="mt-6 text-4xl md:text-6xl font-bold tracking-tight text-white">
+            Nuestras
+            <span class="block mt-2 bg-gradient-to-r from-brand-400 via-brand-500 to-brand-600 bg-clip-text text-transparent">
+              Soluciones
+            </span>
           </h1>
           
-          <p class="mt-6 text-lg md:text-xl text-white/80 leading-relaxed">
+          <p class="mt-6 text-lg md:text-xl text-white/80 max-w-3xl mx-auto leading-relaxed">
             Descubre nuestra amplia gama de productos de polipropileno para diferentes industrias.
-            Calidad y resistencia garantizada para tus proyectos.
           </p>
-          
-          <div class="mt-10">
-            <a 
-              href="#catalogo" 
-              class="inline-flex items-center gap-2 rounded-xl bg-brand-600 px-8 py-4 text-white font-medium hover:bg-brand-700 transition-all shadow-xl shadow-brand-500/20"
-            >
-              Ver catálogo
-              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+
+          <div class="mt-10 flex flex-wrap justify-center gap-4">
+            <a href="#soluciones" 
+               class="group relative inline-flex items-center gap-2 rounded-xl bg-brand-600 px-8 py-4 text-white font-medium hover:bg-brand-700 transition-all hover:scale-105 shadow-xl shadow-brand-500/20">
+              <span>Soluciones</span>
+              <svg class="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
               </svg>
+            </a>
+            <a href="/contacto" 
+               class="inline-flex items-center gap-2 rounded-xl border-2 border-white/30 bg-white/5 backdrop-blur-sm px-8 py-4 text-white font-medium hover:bg-white/10 transition-all">
+              Contáctanos
             </a>
           </div>
         </div>
@@ -184,100 +436,202 @@ const FEATURES = [
       </div>
     </section>
 
-    <!-- Características/Beneficios -->
-    <section class="py-16 bg-white">
-      <div class="mx-auto max-w-7xl px-4">
-        <h2 class="text-3xl font-bold text-center mb-12">¿Por qué elegir Inbolsa?</h2>
-        
-        <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-          {FEATURES.map(feature => (
-            <div class="rounded-xl border border-slate-200 p-6 hover:shadow-lg transition-all hover:border-brand-200">
-              <div class="text-4xl mb-4">{feature.icon}</div>
-              <h3 class="text-xl font-semibold mb-2">{feature.title}</h3>
-              <p class="text-slate-600">{feature.description}</p>
-            </div>
-          ))}
-        </div>
-      </div>
-    </section>
-
-    <!-- Catálogo -->
-    <section id="catalogo" class="py-16 bg-slate-50">
-      <div class="mx-auto max-w-7xl px-4">
-        <h2 class="text-3xl font-bold text-center mb-4">Catálogo de Productos</h2>
-        <p class="text-slate-600 text-center max-w-3xl mx-auto mb-12">
-          Contamos con una amplia variedad de soluciones para distintas industrias.
-          Todos nuestros productos son fabricados con materiales de primera calidad.
+  <main class="bg-white text-slate-700">
+    <section class="mx-auto max-w-6xl px-6 py-12">
+      <div class="text-center">
+        <h1 class="text-3xl font-bold text-slate-900">Soluciones que acompañan tu negocio</h1>
+        <p class="mt-3 text-slate-600">
+          Desarrollamos embalajes que protegen, optimizan la logística y refuerzan la presencia de tu marca.
         </p>
-
-        {CATALOG.map((category, index) => (
-          <div class={`mb-16 ${index % 2 === 1 ? 'md:flex-row-reverse' : ''}`}>
-            <h3 class="text-2xl font-semibold mb-3">{category.cat}</h3>
-            <p class="text-slate-600 mb-6">{category.description}</p>
-            
-            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {category.items.map(product => (
-                <article class="rounded-xl border bg-white p-5 shadow-sm hover:shadow-md transition group">
-                  <div class="aspect-[4/3] w-full overflow-hidden rounded-lg bg-slate-100 mb-4">
-                    <img 
-                      src={product.img} 
-                      alt={product.name} 
-                      class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" 
-                      loading="lazy" 
-                    />
-                  </div>
-                  <h4 class="text-lg font-semibold">{product.name}</h4>
-                  <p class="text-sm text-slate-600 mt-2">{product.description}</p>
-                  
-                  <div class="mt-4 pt-4 border-t border-slate-100">
-                    <a 
-                      href="/inbolsaNeo/contacto" 
-                      class="inline-flex items-center gap-1.5 text-sm font-medium text-brand-600 hover:text-brand-800"
-                    >
-                      Solicitar información
-                      <svg class="w-4 h-4" viewBox="0 0 20 20" fill="currentColor">
-                        <path fill-rule="evenodd" d="M12.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd" />
-                      </svg>
-                    </a>
-                  </div>
-                </article>
-              ))}
-            </div>
-          </div>
+      </div>
+      <div class="mt-10 grid gap-6 md:grid-cols-3">
+        {introBlocks.map((block) => (
+          <article class="h-full rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-lg">
+            <h2 class="text-lg font-semibold text-slate-900">{block.title}</h2>
+            <p class="mt-3 text-sm text-slate-600">{block.text}</p>
+          </article>
         ))}
       </div>
     </section>
 
-    <!-- CTA -->
-    <section class="py-16 bg-gradient-to-br from-brand-600 to-brand-700 text-white">
-      <div class="mx-auto max-w-4xl px-4 text-center">
-        <h2 class="text-3xl font-bold mb-4">¿Necesitas una solución personalizada?</h2>
-        <p class="text-white/90 text-lg mb-8">
-          Contáctanos y diseñaremos un producto que se adapte perfectamente a tus necesidades específicas.
-        </p>
-        <div class="flex flex-wrap justify-center gap-4">
-          <a 
-            href="/inbolsaNeo/contacto" 
-            class="rounded-xl bg-white px-8 py-4 text-brand-700 font-semibold hover:bg-slate-100 transition-colors shadow-xl"
-          >
-            Solicitar asesoría
-          </a>
-          <a 
-            href="/inbolsaNeo/industrias" 
-            class="rounded-xl border-2 border-white/70 bg-white/10 px-8 py-4 text-white font-semibold hover:bg-white/20 transition-colors"
-          >
-            Ver industrias
-          </a>
+    <section class="bg-gradient-to-r from-sky-100 via-sky-200 to-sky-100">
+      <div class="mx-auto flex max-w-6xl flex-col gap-10 px-6 py-16 lg:flex-row lg:items-center">
+        <div class="relative mx-auto flex h-64 w-64 items-center justify-center rounded-full bg-white shadow-2xl ring-8 ring-white/60 lg:mx-0 lg:h-[22rem] lg:w-[22rem]">
+          <div class="absolute inset-4 grid grid-cols-2 gap-3 overflow-hidden rounded-full">
+            {CATALOG.flatMap((c) => c.items.slice(0, 1)).map((item) => (
+              <img src={item.img} alt={item.name} class="h-full w-full object-cover" loading="lazy" />
+            ))}
+          </div>
+          <div class="relative z-10 flex h-32 w-32 items-center justify-center rounded-full bg-white shadow-inner">
+            <span class="text-center text-sm font-bold uppercase tracking-wide text-sky-900">
+              Inbolsa<br />Soluciones
+            </span>
+          </div>
+        </div>
+
+        <div class="flex-1 space-y-6">
+          <header>
+            <h2 class="text-xs font-semibold uppercase tracking-[0.35em] text-sky-700">Soluciones integrales</h2>
+            <p class="mt-3 text-4xl font-black uppercase text-slate-900">{HERO.title}</p>
+            <p class="mt-4 max-w-2xl text-lg text-slate-700">{HERO.lead}</p>
+          </header>
+          <div class="flex flex-wrap gap-3 text-xs font-semibold uppercase tracking-wide text-sky-900">
+            {FAMILY_DETAILS.map((familia) => (
+              <a
+                href={`#${familia.id}`}
+                class="inline-flex items-center gap-2 rounded-full bg-white px-4 py-2 shadow-sm transition hover:bg-sky-500/10"
+              >
+                <span class="h-2 w-2 rounded-full bg-sky-600"></span>
+                {familia.eyebrow}
+              </a>
+            ))}
+          </div>
         </div>
       </div>
     </section>
+
+    <section class="mx-auto max-w-4xl space-y-4 px-6 py-12 text-sm leading-relaxed text-slate-600">
+      <p>
+        Inbolsa es el aliado ideal para tu operación. Desde sacos y big bags hasta hilos y telas, desarrollamos soluciones
+        innovadoras y sustentables que impulsan tu crecimiento, siempre con soporte técnico cercano y abastecimiento seguro.
+      </p>
+      <p>
+        Cada familia de productos se fabrica con materia prima de primera calidad y procesos certificados, garantizando
+        protección de la carga, eficiencia logística y una presencia sólida de tu marca.
+      </p>
+    </section>
+
+    {FAMILY_DETAILS.map((familia, index) => {
+      const heroConfig = FAMILY_HERO[familia.id] ?? defaultFamilyHero;
+      const heroLead = familia.heroLead || familia.description[0] || '';
+      const bodyCopy = heroLead ? familia.description.slice(1) : familia.description;
+      const productGridClass =
+        familia.id === 'hilos-sogas' ? 'grid gap-6 md:grid-cols-2' : 'grid gap-6 md:grid-cols-2 xl:grid-cols-3';
+
+      return (
+        <section id={familia.id} class={`py-16 ${index % 2 === 0 ? 'bg-white' : 'bg-slate-50'}`}>
+          <div class="mx-auto max-w-6xl px-6 space-y-10">
+            <div class={`overflow-hidden rounded-[42px] bg-gradient-to-r ${heroConfig.gradient} shadow-xl`}>
+              <div class="grid gap-10 px-8 py-10 lg:grid-cols-[320px_1fr] lg:items-center">
+                <div class="relative mx-auto h-60 w-60">
+                  <div class={`absolute inset-0 rounded-full border-[12px] ${heroConfig.circle} bg-white/60 shadow-inner`}></div>
+                  <div class="absolute inset-6 rounded-full border border-white/50 bg-white/90 px-4 py-6 text-center text-sm font-semibold text-slate-600 flex flex-col items-center justify-center gap-2">
+                    {familia.products.slice(0, 5).map((product) => (
+                      <span>{product.name}</span>
+                    ))}
+                  </div>
+                  <div class="absolute inset-20 rounded-full border border-white/80 bg-white shadow flex items-center justify-center px-4 text-center">
+                    <span class={`text-xs font-semibold uppercase tracking-wide ${heroConfig.accent}`}>
+                      Inbolsa<br />{familia.eyebrow}
+                    </span>
+                  </div>
+                </div>
+                <div class="flex flex-col justify-center gap-4">
+                  <p class="text-xs font-semibold uppercase tracking-[0.35em] text-white/70">Soluciones integrales</p>
+                  <h4 class={`text-3xl font-black uppercase ${heroConfig.accent}`}>{familia.title}</h4>
+                  {heroLead && <p class="text-sm text-slate-700 max-w-2xl">{heroLead}</p>}
+                  <div class="flex flex-wrap gap-2">
+                    {familia.products.map((product) => (
+                      <span
+                        class={`inline-flex items-center rounded-full px-4 py-1.5 text-xs font-semibold uppercase tracking-wide ${heroConfig.chip}`}
+                      >
+                        {product.name}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {bodyCopy.length ? (
+              <div class="space-y-3 text-sm text-slate-600">
+                {bodyCopy.map((paragraph) => (
+                  <p>{paragraph}</p>
+                ))}
+              </div>
+            ) : null}
+
+            <div class="grid gap-6 lg:grid-cols-2">
+            <div class="rounded-2xl border border-sky-500/30 bg-white shadow">
+              <header class="border-b border-sky-500/20 bg-sky-500/10 px-5 py-3 text-xs font-semibold uppercase tracking-wide text-sky-800">
+                  Aplicaciones clave
+                </header>
+                <ul class="space-y-2 px-5 py-4 text-sm">
+                  {familia.applications.map((item) => (
+                    <li class="flex items-start gap-3">
+                      <span class="mt-1 h-2 w-2 flex-shrink-0 rounded-full bg-sky-500"></span>
+                      <span>{item}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              <div class="rounded-2xl border border-orange-400/60 bg-white shadow">
+                <header class="border-b border-orange-200 bg-orange-50 px-5 py-3 text-xs font-semibold uppercase tracking-wide text-orange-600">
+                  Diferenciales
+                </header>
+                <ul class="space-y-2 px-5 py-4 text-sm">
+                  {familia.differentiators.map((item) => (
+                    <li class="flex items-start gap-3">
+                      <span class="mt-[2px] inline-flex h-5 w-5 items-center justify-center rounded-full bg-orange-500 text-[11px] font-bold text-white">
+                        ★
+                      </span>
+                      <span>{item}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+
+            <div class={productGridClass}>
+              {familia.products.map((product) => {
+                const detail = PRODUCT_DETAILS[product.id] || { summary: '', specs: [] };
+                const theme = PRODUCT_THEME[product.id] ?? defaultTheme;
+                return (
+                  <article
+                    class={`flex h-full flex-col rounded-3xl border ${theme.border} ${theme.bg} shadow transition hover:-translate-y-1 hover:shadow-2xl`}
+                  >
+                    <div class="overflow-hidden rounded-t-3xl bg-white/70 shadow-inner">
+                      <img
+                        src={product.img}
+                        alt={product.name}
+                        class="h-44 w-full object-cover"
+                        loading="lazy"
+                      />
+                    </div>
+                    <div class="flex flex-1 flex-col gap-4 p-6">
+                      <header>
+                        <h4 class={`text-xl font-semibold ${theme.accent}`}>{product.name}</h4>
+                        {detail.summary && <p class="mt-2 text-sm text-slate-600">{detail.summary}</p>}
+                      </header>
+                      {detail.specs.length ? (
+                        <dl class="mt-auto grid gap-3 text-sm text-slate-700">
+                          {detail.specs.map((spec) => (
+                            <div class="rounded-2xl border border-white/40 bg-white/80 px-4 py-3 shadow-sm">
+                              <dt class="text-xs font-semibold uppercase tracking-wide text-slate-500">{spec.label}</dt>
+                              <dd class={`text-sm font-semibold ${theme.accent}`}>{spec.value}</dd>
+                            </div>
+                          ))}
+                        </dl>
+                      ) : null}
+                      <div class="flex flex-wrap gap-2">
+                        <span
+                          class={`inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-wide ${theme.badge}`}
+                        >
+                          {familia.eyebrow}
+                        </span>
+                      </div>
+                    </div>
+                  </article>
+                );
+              })}
+            </div>
+          </div>
+        </section>
+      );
+    })}
   </main>
 
   <Footer />
-  
-  <style>
-    html {
-      scroll-behavior: smooth;
-    }
-  </style>
+  <ChatWidget />
 </Base>

@@ -20,8 +20,8 @@ const baseLinks: NavLink[] = [
 const otherLinks = baseLinks.filter(
   (l) => l.href !== '/inbolsaNeo/' && 
          l.href !== '/inbolsaNeo/valores' && 
-         l.href !== '/inbolsaNeo/historia' 
-         
+         l.href !== '/inbolsaNeo/historia' &&
+         l.href !== '/inbolsaNeo/soluciones'
 );
 
 // Links del dropdown
@@ -29,6 +29,13 @@ const dropdownLinks: NavLink[] = [
    { href: '/inbolsaNeo/valores', label: 'Valores' },
    { href: '/inbolsaNeo/historia', label: 'Historia' },
 
+];
+
+const solutionAnchors: NavLink[] = [
+  { href: '/inbolsaNeo/soluciones#sacos-pp', label: 'Sacos PP' },
+  { href: '/inbolsaNeo/soluciones#big-bag', label: 'Big Bag' },
+  { href: '/inbolsaNeo/soluciones#telas', label: 'Telas' },
+  { href: '/inbolsaNeo/soluciones#hilos-sogas', label: 'Hilos y sogas' },
 ];
 ---
 
@@ -70,6 +77,64 @@ const dropdownLinks: NavLink[] = [
 
       <!-- Contenedor para Productos (solo visible en modo privado) -->
       <span id="products-link-container" class="hidden"></span>
+
+      <!-- Submenú Soluciones -->
+      {(() => {
+        const active = isActive('/inbolsaNeo/soluciones');
+        const triggerBase = transparent
+          ? `relative pb-1 hover:opacity-90 ${active ? 'after:absolute after:left-0 after:right-0 after:-bottom-0.5 after:h-0.5 after:bg-white/70' : ''}`
+          : `hover:text-brand-700 ${active ? 'text-brand-700 font-medium' : ''}`;
+        const panelBase = transparent
+          ? 'bg-white/80 text-slate-800 border-white/40 backdrop-blur-xl'
+          : 'bg-white text-slate-700 border-slate-200';
+
+        return (
+          <div id="soluciones-wrap" class="relative">
+            <button
+              id="soluciones-btn"
+              type="button"
+              aria-haspopup="menu"
+              aria-expanded={active ? 'true' : 'false'}
+              class={`${triggerBase} inline-flex items-center gap-2 select-none rounded-xl px-2 py-1 ${
+                transparent ? 'hover:bg-white/10' : 'hover:bg-slate-50'
+              }`}
+            >
+              <span>Soluciones</span>
+              <svg class={`h-4 w-4 transition-transform duration-200 ${active ? 'rotate-180' : 'rotate-0'}`} viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 10.94l3.71-3.71a.75.75 0 111.08 1.04l-4.25 4.25a.75.75 0 01-1.08 0L5.21 8.27a.75.75 0 01.02-1.06z" clip-rule="evenodd" />
+              </svg>
+            </button>
+
+            <div
+              id="soluciones-menu"
+              role="menu"
+              aria-label="Submenú Soluciones"
+              class={`absolute left-0 mt-3 w-60 rounded-2xl border shadow-xl z-50 origin-top transition-all duration-150 invisible opacity-0 scale-95 pointer-events-none ${panelBase}`}
+            >
+              <div class={`absolute -top-2 left-6 h-4 w-4 rotate-45 ${
+                transparent ? 'bg-white/80 border-l border-t border-white/40' : 'bg-white border-l border-t border-slate-200'
+              }`}></div>
+              <div class="py-2 text-sm font-medium uppercase tracking-wide">
+                <a
+                  href="/inbolsaNeo/soluciones"
+                  class="block rounded-xl px-4 py-3 transition hover:bg-brand-600/10 hover:text-brand-600"
+                >
+                  Página principal
+                </a>
+                <div class="my-2 h-px bg-slate-200/70"></div>
+                {solutionAnchors.map((link) => (
+                  <a
+                    href={link.href}
+                    class="block rounded-xl px-4 py-3 text-xs uppercase tracking-wide transition hover:bg-brand-600/10 hover:text-brand-600"
+                  >
+                    {link.label}
+                  </a>
+                ))}
+              </div>
+            </div>
+          </div>
+        );
+      })()}
 
       <!-- Dropdown "Nosotros" — diseño glass/pill, clic estable -->
       {(() => {
@@ -246,44 +311,49 @@ const dropdownLinks: NavLink[] = [
     });
   </script>
 
-  <!-- Script del dropdown "Nosotros" (click, fuera/ESC, transiciones) -->
+  <!-- Scripts de los dropdowns (click, fuera/ESC, transiciones) -->
   <script is:inline>
     (function(){
-      var wrap = document.getElementById('nosotros-wrap');
-      var btn  = document.getElementById('nosotros-btn');
-      var menu = document.getElementById('nosotros-menu');
-      if (!wrap || !btn || !menu) return;
+      function setupDropdown(wrapId, btnId, menuId){
+        var wrap = document.getElementById(wrapId);
+        var btn  = document.getElementById(btnId);
+        var menu = document.getElementById(menuId);
+        if (!wrap || !btn || !menu) return;
 
-      var open = false;
-      function apply() {
-        if (open) {
-          menu.classList.remove('invisible','opacity-0','scale-95','pointer-events-none');
-          menu.classList.add('visible','opacity-100','scale-100','pointer-events-auto');
-          btn.setAttribute('aria-expanded','true');
-        } else {
-          menu.classList.add('invisible','opacity-0','scale-95','pointer-events-none');
-          menu.classList.remove('visible','opacity-100','scale-100','pointer-events-auto');
-          btn.setAttribute('aria-expanded','false');
+        var open = false;
+        function apply() {
+          if (open) {
+            menu.classList.remove('invisible','opacity-0','scale-95','pointer-events-none');
+            menu.classList.add('visible','opacity-100','scale-100','pointer-events-auto');
+            btn.setAttribute('aria-expanded','true');
+          } else {
+            menu.classList.add('invisible','opacity-0','scale-95','pointer-events-none');
+            menu.classList.remove('visible','opacity-100','scale-100','pointer-events-auto');
+            btn.setAttribute('aria-expanded','false');
+          }
         }
+        function toggle(){ open = !open; apply(); }
+        function close(){ if (!open) return; open = false; apply(); }
+
+        btn.addEventListener('click', function(e){
+          e.stopPropagation();
+          toggle();
+        });
+
+        document.addEventListener('click', function(e){
+          if (!open) return;
+          if (!wrap.contains(e.target)) close();
+        });
+
+        document.addEventListener('keydown', function(e){
+          if (e.key === 'Escape') close();
+        });
+
+        apply();
       }
-      function toggle(){ open = !open; apply(); }
-      function close(){ if (!open) return; open = false; apply(); }
 
-      btn.addEventListener('click', function(e){
-        e.stopPropagation();
-        toggle();
-      });
-
-      document.addEventListener('click', function(e){
-        if (!open) return;
-        if (!wrap.contains(e.target)) close();
-      });
-
-      document.addEventListener('keydown', function(e){
-        if (e.key === 'Escape') close();
-      });
-
-      apply();
+      setupDropdown('nosotros-wrap','nosotros-btn','nosotros-menu');
+      setupDropdown('soluciones-wrap','soluciones-btn','soluciones-menu');
     })();
   </script>
 </header>
