@@ -59,12 +59,80 @@ const milestones = [
   }
 
   .timeline-dot {
-    transition: all 0.3s ease;
+    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
   }
 
   .timeline-dot.active {
     background-color: #3E7DD2;
-    transform: scale(1.3);
+    transform: scale(1.4);
+    box-shadow: 0 0 0 4px rgba(62, 125, 210, 0.2);
+  }
+
+  .timeline-year-btn {
+    transition: all 0.3s ease;
+  }
+
+  .timeline-year-btn:hover .timeline-dot {
+    background-color: #3E7DD2;
+    transform: scale(1.2);
+  }
+
+  @keyframes slideInLeft {
+    from {
+      opacity: 0;
+      transform: translateX(-50px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  @keyframes slideInRight {
+    from {
+      opacity: 0;
+      transform: translateX(50px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .slide-content {
+    animation: fadeIn 0.6s ease-out forwards;
+  }
+
+  .slide-img-left {
+    animation: slideInLeft 0.8s ease-out forwards;
+  }
+
+  .slide-img-right {
+    animation: slideInRight 0.8s ease-out forwards;
+  }
+
+  @keyframes pulse-glow {
+    0%, 100% {
+      box-shadow: 0 0 20px rgba(62, 125, 210, 0.4);
+    }
+    50% {
+      box-shadow: 0 0 30px rgba(62, 125, 210, 0.6);
+    }
+  }
+
+  .glow-border {
+    animation: pulse-glow 2s infinite;
   }
 </style>
 
@@ -73,12 +141,31 @@ const milestones = [
 
   <main class="bg-slate-900">
     <!-- Hero Section -->
-    <section class="py-20 text-center text-white">
-      <div class="mx-auto max-w-7xl px-4">
-        <p class="text-brand-400 font-semibold mb-2 uppercase tracking-wide text-sm">Nuestra trayectoria</p>
-        <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold mb-6">Historia</h1>
+    <section class="py-20 text-center text-white relative overflow-hidden">
+      <div class="absolute inset-0 opacity-10">
+        <div class="absolute inset-0" style="background-image: radial-gradient(circle at 2px 2px, white 1px, transparent 0); background-size: 40px 40px;"></div>
+      </div>
+      
+      <div class="absolute top-20 -left-20 w-96 h-96 bg-brand-500/20 rounded-full blur-3xl animate-pulse"></div>
+      <div class="absolute bottom-20 -right-20 w-96 h-96 bg-brand-400/20 rounded-full blur-3xl animate-pulse" style="animation-delay: 1s;"></div>
+      
+      <div class="mx-auto max-w-7xl px-4 relative z-10">
+        <span class="inline-flex items-center gap-2 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 px-4 py-2 text-sm text-white/90 mb-4">
+          <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd"/>
+          </svg>
+          Nuestra trayectoria
+        </span>
+        
+        <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold mb-6">
+          50 años de
+          <span class="block mt-2 bg-gradient-to-r from-brand-300 via-brand-400 to-brand-500 bg-clip-text text-transparent">
+            Historia y Excelencia
+          </span>
+        </h1>
+        
         <p class="text-xl text-slate-300 max-w-3xl mx-auto">
-          Más de 50 años de excelencia en la industria del polipropileno.
+          Más de cinco décadas tejiendo calidad superior y construyendo relaciones duraderas.
         </p>
       </div>
     </section>
@@ -88,69 +175,85 @@ const milestones = [
       <div class="mx-auto max-w-[1600px] px-4">
         <!-- Contenedor del slide actual -->
         <div id="timeline-slider" class="relative">
-          <!-- Slide Container -->
-          <div class="bg-slate-800 rounded-3xl overflow-hidden shadow-2xl">
+          <!-- Slide Container con border glow -->
+          <div class="bg-slate-800 rounded-3xl overflow-hidden shadow-2xl glow-border">
             <div class="grid md:grid-cols-2 gap-0 items-center min-h-[500px]">
               <!-- Imagen Izquierda -->
-              <div class="h-full">
+              <div class="h-full slide-img-left">
                 <img 
                   id="slide-img-left" 
                   src={milestones[0].imageLeft}
                   alt="Historia" 
-                  class="w-full h-full object-cover min-h-[400px] md:min-h-[500px]"
+                  class="w-full h-full object-cover min-h-[400px] md:min-h-[500px] transition-transform duration-700 hover:scale-105"
                 />
               </div>
 
               <!-- Contenido Central -->
-              <div class="relative px-8 md:px-16 py-12 text-white">
-                <!-- Año grande -->
+              <div class="relative px-8 md:px-16 py-12 text-white slide-content">
+                <!-- Año grande con efecto -->
                 <div class="flex items-center gap-4 mb-6">
-                  <h2 id="slide-year" class="text-6xl md:text-8xl font-bold text-brand-400">
+                  <h2 id="slide-year" class="text-6xl md:text-8xl font-bold text-brand-400 transition-all duration-500">
                     {milestones[0].year}
                   </h2>
-                  <svg class="w-16 h-16 text-brand-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg class="w-16 h-16 text-brand-400 animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
                   </svg>
                 </div>
 
                 <!-- Título -->
-                <h3 id="slide-title" class="text-3xl md:text-4xl font-bold mb-4">
+                <h3 id="slide-title" class="text-3xl md:text-4xl font-bold mb-4 transition-all duration-500">
                   {milestones[0].title}
                 </h3>
 
                 <!-- Descripción -->
-                <p id="slide-description" class="text-lg text-slate-300 leading-relaxed">
+                <p id="slide-description" class="text-lg text-slate-300 leading-relaxed transition-all duration-500">
                   {milestones[0].description}
                 </p>
+
+                <!-- Badges decorativos -->
+                <div class="mt-8 flex flex-wrap gap-3">
+                  <span class="inline-flex items-center gap-2 rounded-full bg-brand-500/20 border border-brand-500/30 px-4 py-2 text-sm font-semibold text-brand-300">
+                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                      <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                    </svg>
+                    Hito importante
+                  </span>
+                </div>
               </div>
             </div>
           </div>
 
-          <!-- Controles de navegación -->
+          <!-- Controles de navegación mejorados -->
           <div class="flex justify-between items-center mt-8">
             <button 
               id="prev-btn"
-              class="p-3 rounded-full bg-slate-700 text-white hover:bg-brand-600 transition disabled:opacity-30 disabled:cursor-not-allowed"
+              class="group p-4 rounded-full bg-brand-600 text-white hover:bg-brand-700 transition-all disabled:opacity-30 disabled:cursor-not-allowed shadow-lg hover:shadow-xl hover:scale-110 active:scale-95"
               aria-label="Anterior"
             >
-              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg class="w-6 h-6 group-hover:-translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
               </svg>
             </button>
 
+            <div class="flex items-center gap-4 text-white">
+              <span id="current-slide" class="text-2xl font-bold text-brand-400">1</span>
+              <span class="text-slate-500">/</span>
+              <span class="text-slate-400">{milestones.length}</span>
+            </div>
+
             <button 
               id="next-btn"
-              class="p-3 rounded-full bg-slate-700 text-white hover:bg-brand-600 transition"
+              class="group p-4 rounded-full bg-brand-600 text-white hover:bg-brand-700 transition-all shadow-lg hover:shadow-xl hover:scale-110 active:scale-95"
               aria-label="Siguiente"
             >
-              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg class="w-6 h-6 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
               </svg>
             </button>
           </div>
         </div>
 
-        <!-- Timeline Navigation (años en la parte inferior) -->
+        <!-- Timeline Navigation mejorada -->
         <div class="mt-12 overflow-x-auto">
           <div class="flex items-center justify-between min-w-max mx-auto px-4 gap-4">
             {milestones.map((milestone, index) => (
@@ -159,13 +262,20 @@ const milestones = [
                   class="timeline-year-btn flex flex-col items-center group"
                   data-index={index}
                 >
-                  <span class="text-white text-lg font-bold mb-3 opacity-50 group-hover:opacity-100 transition">
+                  <span class="text-white text-lg font-bold mb-3 opacity-50 group-hover:opacity-100 transition-all">
                     {milestone.year}
                   </span>
-                  <div class="timeline-dot w-4 h-4 rounded-full bg-slate-600 group-hover:bg-brand-500"></div>
+                  <div class="timeline-dot w-4 h-4 rounded-full bg-slate-600 group-hover:bg-brand-500 relative">
+                    <div class="absolute inset-0 rounded-full bg-brand-400 opacity-0 group-hover:opacity-50 blur-md"></div>
+                  </div>
+                  <div class="mt-3 text-xs text-slate-500 opacity-0 group-hover:opacity-100 transition-all max-w-[120px] text-center">
+                    {milestone.title}
+                  </div>
                 </button>
                 {index < milestones.length - 1 && (
-                  <div class="w-24 md:w-32 h-0.5 bg-slate-700 mx-2"></div>
+                  <div class="w-24 md:w-32 h-0.5 bg-slate-700 mx-2 relative overflow-hidden">
+                    <div class="absolute inset-0 bg-gradient-to-r from-brand-500 to-transparent w-0 group-hover:w-full transition-all duration-500"></div>
+                  </div>
                 )}
               </div>
             ))}
@@ -174,20 +284,27 @@ const milestones = [
       </div>
     </section>
 
-    <!-- CTA Section -->
-    <section class="bg-slate-800 py-16">
-      <div class="mx-auto max-w-4xl px-4 text-center text-white">
+    <!-- CTA Section con animación -->
+    <section class="bg-slate-800 py-20 relative overflow-hidden">
+      <div class="absolute inset-0 opacity-5">
+        <div class="absolute inset-0" style="background-image: radial-gradient(circle at 2px 2px, white 1px, transparent 0); background-size: 40px 40px;"></div>
+      </div>
+      
+      <div class="mx-auto max-w-4xl px-4 text-center text-white relative z-10">
         <h2 class="text-3xl md:text-4xl font-bold mb-4">
           Construyendo el futuro juntos
         </h2>
         <p class="text-lg text-slate-300 mb-8">
-          Conoce más sobre nuestros valores y compromisos.
+          Conoce más sobre nuestros valores y compromisos que nos han guiado durante 50 años.
         </p>
         <div class="flex flex-wrap justify-center gap-4">
-          <a href="/valores" class="px-8 py-3 bg-brand-600 text-white rounded-xl font-semibold hover:bg-brand-700 transition shadow-lg">
-            Nuestros Valores
+          <a href="/valores" class="group inline-flex items-center gap-2 px-8 py-3 bg-brand-600 text-white rounded-xl font-semibold hover:bg-brand-700 transition-all shadow-lg hover:scale-105">
+            <span>Nuestros Valores</span>
+            <svg class="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+            </svg>
           </a>
-          <a href="/contacto" class="px-8 py-3 border-2 border-slate-600 text-white rounded-xl font-semibold hover:border-brand-600 hover:bg-slate-700 transition">
+          <a href="/contacto" class="px-8 py-3 border-2 border-slate-600 text-white rounded-xl font-semibold hover:border-brand-600 hover:bg-slate-700 transition-all">
             Contáctanos
           </a>
         </div>
@@ -205,6 +322,7 @@ const milestones = [
     const slideYear = document.getElementById('slide-year');
     const slideTitle = document.getElementById('slide-title');
     const slideDescription = document.getElementById('slide-description');
+    const currentSlideSpan = document.getElementById('current-slide');
     const prevBtn = document.getElementById('prev-btn');
     const nextBtn = document.getElementById('next-btn');
     const dots = document.querySelectorAll('.timeline-dot');
@@ -213,25 +331,29 @@ const milestones = [
     function updateSlide(index) {
       const milestone = milestones[index];
       
-      // Actualizar contenido con fade
-      slideImgLeft.style.opacity = '0';
-      slideYear.style.opacity = '0';
-      slideTitle.style.opacity = '0';
-      slideDescription.style.opacity = '0';
+      // Actualizar contenido con fade y scale
+      const elements = [slideImgLeft, slideYear, slideTitle, slideDescription];
+      elements.forEach(el => {
+        el.style.opacity = '0';
+        el.style.transform = 'scale(0.95)';
+      });
 
       setTimeout(() => {
         slideImgLeft.src = milestone.imageLeft;
         slideYear.textContent = milestone.year;
         slideTitle.textContent = milestone.title;
         slideDescription.textContent = milestone.description;
+        currentSlideSpan.textContent = (index + 1).toString();
 
-        slideImgLeft.style.opacity = '1';
-        slideYear.style.opacity = '1';
-        slideTitle.style.opacity = '1';
-        slideDescription.style.opacity = '1';
+        elements.forEach((el, i) => {
+          setTimeout(() => {
+            el.style.opacity = '1';
+            el.style.transform = 'scale(1)';
+          }, i * 100);
+        });
       }, 300);
 
-      // Actualizar dots
+      // Actualizar dots con animación
       dots.forEach((dot, i) => {
         if (i === index) {
           dot.classList.add('active');
@@ -248,10 +370,9 @@ const milestones = [
     }
 
     // Transición suave
-    slideImgLeft.style.transition = 'opacity 0.3s ease';
-    slideYear.style.transition = 'opacity 0.3s ease';
-    slideTitle.style.transition = 'opacity 0.3s ease';
-    slideDescription.style.transition = 'opacity 0.3s ease';
+    [slideImgLeft, slideYear, slideTitle, slideDescription].forEach(el => {
+      el.style.transition = 'all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)';
+    });
 
     prevBtn.addEventListener('click', () => {
       if (currentIndex > 0) {
@@ -270,6 +391,15 @@ const milestones = [
         const index = parseInt(btn.dataset.index);
         updateSlide(index);
       });
+    });
+
+    // Keyboard navigation
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowLeft' && currentIndex > 0) {
+        updateSlide(currentIndex - 1);
+      } else if (e.key === 'ArrowRight' && currentIndex < totalSlides - 1) {
+        updateSlide(currentIndex + 1);
+      }
     });
 
     // Inicializar primer dot
