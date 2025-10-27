@@ -5,33 +5,37 @@ import Base from '../layouts/Base.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import HomeHero from '../components/HomeHero.astro';
+import InteractiveHoverButton from '../components/InteractiveHoverButton.astro';
+import AnimatedCard from '../components/AnimatedCard.astro';
 ---
 
 <Base title="Inbolsa · Home">
   <Header transparent={true} />
   <HomeHero />
 
-  <!-- Sección de contenido descriptivo - después del hero -->
+  <!-- Sección de contenido descriptivo -->
   <section class="relative py-20 md:py-28 bg-white overflow-hidden">
-    <!-- Decoración de fondo sutil -->
     <div class="absolute top-10 right-0 w-96 h-96 bg-brand-50 rounded-full blur-3xl opacity-40"></div>
     <div class="absolute bottom-10 left-0 w-96 h-96 bg-slate-50 rounded-full blur-3xl opacity-60"></div>
     
     <div class="relative mx-auto max-w-5xl px-4">
       <div class="text-center">
-        <!-- Badge superior -->
-        
+        <span class="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-brand-500/10 to-brand-600/10 border border-brand-200 px-4 py-2 text-sm font-semibold text-brand-700 mb-6">
+          <span class="relative flex h-2 w-2">
+            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand-500 opacity-75"></span>
+            <span class="relative inline-flex rounded-full h-2 w-2 bg-brand-600"></span>
+          </span>
+          Calidad Superior desde 1974
+        </span>
 
-        <!-- Título grande y llamativo -->
         <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold text-slate-900 mb-4 leading-tight">
           Dedicación y excelencia en 
           <span class="relative inline-block">
-            <span class="relative z-10">cada paso</span>
+            <span class="relative z-10 bg-gradient-to-r from-brand-600 to-brand-700 bg-clip-text text-transparent">cada paso</span>
             <span class="absolute bottom-1 left-0 right-0 h-3 bg-brand-200 -rotate-1 -z-10"></span>
           </span>
         </h2>
 
-        <!-- Textos descriptivos -->
         <div class="max-w-3xl mx-auto space-y-6 text-base md:text-lg text-slate-700 leading-relaxed">
           <p>
             En Inbolsa nos comprometemos a desarrollar productos de alta calidad con 
@@ -45,93 +49,132 @@ import HomeHero from '../components/HomeHero.astro';
           </p>
         </div>
 
-        <!-- Stats limpios -->
         <div class="mt-14 grid grid-cols-2 md:grid-cols-4 gap-8 max-w-4xl mx-auto">
-          <div class="text-center">
+          <div class="text-center group transition-transform duration-300 hover:scale-110">
             <div class="text-4xl md:text-5xl font-bold text-brand-700 mb-2">50+</div>
             <div class="text-sm text-slate-600 font-medium">Años de experiencia</div>
           </div>
-          <div class="text-center">
+          <div class="text-center group transition-transform duration-300 hover:scale-110">
             <div class="text-4xl md:text-5xl font-bold text-brand-700 mb-2">100%</div>
             <div class="text-sm text-slate-600 font-medium">Compromiso</div>
           </div>
-          <div class="text-center">
+          <div class="text-center group transition-transform duration-300 hover:scale-110">
             <div class="text-4xl md:text-5xl font-bold text-brand-700 mb-2">OEA</div>
             <div class="text-sm text-slate-600 font-medium">Certificación</div>
           </div>
-          <div class="text-center">
+          <div class="text-center group transition-transform duration-300 hover:scale-110">
             <div class="text-4xl md:text-5xl font-bold text-brand-700 mb-2">1974</div>
             <div class="text-sm text-slate-600 font-medium">Desde el inicio</div>
           </div>
         </div>
 
-        <!-- CTA -->
         <div class="mt-12">
-          <a 
-            href="/valores" 
-            class="inline-flex items-center gap-2 rounded-lg bg-brand-700 px-8 py-3.5 text-white font-semibold hover:bg-brand-800 transition-colors shadow-sm"
+          <InteractiveHoverButton 
+            href="/inbolsaNeo/valores" 
+            variant="primary"
+            size="lg"
           >
-            <span>Conocer más sobre nosotros</span>
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
-            </svg>
-          </a>
+            Conocer más sobre nosotros
+          </InteractiveHoverButton>
         </div>
       </div>
     </div>
   </section>
 
-  {/* Sección de características - Diseño limpio */}
-  <section class="px-6 py-20 bg-slate-50">
-    <div class="mx-auto max-w-7xl grid gap-8 md:grid-cols-3">
+  <!-- Sección de características -->
+  <section class="px-6 py-20 bg-gradient-to-br from-slate-50 to-white relative overflow-hidden">
+    <div class="absolute inset-0 opacity-5">
+      <div class="absolute inset-0" style="background-image: radial-gradient(circle at 2px 2px, currentColor 1px, transparent 0); background-size: 40px 40px;"></div>
+    </div>
+
+    <div class="relative mx-auto max-w-7xl grid gap-8 md:grid-cols-3">
       
-      <div class="rounded-xl border border-slate-200 bg-white p-8 hover:shadow-lg transition-shadow">
-        <div class="inline-flex items-center justify-center w-12 h-12 rounded-lg bg-slate-100 mb-5">
-          <svg class="w-6 h-6 text-slate-700" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
-          </svg>
+      <AnimatedCard variant="gradient" class="group">
+        <div class="p-8">
+          <div class="relative inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-gradient-to-br from-brand-500 to-brand-600 text-white mb-5 group-hover:scale-110 group-hover:rotate-6 transition-all duration-300 shadow-lg">
+            <svg class="w-7 h-7" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            </svg>
+            <div class="absolute inset-0 rounded-2xl bg-brand-400 opacity-0 group-hover:opacity-20 blur-xl transition-opacity"></div>
+          </div>
+
+          <h3 class="text-xl font-bold text-slate-900 mb-3 group-hover:text-brand-700 transition-colors">
+            Valores
+          </h3>
+          <p class="text-slate-600 mb-6 leading-relaxed">
+            Compromiso con la calidad, innovación y servicio al cliente.
+          </p>
+          
+          <InteractiveHoverButton 
+            href="/inbolsaNeo/valores" 
+            variant="ghost"
+            size="sm"
+            class="w-full"
+          >
+            Conocer más
+          </InteractiveHoverButton>
         </div>
-        <h3 class="text-xl font-semibold text-slate-900 mb-3">Valores</h3>
-        <p class="text-slate-600 mb-4 leading-relaxed">Compromiso con la calidad, innovación y servicio al cliente.</p>
-        <a href="/valores" class="inline-flex items-center gap-2 text-brand-700 font-medium hover:gap-3 transition-all">
-          <span>Conocer más</span>
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/>
-          </svg>
-        </a>
-      </div>
+
+        <div class="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-brand-500 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+      </AnimatedCard>
       
-      <div class="rounded-xl border border-slate-200 bg-white p-8 hover:shadow-lg transition-shadow">
-        <div class="inline-flex items-center justify-center w-12 h-12 rounded-lg bg-slate-100 mb-5">
-          <svg class="w-6 h-6 text-slate-700" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
-          </svg>
+      <AnimatedCard variant="gradient" class="group">
+        <div class="p-8">
+          <div class="relative inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-gradient-to-br from-emerald-500 to-green-600 text-white mb-5 group-hover:scale-110 group-hover:rotate-6 transition-all duration-300 shadow-lg">
+            <svg class="w-7 h-7" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
+            </svg>
+            <div class="absolute inset-0 rounded-2xl bg-emerald-400 opacity-0 group-hover:opacity-20 blur-xl transition-opacity"></div>
+          </div>
+
+          <h3 class="text-xl font-bold text-slate-900 mb-3 group-hover:text-emerald-700 transition-colors">
+            Industrias
+          </h3>
+          <p class="text-slate-600 mb-6 leading-relaxed">
+            Soluciones especializadas para múltiples sectores industriales.
+          </p>
+          
+          <InteractiveHoverButton 
+            href="/inbolsaNeo/industrias" 
+            variant="ghost"
+            size="sm"
+            class="w-full"
+          >
+            Ver industrias
+          </InteractiveHoverButton>
         </div>
-        <h3 class="text-xl font-semibold text-slate-900 mb-3">Industrias</h3>
-        <p class="text-slate-600 mb-4 leading-relaxed">Soluciones especializadas para múltiples sectores industriales.</p>
-        <a href="/industrias" class="inline-flex items-center gap-2 text-brand-700 font-medium hover:gap-3 transition-all">
-          <span>Ver industrias</span>
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/>
-          </svg>
-        </a>
-      </div>
+
+        <div class="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-emerald-500 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+      </AnimatedCard>
       
-      <div class="rounded-xl border border-slate-200 bg-white p-8 hover:shadow-lg transition-shadow">
-        <div class="inline-flex items-center justify-center w-12 h-12 rounded-lg bg-slate-100 mb-5">
-          <svg class="w-6 h-6 text-slate-700" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
-          </svg>
+      <AnimatedCard variant="gradient" class="group">
+        <div class="p-8">
+          <div class="relative inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-gradient-to-br from-amber-500 to-orange-600 text-white mb-5 group-hover:scale-110 group-hover:rotate-6 transition-all duration-300 shadow-lg">
+            <svg class="w-7 h-7" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            </svg>
+            <div class="absolute inset-0 rounded-2xl bg-amber-400 opacity-0 group-hover:opacity-20 blur-xl transition-opacity"></div>
+          </div>
+
+          <h3 class="text-xl font-bold text-slate-900 mb-3 group-hover:text-amber-700 transition-colors">
+            Historia
+          </h3>
+          <p class="text-slate-600 mb-6 leading-relaxed">
+            Desde 1974, tejiendo calidad superior en polipropileno.
+          </p>
+          
+          <InteractiveHoverButton 
+            href="/inbolsaNeo/historia" 
+            variant="ghost"
+            size="sm"
+            class="w-full"
+          >
+            Nuestra trayectoria
+          </InteractiveHoverButton>
         </div>
-        <h3 class="text-xl font-semibold text-slate-900 mb-3">Historia</h3>
-        <p class="text-slate-600 mb-4 leading-relaxed">Desde 1974, tejiendo calidad superior en polipropileno.</p>
-        <a href="/historia" class="inline-flex items-center gap-2 text-brand-700 font-medium hover:gap-3 transition-all">
-          <span>Nuestra trayectoria</span>
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/>
-          </svg>
-        </a>
-      </div>
+
+        <div class="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-amber-500 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+      </AnimatedCard>
     </div>
   </section>
 

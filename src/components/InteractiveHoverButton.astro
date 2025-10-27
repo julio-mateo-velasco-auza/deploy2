@@ -1,0 +1,84 @@
+---
+/**
+ * InteractiveHoverButton.astro
+ * Botón interactivo con animaciones elegantes
+ */
+
+interface Props {
+  variant?: 'primary' | 'secondary' | 'ghost';
+  size?: 'sm' | 'md' | 'lg';
+  href?: string;
+  class?: string;
+}
+
+const {
+  variant = 'primary',
+  size = 'md',
+  href,
+  class: className = '',
+  ...rest
+} = Astro.props as Props & Record<string, unknown>;
+
+const baseClasses =
+  'group relative inline-flex items-center justify-center overflow-hidden rounded-full font-semibold transition-all duration-300 ease-out';
+
+const variantClasses: Record<NonNullable<Props['variant']>, string> = {
+  primary:
+    'bg-brand-600 text-white border-2 border-brand-600 hover:bg-brand-700 hover:border-brand-700 hover:shadow-xl hover:shadow-brand-500/30',
+  secondary:
+    'bg-white text-brand-700 border-2 border-brand-600 hover:bg-brand-50 hover:shadow-xl hover:border-brand-700',
+  ghost:
+    'bg-transparent text-slate-700 border-2 border-slate-300 hover:border-brand-500 hover:text-brand-700 hover:bg-brand-50/50',
+};
+
+const sizeClasses: Record<NonNullable<Props['size']>, string> = {
+  sm: 'px-4 py-2 text-sm gap-2',
+  md: 'px-6 py-3 text-base gap-2',
+  lg: 'px-8 py-4 text-lg gap-3',
+};
+
+---
+
+{href ? (
+  <a
+    href={href}
+    class={`${baseClasses} ${variantClasses[variant]} ${sizeClasses[size]} ${className}`}
+    {...rest}
+  >
+    <span class="absolute left-2 h-2 w-2 rounded-full bg-current opacity-70 transition-all duration-300 group-hover:scale-[50] group-hover:opacity-10"></span>
+
+    <span class="relative z-10 inline-flex items-center gap-2 transition-all duration-300 group-hover:translate-x-12 group-hover:opacity-0">
+      <slot />
+    </span>
+
+    <span class="absolute inset-0 z-20 flex items-center justify-center gap-2 translate-x-12 opacity-0 transition-all duration-300 group-hover:-translate-x-1 group-hover:opacity-100">
+      <slot />
+      <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+      </svg>
+    </span>
+
+    <span class="absolute inset-0 -z-10 rounded-full bg-gradient-to-r from-transparent via-white/20 to-transparent translate-x-[-200%] group-hover:translate-x-[200%] transition-transform duration-700"></span>
+  </a>
+) : (
+  <button
+    type="button"
+    class={`${baseClasses} ${variantClasses[variant]} ${sizeClasses[size]} ${className}`}
+    {...rest}
+  >
+    <span class="absolute left-2 h-2 w-2 rounded-full bg-current opacity-70 transition-all duration-300 group-hover:scale-[50] group-hover:opacity-10"></span>
+
+    <span class="relative z-10 inline-flex items-center gap-2 transition-all duration-300 group-hover:translate-x-12 group-hover:opacity-0">
+      <slot />
+    </span>
+
+    <span class="absolute inset-0 z-20 flex items-center justify-center gap-2 translate-x-12 opacity-0 transition-all duration-300 group-hover:-translate-x-1 group-hover:opacity-100">
+      <slot />
+      <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+      </svg>
+    </span>
+
+    <span class="absolute inset-0 -z-10 rounded-full bg-gradient-to-r from-transparent via-white/20 to-transparent translate-x-[-200%] group-hover:translate-x-[200%] transition-transform duration-700"></span>
+  </button>
+)}

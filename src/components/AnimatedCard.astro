@@ -1,0 +1,44 @@
+---
+/**
+ * AnimatedCard.astro
+ * Tarjeta con efectos hover y animaciones
+ */
+
+interface Props {
+  variant?: 'default' | 'gradient' | 'glass';
+  hoverable?: boolean;
+  class?: string;
+}
+
+const { 
+  variant = 'default',
+  hoverable = true,
+  class: className = ''
+} = Astro.props;
+
+const baseClasses = "relative overflow-hidden rounded-3xl transition-all duration-500 group";
+
+const variantClasses = {
+  default: "bg-white border border-slate-200 shadow-sm hover:shadow-xl",
+  gradient: "bg-gradient-to-br from-white via-brand-50/30 to-white border border-brand-100 shadow-md hover:shadow-2xl hover:shadow-brand-500/10",
+  glass: "bg-white/80 backdrop-blur-xl border border-white/20 shadow-lg hover:shadow-2xl"
+};
+
+const hoverClasses = hoverable ? "hover:-translate-y-2 hover:scale-[1.02]" : "";
+---
+
+<article 
+  class={`${baseClasses} ${variantClasses[variant]} ${hoverClasses} ${className}`}
+>
+  <div class="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-brand-500/50 to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100"></div>
+  
+  <div class="absolute -inset-1 bg-gradient-to-r from-brand-500/20 via-brand-600/20 to-brand-500/20 opacity-0 blur-xl transition-opacity duration-500 group-hover:opacity-100 -z-10"></div>
+  
+  <div class="absolute -top-24 -right-24 h-48 w-48 rounded-full bg-brand-500/5 blur-3xl transition-all duration-700 group-hover:scale-150 group-hover:bg-brand-500/10"></div>
+  
+  <div class="relative z-10">
+    <slot />
+  </div>
+
+  <div class="absolute bottom-0 right-0 h-32 w-32 translate-x-16 translate-y-16 rounded-full bg-gradient-to-tl from-brand-400/20 to-transparent opacity-0 blur-2xl transition-all duration-500 group-hover:translate-x-8 group-hover:translate-y-8 group-hover:opacity-100"></div>
+</article>
