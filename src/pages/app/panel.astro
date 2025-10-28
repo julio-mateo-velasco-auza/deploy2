@@ -384,7 +384,12 @@ const CATALOG = [
       document.querySelector('#qrModal [data-close]')?.addEventListener('click', ()=> close('qrModal'));
 
       // Logout
-      document.getElementById('logoutBtn')?.addEventListener('click', async ()=>{ try{ await api.logout(); }catch{} location.href='inbolsaNeo/app/login'; });
+      document.getElementById('logoutBtn')?.addEventListener('click', async ()=>{ 
+        try { 
+          await api.logout(); 
+        } catch {} 
+        location.href = '/inbolsaNeo/app/login'; 
+      });
 
       // Cargar lista
       await loadList();
