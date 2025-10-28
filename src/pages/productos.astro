@@ -38,15 +38,28 @@ const CATALOG = [
   ]},
 ];
 
+const slugify = (value: string) =>
+  value
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '');
+
+const PRODUCT_NAV = CATALOG.map((group) => ({
+  id: slugify(group.cat),
+  label: group.cat,
+}));
+
 const PRODUCT_DETAILS = {
   'sacos-convencionales': {
     name: 'Sacos Convencionales',
     category: 'Sacos PP',
     cover: '/inbolsaNeo/imgs/bolsa-chica.jpg',
     shortDescription: 'Saco de rafia versátil para cargas a granel y productos agroindustriales.',
-    summary: 'Bolsa tejida en polipropileno virgen con tratamiento anti UV y costuras reforzadas para garantizar ciclos de reutilización.',
+    summary: 'La estructura tramada permite flujo de aire constante, ideal para productos que continúan respirando en postcosecha.',
     description: [
-      'Sacos convencionales con costura en la base o el fondo. Nuestros sacos están construidos con resiliencia y protección en mente, brindando la solución perfecta para su industria. Con múltiples opciones de personalización, cada saco que creamos es hecho con el cliente en mente'
+      'Nuestros sacos convencionales están fabricados con tejido de polipropileno de alta resistencia, ofreciendo una protección confiable frente a la manipulación, el transporte y las condiciones ambientales. Diseñados con costura reforzada en la base o el fondo, garantizan una excelente capacidad de carga y durabilidad, convirtiéndolos en la elección ideal para diversas industrias como la agroindustrial, alimentaria y de materiales a granel. Cada saco es elaborado bajo estrictos estándares de calidad, priorizando la resiliencia, la seguridad y la funcionalidad. Además, contamos con múltiples opciones de personalización, desde tamaños y gramajes hasta colores, impresiones y acabados especiales, para adaptar cada producto a las necesidades específicas de nuestros clientes.'
     ],
     features: [
       'Impresión de hasta 8 colores',
@@ -58,6 +71,10 @@ const PRODUCT_DETAILS = {
       'Opciones de coostura: Lateral, superior, inferior hilo resaltado'
     ],
     applications: [
+      '/inbolsaNeo/imgs/icons/Asas.PNG',
+      '/inbolsaNeo/imgs/icons/Costurapersonalizable.PNG',
+      '/inbolsaNeo/imgs/icons/Fuelles.PNG',
+      '/inbolsaNeo/imgs/icons/Impresiones.PNG',
     ],
     specs: [
       { label: 'Gramaje disponible', value: '70 a 110 g/m²' },
@@ -77,8 +94,8 @@ const PRODUCT_DETAILS = {
     shortDescription: 'Bolsa mallada con excelente ventilación para frutas y hortalizas.',
     summary: 'La estructura tramada permite flujo de aire constante, ideal para productos que continúan respirando en postcosecha.',
     description: [
-      'Nuestros sacos de red mantienen la firmeza del producto gracias a la elasticidad controlada del monofilamento. Disponibles en colores personalizados para identidades de marca o codificación de calibres.',
-      'La red se ofrece en piezas continuas o cortadas y cosidas, con opciones de cierre mediante cordón, fleje o etiqueta térmica integrable.'
+      'los sacos tejidos tipo red ofrecen resistencia superior y excelente ventilación, garantizando una manipulación segura en cada etapa del proceso logístico. Su diseño ligero pero robusto los convierte en una solución eficiente y confiable para la industria agronómica, especialmente en el envasado y transporte de productos agrícolas como papas, cebollas y otros tubérculos',
+      'Gracias a su estructura flexible, permiten un llenado y vaciado ágil, reduciendo tiempos de operación y optimizando el manejo del producto. Además, su transparencia y acabado uniforme facilitan la identificación visual del contenido, aportando un valor estético y funcional que refuerza la presentación del producto final.'
     ],
     features: [
       'Monofilamento estabilizado para evitar decoloración bajo luz solar.',
@@ -87,9 +104,9 @@ const PRODUCT_DETAILS = {
       'Posibilidad de incluir etiqueta lateral o cinta térmica.'
     ],
     applications: [
-      'Cebollas, cítricos y tubérculos.',
-      'Envases secundarios para pack promocional.',
-      'Segmentación visual en centros de distribución.'
+      '/inbolsaNeo/imgs/icons/sacos-red-1.svg',
+      '/inbolsaNeo/imgs/icons/sacos-red-2.svg',
+      '/inbolsaNeo/imgs/icons/sacos-red-3.svg'
     ],
     specs: [
       { label: 'Anchos disponibles', value: '30 a 60 cm' },
@@ -118,9 +135,9 @@ const PRODUCT_DETAILS = {
       'Personalización total de dimensiones y densidad del tejido.'
     ],
     applications: [
-      'Harinas y mezclas preparadas.',
-      'Suplementos minerales y premixes.',
-      'Productos químicos pulverulentos.'
+      '/inbolsaNeo/imgs/icons/sacos-laminados-1.svg',
+      '/inbolsaNeo/imgs/icons/sacos-laminados-2.svg',
+      '/inbolsaNeo/imgs/icons/sacos-laminados-3.svg'
     ],
     specs: [
       { label: 'Gramaje tejido', value: '80 a 120 g/m²' },
@@ -149,9 +166,9 @@ const PRODUCT_DETAILS = {
       'Se suministra con certificados de contacto indirecto con alimentos.'
     ],
     applications: [
-      'Alimentos para mascotas premium.',
-      'Harinas especiales y mixes gourmet.',
-      'Productos de jardinería profesional.'
+      '/inbolsaNeo/imgs/icons/sacos-laminacion-premium-1.svg',
+      '/inbolsaNeo/imgs/icons/sacos-laminacion-premium-2.svg',
+      '/inbolsaNeo/imgs/icons/sacos-laminacion-premium-3.svg'
     ],
     specs: [
       { label: 'Gramaje tejido', value: '90 a 130 g/m²' },
@@ -180,9 +197,9 @@ const PRODUCT_DETAILS = {
       'Opciones de bolsa interior coex para productos finos.'
     ],
     applications: [
-      'Azúcares, sal y productos cristalinos.',
-      'Semillas certificadas.',
-      'Materias primas para industria química.'
+      '/inbolsaNeo/imgs/icons/sacos-planos-1.svg',
+      '/inbolsaNeo/imgs/icons/sacos-planos-2.svg',
+      '/inbolsaNeo/imgs/icons/sacos-planos-3.svg'
     ],
     specs: [
       { label: 'Anchos', value: '35 a 60 cm' },
@@ -211,9 +228,9 @@ const PRODUCT_DETAILS = {
       'Amplia superficie frontal para branding y mensajes.'
     ],
     applications: [
-      'Cemento, cal y mezclas secas.',
-      'Balanceados y alimentos para mascotas.',
-      'Semillas y productos agroquímicos.'
+      '/inbolsaNeo/imgs/icons/sacos-fondo-cuadrado-1.svg',
+      '/inbolsaNeo/imgs/icons/sacos-fondo-cuadrado-2.svg',
+      '/inbolsaNeo/imgs/icons/sacos-fondo-cuadrado-3.svg'
     ],
     specs: [
       { label: 'Capacidades', value: '20, 25 y 50 kg' },
@@ -242,9 +259,9 @@ const PRODUCT_DETAILS = {
       'Recubrimiento interior opcional con liner de PE.'
     ],
     applications: [
-      'Pigmentos y polvos finos.',
-      'Químicos peligrosos controlados.',
-      'Ingredientes de grado alimenticio.'
+      '/inbolsaNeo/imgs/icons/big-bag-tubular-1.svg',
+      '/inbolsaNeo/imgs/icons/big-bag-tubular-2.svg',
+      '/inbolsaNeo/imgs/icons/big-bag-tubular-3.svg'
     ],
     specs: [
       { label: 'Factor de seguridad', value: '5:1 o 6:1 según ISO 21898' },
@@ -274,9 +291,9 @@ const PRODUCT_DETAILS = {
       'Compatible con llenado automático y descarga controlada.'
     ],
     applications: [
-      'Productos minerales y cementicios.',
-      'Alimentos para mascotas a granel.',
-      'Reciclables y residuos industriales.'
+      '/inbolsaNeo/imgs/icons/big-bag-u-panel-1.svg',
+      '/inbolsaNeo/imgs/icons/big-bag-u-panel-2.svg',
+      '/inbolsaNeo/imgs/icons/big-bag-u-panel-3.svg'
     ],
     specs: [
       { label: 'Capacidad de carga', value: '500 a 2000 kg' },
@@ -305,9 +322,9 @@ const PRODUCT_DETAILS = {
       'Etiqueta RFID opcional para trazabilidad.'
     ],
     applications: [
-      'Pigmentos y masterbatch.',
-      'Azúcares y productos granulares.',
-      'Materiales reciclados de alta densidad.'
+      '/inbolsaNeo/imgs/icons/big-bag-cuadripanel-1.svg',
+      '/inbolsaNeo/imgs/icons/big-bag-cuadripanel-2.svg',
+      '/inbolsaNeo/imgs/icons/big-bag-cuadripanel-3.svg'
     ],
     specs: [
       { label: 'Carga útil', value: 'Hasta 1500 kg' },
@@ -336,9 +353,9 @@ const PRODUCT_DETAILS = {
       'Trampilla de descarga con cordón asegurador.'
     ],
     applications: [
-      'Leche en polvo y ingredientes alimenticios.',
-      'Productos farmacéuticos intermedios.',
-      'Químicos finos sensibles a la presión.'
+      '/inbolsaNeo/imgs/icons/big-bag-compartimentada-1.svg',
+      '/inbolsaNeo/imgs/icons/big-bag-compartimentada-2.svg',
+      '/inbolsaNeo/imgs/icons/big-bag-compartimentada-3.svg'
     ],
     specs: [
       { label: 'Factor de seguridad', value: '5:1 o 6:1' },
@@ -367,9 +384,9 @@ const PRODUCT_DETAILS = {
       'Fácil plegado para retornos o reciclaje.'
     ],
     applications: [
-      'Fertilizantes y agroquímicos.',
-      'Materiales reciclables clasificados.',
-      'Alimentos a granel de rotación media.'
+      '/inbolsaNeo/imgs/icons/sling-bag-1.svg',
+      '/inbolsaNeo/imgs/icons/sling-bag-2.svg',
+      '/inbolsaNeo/imgs/icons/sling-bag-3.svg'
     ],
     specs: [
       { label: 'Capacidad de carga', value: '400 a 1000 kg' },
@@ -398,9 +415,9 @@ const PRODUCT_DETAILS = {
       'Entrega en rollos de hasta 500 m lineales.'
     ],
     applications: [
-      'Confección de sacos industriales.',
-      'Revestimiento de estructuras temporales.',
-      'Cubiertas y protecciones de suelos.'
+      '/inbolsaNeo/imgs/icons/tela-plana-1.svg',
+      '/inbolsaNeo/imgs/icons/tela-plana-2.svg',
+      '/inbolsaNeo/imgs/icons/tela-plana-3.svg'
     ],
     specs: [
       { label: 'Gramaje', value: '60 a 120 g/m²' },
@@ -429,9 +446,9 @@ const PRODUCT_DETAILS = {
       'Compatible con procesos automatizados de conversión.'
     ],
     applications: [
-      'Cuerpo de big bags y sacos tubulares.',
-      'Protectores de bobinas metálicas.',
-      'Conductos flexibles y mangas de ventilación.'
+      '/inbolsaNeo/imgs/icons/tela-tubular-1.svg',
+      '/inbolsaNeo/imgs/icons/tela-tubular-2.svg',
+      '/inbolsaNeo/imgs/icons/tela-tubular-3.svg'
     ],
     specs: [
       { label: 'Diámetro plano', value: '60 a 220 cm' },
@@ -460,9 +477,9 @@ const PRODUCT_DETAILS = {
       'Calidad alimentaria disponible bajo pedido.'
     ],
     applications: [
-      'Cierre de sacos de polipropileno.',
-      'Empaques de harina y balanceados.',
-      'Atado de fardos livianos.'
+      '/inbolsaNeo/imgs/icons/hilo-plano-1.svg',
+      '/inbolsaNeo/imgs/icons/hilo-plano-2.svg',
+      '/inbolsaNeo/imgs/icons/hilo-plano-3.svg'
     ],
     specs: [
       { label: 'Título', value: '1200 a 3000 den' },
@@ -491,9 +508,9 @@ const PRODUCT_DETAILS = {
       'Elongación controlada para absorción de impactos.'
     ],
     applications: [
-      'Costura de big bags.',
-      'Envasadoras automáticas de balanceados.',
-      'Atado de redes y sogas.'
+      '/inbolsaNeo/imgs/icons/hilo-multifilamentado-1.svg',
+      '/inbolsaNeo/imgs/icons/hilo-multifilamentado-2.svg',
+      '/inbolsaNeo/imgs/icons/hilo-multifilamentado-3.svg'
     ],
     specs: [
       { label: 'Título', value: '840 a 2100 den' },
@@ -522,9 +539,9 @@ const PRODUCT_DETAILS = {
       'Bobinas selladas al vacío para mayor vida útil.'
     ],
     applications: [
-      'Costura de sacos laminados.',
-      'Cierres de sacos block bottom.',
-      'Atado de componentes industriales.'
+      '/inbolsaNeo/imgs/icons/hilo-reforzado-pp-1.svg',
+      '/inbolsaNeo/imgs/icons/hilo-reforzado-pp-2.svg',
+      '/inbolsaNeo/imgs/icons/hilo-reforzado-pp-3.svg'
     ],
     specs: [
       { label: 'Título', value: '1500 a 2600 den' },
@@ -553,9 +570,9 @@ const PRODUCT_DETAILS = {
       'No absorbe humedad y mantiene peso constante.'
     ],
     applications: [
-      'Costura de big bags premium.',
-      'Fijación de liners en FIBC.',
-      'Sogas para atado en camiones.'
+      '/inbolsaNeo/imgs/icons/hilo-reforzado-multifilamento-1.svg',
+      '/inbolsaNeo/imgs/icons/hilo-reforzado-multifilamento-2.svg',
+      '/inbolsaNeo/imgs/icons/hilo-reforzado-multifilamento-3.svg'
     ],
     specs: [
       { label: 'Título', value: '1800 a 3200 den' },
@@ -584,9 +601,9 @@ const PRODUCT_DETAILS = {
       'Resistentes a la humedad y agentes químicos.'
     ],
     applications: [
-      'Atado de sacos en transporte.',
-      'Fijación de mercadería en pallets.',
-      'Operaciones de cosecha y atado en campo.'
+      '/inbolsaNeo/imgs/icons/amarres-1.svg',
+      '/inbolsaNeo/imgs/icons/amarres-2.svg',
+      '/inbolsaNeo/imgs/icons/amarres-3.svg'
     ],
     specs: [
       { label: 'Diámetros', value: '3 a 12 mm' },
@@ -603,34 +620,337 @@ const PRODUCT_DETAILS = {
 type ProductId = keyof typeof PRODUCT_DETAILS;
 ---
 
+<style>
+  
+  
+  /* Header Pattern Background */
+  .pattern-bg {
+    background-image: 
+      linear-gradient(135deg, rgba(62, 125, 210, 0.03) 25%, transparent 25%),
+      linear-gradient(225deg, rgba(62, 125, 210, 0.03) 25%, transparent 25%),
+      linear-gradient(45deg, rgba(62, 125, 210, 0.03) 25%, transparent 25%),
+      linear-gradient(315deg, rgba(62, 125, 210, 0.03) 25%, transparent 25%);
+    background-size: 40px 40px;
+    background-position: 0 0, 0 0, 20px 20px, 20px 20px;
+  }
+
+  /* Product Card Hover Effects */
+  .product-card {
+    transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .product-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba(62, 125, 210, 0.1),
+      transparent
+    );
+    transition: left 0.6s ease;
+  }
+
+  .product-card:hover::before {
+    left: 100%;
+  }
+
+  .product-card:hover {
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: 0 20px 40px -10px rgba(62, 125, 210, 0.25);
+  }
+
+  /* Image Zoom Effect */
+  .product-img-wrapper {
+    overflow: hidden;
+    position: relative;
+  }
+
+  .product-img-wrapper::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(62, 125, 210, 0.4), rgba(37, 99, 235, 0.4));
+    opacity: 0;
+    transition: opacity 0.4s ease;
+  }
+
+  .product-card:hover .product-img-wrapper::after {
+    opacity: 1;
+  }
+
+  .product-img {
+    transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  .product-card:hover .product-img {
+    transform: scale(1.15);
+  }
+
+  /* Badge Styles */
+  .category-badge {
+    background: linear-gradient(135deg, #3E7DD2, #2563eb);
+    box-shadow: 0 4px 12px rgba(62, 125, 210, 0.3);
+  }
+
+  /* Modal Animations */
+  @keyframes modalFadeIn {
+    from {
+      opacity: 0;
+      transform: scale(0.9);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+
+  .modal-content {
+    animation: modalFadeIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  /* Icon Container Styles */
+  .icon-container {
+    background: linear-gradient(135deg, rgba(62, 125, 210, 0.1), rgba(62, 125, 210, 0.05));
+    border: 2px solid rgba(62, 125, 210, 0.2);
+    transition: all 0.3s ease;
+  }
+
+  .icon-container:hover {
+    background: linear-gradient(135deg, rgba(62, 125, 210, 0.2), rgba(62, 125, 210, 0.1));
+    border-color: rgba(62, 125, 210, 0.4);
+    transform: scale(1.05);
+  }
+
+  /* Spec Table Styles */
+  .spec-row {
+    transition: all 0.3s ease;
+  }
+
+  .spec-row:hover {
+    background: linear-gradient(90deg, rgba(62, 125, 210, 0.05), transparent);
+    transform: translateX(4px);
+  }
+
+  /* Feature List Styles */
+  .feature-item {
+    position: relative;
+    padding-left: 32px;
+    transition: all 0.3s ease;
+  }
+
+  .feature-item::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 20px;
+    height: 20px;
+    background: linear-gradient(135deg, #3E7DD2, #2563eb);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .feature-item::after {
+    content: '✓';
+    position: absolute;
+    left: 5px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: white;
+    font-size: 12px;
+    font-weight: bold;
+  }
+
+  .feature-item:hover {
+    color: #3E7DD2;
+    padding-left: 36px;
+  }
+
+  /* Scrollbar Styles */
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: #f1f5f9;
+    border-radius: 10px;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, #3E7DD2, #2563eb);
+    border-radius: 10px;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(180deg, #2563eb, #1d4ed8);
+  }
+
+  /* Gallery Grid */
+  .gallery-item {
+    position: relative;
+    overflow: hidden;
+    border-radius: 16px;
+    transition: all 0.3s ease;
+  }
+
+  .gallery-item:hover {
+    transform: scale(1.05);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  }
+
+  .gallery-item img {
+    transition: transform 0.5s ease;
+  }
+
+  .gallery-item:hover img {
+    transform: scale(1.1);
+  }
+</style>
+
 <Base title={pageTitle}>
   <Header />
 
-  <main class="mx-auto max-w-6xl px-4 py-12">
-    <h1 class="text-3xl font-bold">{pageTitle}</h1>
+  <!-- Hero Section con estilo Sacaria -->
+      <section class="relative overflow-hidden bg-gradient-to-b from-brand-100 via-sky-50 to-white">
+        <div class="absolute inset-0 opacity-60">
+          <div class="absolute inset-0" style="background-image: radial-gradient(circle at 1px 1px, rgba(59,130,246,0.08) 0%, transparent 55%); background-size: 48px 48px;"></div>
+        </div>
 
-    {CATALOG.map((group) => (
-      <section class="mt-8">
-        <h2 class="text-xl font-semibold">{group.cat}</h2>
-        <div class="mt-4 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <div class="absolute top-20 -left-32 w-[28rem] h-[28rem] bg-brand-200/35 rounded-full blur-3xl"></div>
+        <div class="absolute bottom-10 -right-32 w-[26rem] h-[26rem] bg-sky-200/30 rounded-full blur-3xl"></div>
+
+        <div class="relative mx-auto max-w-7xl px-4 py-16 md:py-24">
+          <div class="text-center">
+            <h1 class="text-4xl md:text-6xl font-black uppercase tracking-tight text-slate-900 mb-6">
+              Nuestros
+              <span class="block mt-2 bg-gradient-to-r from-brand-500 via-brand-600 to-sky-500 bg-clip-text text-transparent">
+                Productos
+              </span>
+            </h1>
+
+            <p class="text-lg md:text-xl text-slate-700 max-w-3xl mx-auto leading-relaxed">
+              Soluciones especializadas en polipropileno para industrias exigentes
+            </p>
+          </div>
+        </div>
+
+    <div class="absolute bottom-0 left-0 right-0">
+      <svg viewBox="0 0 1440 100" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-full">
+        <path d="M0 0L60 8.33C120 16.7 240 33.3 360 41.7C480 50 600 50 720 45C840 40 960 30 1080 28.3C1200 26.7 1320 33.3 1380 36.7L1440 40V100H1380C1320 100 1200 100 1080 100C960 100 840 100 720 100C600 100 480 100 360 100C240 100 120 100 60 100H0V0Z" fill="white"/>
+      </svg>
+    </div>
+  </section>
+
+  <main class="mx-auto max-w-7xl px-4 py-12">
+    <nav class="sticky top-24 z-20 mb-12" data-nav-wrapper>
+      <div class="rounded-2xl border border-white/70 bg-white/85 shadow-sm backdrop-blur">
+        <ul class="flex flex-wrap items-center justify-center gap-2 px-4 py-3 text-xs font-semibold uppercase text-brand-700 md:gap-3">
+          {PRODUCT_NAV.map((item) => (
+            <li data-nav-item={item.id}>
+              <a
+                href={`#${item.id}`}
+                class="inline-flex items-center gap-2 rounded-full border border-brand-200 bg-white px-4 py-2 shadow-sm transition hover:-translate-y-0.5 hover:bg-brand-50 hover:text-brand-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-500"
+              >
+                <span class="h-2 w-2 rounded-full bg-brand-500"></span>
+                {item.label}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </nav>
+    {CATALOG.map((group, groupIndex) => {
+      const sectionId = PRODUCT_NAV[groupIndex]?.id ?? slugify(group.cat);
+      return (
+      <section id={sectionId} data-product-group={sectionId} class="mb-16 scroll-mt-32">
+        <!-- Category Header -->
+        <div class="mb-8">
+          <div class="flex items-center gap-4 mb-4">
+            <div class="h-1 w-16 bg-gradient-to-r from-brand-600 to-brand-400 rounded-full"></div>
+            <h2 class="text-3xl font-black uppercase tracking-tight text-slate-900">
+              {group.cat}
+            </h2>
+          </div>
+          <p class="text-slate-600 ml-20">Productos especializados de alta calidad</p>
+        </div>
+
+        <!-- Products Grid -->
+        <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {group.items.map((p) => {
             const detail = PRODUCT_DETAILS[p.id as ProductId];
+            const applicationIcons = Array.isArray(detail?.applications) ? detail?.applications : [];
             return (
-              <article data-product-id={p.id} class="flex flex-col rounded-xl border border-slate-200/40 bg-white/5 p-4 shadow-sm">
-                <div class="aspect-[4/3] w-full overflow-hidden rounded-lg bg-slate-100">
-                  <img src={p.img} alt={p.name} class="h-full w-full object-cover" loading="lazy" />
+              <article 
+                data-product-id={p.id} 
+                class="product-card flex flex-col rounded-2xl border-2 border-slate-200 bg-white shadow-lg"
+              >
+                {/* Image Section */}
+                <div class="product-img-wrapper aspect-[4/3] w-full rounded-t-2xl bg-gradient-to-br from-slate-100 to-slate-50 relative">
+                  <img 
+                    src={p.img} 
+                    alt={p.name} 
+                    class="product-img h-full w-full object-cover rounded-t-2xl" 
+                    loading="lazy" 
+                  />
+                  <div class="absolute top-3 left-3">
+                    <span class="category-badge inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-xs font-bold uppercase tracking-wide text-white">
+                      <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                      </svg>
+                      {group.cat}
+                    </span>
+                  </div>
                 </div>
-                <h3 class="mt-3 text-lg font-medium">{p.name}</h3>
-                {detail?.shortDescription && (
-                  <p class="mt-2 text-sm text-slate-600">{detail.shortDescription}</p>
-                )}
-                <div class="mt-4 flex flex-wrap gap-3">
+
+                {/* Content Section */}
+                <div class="flex flex-1 flex-col p-6">
+                  <h3 class="text-xl font-bold text-slate-900 mb-3 leading-tight">
+                    {p.name}
+                  </h3>
+                  
+                  {detail?.shortDescription && (
+                    <p class="text-sm text-slate-600 mb-4 leading-relaxed flex-1">
+                      {detail.shortDescription}
+                    </p>
+                  )}
+
+                  {/* Key Specs Preview */}
+                  {detail?.specs && detail.specs.length > 0 && (
+                    <div class="mb-4 space-y-2">
+                      {detail.specs.slice(0, 2).map((spec) => (
+                        <div class="flex items-start gap-2 text-xs">
+                          <svg class="w-4 h-4 text-brand-600 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                          </svg>
+                          <div>
+                            <span class="font-semibold text-slate-700">{spec.label}:</span>
+                            <span class="text-slate-600 ml-1">{spec.value}</span>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+
+                  {/* Action Button */}
                   <button
                     type="button"
                     data-product-modal={p.id}
-                    class="inline-flex items-center justify-center rounded-lg bg-brand-600 px-3 py-2 text-sm font-semibold text-white transition hover:bg-brand-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2"
+                    class="mt-auto inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-brand-600 to-brand-700 px-5 py-3 text-sm font-bold uppercase tracking-wide text-white transition-all hover:from-brand-700 hover:to-brand-800 hover:shadow-lg hover:shadow-brand-500/30 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2"
                   >
-                    Ver más
+                    <span>Ver detalles</span>
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/>
+                    </svg>
                   </button>
                 </div>
               </article>
@@ -638,172 +958,225 @@ type ProductId = keyof typeof PRODUCT_DETAILS;
           })}
         </div>
       </section>
-    ))}
-
-    <p id="empty-msg" class="mt-8 hidden text-slate-500">
-      No hay productos habilitados para este acceso.
-    </p>
+    );
+    })}
   </main>
 
   <Footer />
 
+  <!-- Modal de Producto -->
   <div
     id="productModal"
-    class="fixed inset-0 z-50 hidden items-center justify-center px-4 py-10"
+    class="fixed inset-0 z-50 hidden items-center justify-center px-4 py-6 bg-slate-900/80 backdrop-blur-sm"
     role="dialog"
     aria-modal="true"
   >
-    <div class="absolute inset-0 bg-slate-900/70 backdrop-blur-sm" data-close></div>
-    <div class="relative z-10 max-h-[85vh] w-full max-w-4xl overflow-hidden rounded-2xl bg-slate-50 shadow-2xl">
-      <div class="flex items-center justify-between border-b border-slate-200 bg-white px-5 py-3">
-        <h2 class="text-base font-semibold text-slate-900">Detalle del producto</h2>
+    <div class="modal-content relative z-10 max-h-[90vh] w-full max-w-5xl overflow-hidden rounded-3xl bg-white shadow-2xl">
+      {/* Modal Header */}
+      <div class="flex items-center justify-between border-b-2 border-brand-500 bg-gradient-to-r from-brand-600 to-brand-700 px-6 py-4">
+        <div class="flex items-center gap-3">
+          <div class="rounded-xl bg-white/20 p-2">
+            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            </svg>
+          </div>
+          <h2 class="text-lg font-black uppercase tracking-wide text-white">Detalle del producto</h2>
+        </div>
         <button
           type="button"
-          class="rounded-lg border border-transparent px-2 text-xl leading-none text-slate-500 transition hover:border-slate-200 hover:text-slate-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2"
+          class="rounded-xl bg-white/20 p-2 text-white transition hover:bg-white/30 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-brand-600"
           data-close
           aria-label="Cerrar detalle"
         >
-          ×
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"/>
+          </svg>
         </button>
       </div>
-      <div id="productModalBody" class="max-h-[70vh] overflow-y-auto px-5 py-6"></div>
+      
+      {/* Modal Body */}
+      <div id="productModalBody" class="custom-scrollbar max-h-[calc(90vh-80px)] overflow-y-auto bg-slate-50 p-6"></div>
     </div>
   </div>
 
+  {/* Templates para los detalles de productos */}
   <div id="product-detail-templates" class="hidden" aria-hidden="true">
-    {Object.entries(PRODUCT_DETAILS).map(([id, product]) => (
-      <template id={`product-detail-${id}`}>
-        <article class="space-y-10 text-slate-700">
-          <section class="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-xl">
-            <div class="grid gap-0 lg:grid-cols-[3fr_2fr]">
-              <div class="relative bg-gradient-to-br from-sky-900 via-slate-900 to-sky-700 px-8 py-10 text-white">
-                <p class="text-xs font-semibold uppercase tracking-[0.3em] text-sky-200">{product.category}</p>
-                <h3 class="mt-3 text-3xl font-bold">{product.name}</h3>
-                <p class="mt-5 max-w-xl text-sm text-sky-100/80">{product.summary}</p>
-
-                <div class="mt-8 flex flex-wrap gap-3 text-xs font-semibold uppercase tracking-wide">
-                  {product.specs.slice(0, 3).map((spec) => (
-                    <span class="rounded-full bg-white/10 px-4 py-2 text-sky-100 backdrop-blur-sm">{spec.value}</span>
-                  ))}
-                </div>
-
-                <div class="absolute inset-x-8 bottom-0 h-1 bg-sky-400/70"></div>
-              </div>
-              <div class="relative bg-slate-50 p-6">
-                <div class="absolute inset-y-0 left-0 w-5 -skew-x-12 bg-sky-400/70"></div>
-                <div class="relative h-full rounded-2xl border border-slate-200 bg-white p-4 shadow-inner">
+    {Object.entries(PRODUCT_DETAILS).map(([id, product]) => {
+      const applicationIcons = Array.isArray(product.applications) ? product.applications : [];
+      return (
+        <template id={`product-detail-${id}`}>
+        <article class="space-y-6">
+          {/* Hero Card */}
+          <div class="overflow-hidden rounded-2xl border-2 border-brand-200 bg-white shadow-xl">
+            <div class="grid gap-0 lg:grid-cols-[2fr_3fr]">
+              {/* Image Section */}
+              <div class="relative bg-gradient-to-br from-brand-900 via-slate-900 to-brand-800 p-8">
+                <div class="aspect-square w-full overflow-hidden rounded-2xl bg-white shadow-2xl">
                   <img
                     src={product.cover}
                     alt={`Imagen principal de ${product.name}`}
-                    class="h-full w-full rounded-2xl object-cover shadow-lg"
+                    class="h-full w-full object-cover"
                     loading="lazy"
                   />
                 </div>
               </div>
-            </div>
-          </section>
 
-          <section class="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow">
-            <header class="border-b-4 border-sky-500 bg-sky-100 px-6 py-3">
-              <h4 class="text-sm font-semibold uppercase tracking-wide text-sky-800">Descripción</h4>
-            </header>
-            <div class="space-y-4 px-6 py-6 text-sm leading-relaxed">
+              {/* Info Section */}
+              <div class="relative bg-white p-8">
+                <div class="mb-6">
+                  <span class="inline-flex items-center gap-2 rounded-full bg-brand-100 px-4 py-1.5 text-xs font-bold uppercase tracking-wide text-brand-700">
+                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                      <path fill-rule="evenodd" d="M17.707 9.293a1 1 0 010 1.414l-7 7a1 1 0 01-1.414 0l-7-7A.997.997 0 012 10V5a3 3 0 013-3h5c.256 0 .512.098.707.293l7 7zM5 6a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd"/>
+                    </svg>
+                    {product.category}
+                  </span>
+                </div>
+                
+                <h3 class="text-3xl font-black uppercase text-slate-900 mb-4 tracking-tight">
+                  {product.name}
+                </h3>
+                
+                <p class="text-base text-slate-700 leading-relaxed mb-6">
+                  {product.summary}
+                </p>
+
+                {/* Quick Specs */}
+                <div class="grid gap-3 sm:grid-cols-2">
+                  {product.specs.slice(0, 4).map((spec) => (
+                    <div class="rounded-xl border-2 border-slate-200 bg-slate-50 p-3">
+                      <dt class="text-xs font-bold uppercase tracking-wide text-slate-500 mb-1">{spec.label}</dt>
+                      <dd class="text-sm font-bold text-brand-700">{spec.value}</dd>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Description */}
+          <div class="rounded-2xl border-2 border-slate-200 bg-white p-6 shadow-lg">
+            <div class="flex items-center gap-3 mb-4 pb-4 border-b-2 border-brand-500">
+              <div class="icon-container rounded-xl p-2">
+                <svg class="w-5 h-5 text-brand-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                </svg>
+              </div>
+              <h4 class="text-xl font-black uppercase tracking-tight text-slate-900">Descripción</h4>
+            </div>
+            <div class="space-y-3 text-sm leading-relaxed text-slate-700">
               {product.description.map((paragraph) => (
                 <p>{paragraph}</p>
               ))}
             </div>
-          </section>
+          </div>
 
-          <section class="grid gap-6 lg:grid-cols-[2fr_1fr]">
-            <div class="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow">
-              <header class="border-b border-slate-200 bg-slate-50 px-6 py-3">
-                <h4 class="text-sm font-semibold uppercase tracking-wide text-slate-700">Ficha técnica</h4>
-              </header>
-              <table class="min-w-full divide-y divide-slate-200 text-sm">
-                <thead class="bg-sky-500/10 text-slate-600">
-                  <tr>
-                    <th class="px-6 py-3 text-left font-semibold">Especificación</th>
-                    <th class="px-6 py-3 text-left font-semibold">Detalle</th>
-                  </tr>
-                </thead>
-                <tbody class="divide-y divide-slate-100">
-                  {product.specs.map((spec) => (
-                    <tr>
-                      <td class="px-6 py-3 font-medium text-slate-600">{spec.label}</td>
-                      <td class="px-6 py-3 text-slate-800">{spec.value}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-
-            <div class="flex flex-col gap-6">
-              <section class="rounded-2xl border border-slate-200 bg-white shadow">
-                <header class="border-b border-slate-200 bg-slate-50 px-6 py-3">
-                  <h4 class="text-sm font-semibold uppercase tracking-wide text-slate-700">Aplicaciones</h4>
-                </header>
-                <div class="space-y-2 px-6 py-5 text-sm text-slate-600">
-                  {product.applications.map((application) => (
-                    <div class="flex items-start gap-3 rounded-xl bg-sky-500/5 px-4 py-3">
-                      <span class="mt-1 inline-flex h-8 w-8 items-center justify-center rounded-full bg-sky-500 text-white shadow">{application[0]}</span>
-                      <p class="leading-snug">{application}</p>
-                    </div>
-                  ))}
+          {/* Features & Applications */}
+          <div class="grid gap-6 lg:grid-cols-2">
+            {/* Features */}
+            <div class="rounded-2xl border-2 border-brand-200 bg-white p-6 shadow-lg">
+              <div class="flex items-center gap-3 mb-4 pb-4 border-b-2 border-brand-500">
+                <div class="icon-container rounded-xl p-2">
+                  <svg class="w-5 h-5 text-brand-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"/>
+                  </svg>
                 </div>
-              </section>
-
-              <section class="rounded-2xl border border-orange-400 bg-white shadow">
-                <header class="border-b border-orange-200 bg-orange-50 px-6 py-3">
-                  <h4 class="text-sm font-semibold uppercase tracking-wide text-orange-600">Diferenciales</h4>
-                </header>
-                <ul class="space-y-2 px-6 py-5 text-sm text-slate-700">
-                  {product.features.slice(0, 3).map((feature) => (
-                    <li class="flex items-start gap-3">
-                      <span class="mt-[6px] h-2 w-2 flex-shrink-0 rounded-full bg-orange-500"></span>
-                      <span>{feature}</span>
-                    </li>
-                  ))}
-                </ul>
-              </section>
+                <h4 class="text-lg font-black uppercase tracking-tight text-slate-900">Características</h4>
+              </div>
+              <ul class="space-y-2 text-sm text-slate-700">
+                {product.features.map((feature) => (
+                  <li class="feature-item">{feature}</li>
+                ))}
+              </ul>
             </div>
-          </section>
 
-          <section class="rounded-2xl border border-slate-200 bg-white shadow">
-            <header class="border-b border-slate-200 bg-slate-50 px-6 py-3">
-              <h4 class="text-sm font-semibold uppercase tracking-wide text-slate-700">Características ampliadas</h4>
-            </header>
-            <ul class="grid gap-4 px-6 py-6 text-sm text-slate-600 md:grid-cols-2">
-              {product.features.map((feature) => (
-                <li class="flex items-start gap-3 rounded-xl border border-slate-200/70 bg-slate-50 px-4 py-3 shadow-sm">
-                  <span class="mt-1 inline-flex h-8 w-8 items-center justify-center rounded-full bg-sky-500 text-white shadow-inner">✓</span>
-                  <span>{feature}</span>
-                </li>
+            {/* Applications */}
+            {applicationIcons.length > 0 && (
+              <div class="rounded-2xl border-2 border-emerald-200 bg-white p-6 shadow-lg">
+                <div class="flex items-center gap-3 mb-4 pb-4 border-b-2 border-emerald-500">
+                  <div class="icon-container rounded-xl p-2">
+                    <svg class="w-5 h-5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
+                    </svg>
+                  </div>
+                  <h4 class="text-lg font-black uppercase tracking-tight text-slate-900">Aplicaciones</h4>
+                </div>
+                <ul class="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
+                  {(applicationIcons as string[]).map((iconSrc, index) => {
+                    if (!iconSrc) return null;
+                    return (
+                      <li class="flex flex-col items-center justify-center" data-index={index}>
+                        <span class="sr-only">{product.name ?? 'Aplicación'} {index + 1}</span>
+                        <span class="flex h-16 w-16 items-center justify-center rounded-full border-2 border-emerald-300 bg-white shadow-md ring-1 ring-emerald-100">
+                          <img
+                            src={iconSrc}
+                            alt=""
+                            aria-hidden="true"
+                            class="h-10 w-10 object-contain"
+                            loading="lazy"
+                          />
+                        </span>
+                      </li>
+                    );
+                  })}
+                </ul>
+              </div>
+            )}
+          </div>
+
+          {/* Technical Specs Table */}
+          <div class="rounded-2xl border-2 border-slate-200 bg-white shadow-lg overflow-hidden">
+            <div class="flex items-center gap-3 bg-slate-900 text-white px-6 py-4">
+              <div class="rounded-xl bg-white/20 p-2">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"/>
+                </svg>
+              </div>
+              <h4 class="text-lg font-black uppercase tracking-tight">Especificaciones Técnicas</h4>
+            </div>
+            <div class="divide-y divide-slate-200">
+              {product.specs.map((spec, index) => (
+                <div class="spec-row grid grid-cols-2 gap-4 px-6 py-4 hover:bg-brand-50/50">
+                  <dt class="font-bold text-slate-700 flex items-center gap-2">
+                    <span class="flex-shrink-0 w-6 h-6 rounded-full bg-brand-100 text-brand-600 flex items-center justify-center text-xs font-bold">
+                      {index + 1}
+                    </span>
+                    {spec.label}
+                  </dt>
+                  <dd class="text-slate-900 font-semibold">{spec.value}</dd>
+                </div>
               ))}
-            </ul>
-          </section>
+            </div>
+          </div>
 
-          {product.gallery.length ? (
-            <section class="rounded-2xl border border-slate-200 bg-white shadow">
-              <header class="border-b border-slate-200 bg-slate-50 px-6 py-3">
-                <h4 class="text-sm font-semibold uppercase tracking-wide text-slate-700">Galería</h4>
-              </header>
-              <div class="grid gap-4 px-6 py-6 sm:grid-cols-2 lg:grid-cols-3">
+          {/* Gallery */}
+          {product.gallery.length > 0 && (
+            <div class="rounded-2xl border-2 border-slate-200 bg-white p-6 shadow-lg">
+              <div class="flex items-center gap-3 mb-6 pb-4 border-b-2 border-brand-500">
+                <div class="icon-container rounded-xl p-2">
+                  <svg class="w-5 h-5 text-brand-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                  </svg>
+                </div>
+                <h4 class="text-lg font-black uppercase tracking-tight text-slate-900">Galería</h4>
+              </div>
+              <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
                 {product.gallery.map((image, index) => (
-                  <div class="overflow-hidden rounded-2xl border border-slate-200 bg-slate-100 shadow-sm">
+                  <div class="gallery-item aspect-video bg-slate-100 shadow-md">
                     <img
                       src={image}
                       alt={`${product.name} imagen ${index + 1}`}
-                      class="h-28 w-full object-cover"
+                      class="h-full w-full object-cover"
                       loading="lazy"
                     />
                   </div>
                 ))}
               </div>
-            </section>
-          ) : null}
+            </div>
+          )}
         </article>
-      </template>
-    ))}
+        </template>
+      );
+    })}
   </div>
 
   <script type="module">
@@ -814,13 +1187,11 @@ type ProductId = keyof typeof PRODUCT_DETAILS;
       // 1) Bloquea si no hay acceso privado
       try {
         if (!isPrivateEnabled()) {
-          // TODO(claude): subcarpeta /inbolsaNeo para redirección
           location.replace('/inbolsaNeo/');
           return;
         }
       }
       catch {
-        // TODO(claude): subcarpeta /inbolsaNeo para redirección
         location.replace('/inbolsaNeo/');
         return;
       }
@@ -931,7 +1302,6 @@ type ProductId = keyof typeof PRODUCT_DETAILS;
           if (!isValid) {
             console.log('Acceso revocado, redirigiendo...');
             disablePrivate();
-            // TODO(claude): subcarpeta /inbolsaNeo para redirección
             window.location.href = '/inbolsaNeo/';
           }
         } catch (e) {
