@@ -3,9 +3,18 @@
 export const prerender = true;
 
 import Base from '../../layouts/Base.astro';
+
+const basePathRaw = import.meta.env.PUBLIC_BASE || import.meta.env.BASE_URL || '/';
+const basePath = basePathRaw.replace(/\/$/, '');
+const apiBaseRaw = import.meta.env.PUBLIC_API_BASE || `${basePath}/inbolsa-api/api`;
+const apiBase = apiBaseRaw.replace(/\/$/, '');
 ---
 <Base title="Iniciar sesión — Inbolsa">
-  <main class="mx-auto max-w-md px-4 py-16">
+  <main
+    class="mx-auto max-w-md px-4 py-16"
+    data-base-path={basePath}
+    data-api-base={apiBase}
+  >
     <h1 class="text-2xl font-semibold mb-6">Iniciar sesión</h1>
     <p class="text-slate-600">Acceso privado para generar y gestionar QR.</p>
 
@@ -28,8 +37,27 @@ import Base from '../../layouts/Base.astro';
 
   <script type="module">
     // Script directo sin importar módulos
+    const container = document.querySelector('main[data-base-path]');
+    const rawBase = container?.getAttribute('data-base-path') ?? (import.meta.env.BASE_URL ?? '');
+    const BASE_PATH = rawBase.endsWith('/') ? rawBase.slice(0, -1) : rawBase;
+    const rawApi = container?.getAttribute('data-api-base') ?? `${BASE_PATH}/inbolsa-api/api`;
+    const API_BASE = rawApi.endsWith('/') ? rawApi.slice(0, -1) : rawApi;
+
+    const joinBase = (path = '') => {
+      const clean = path.startsWith('/') ? path.slice(1) : path;
+      return `${BASE_PATH}/${clean}`.replace(/\/{2,}/g, '/');
+    };
+
     const params = new URLSearchParams(location.search);
-    const next = params.get('next') || '/inbolsaNeo/app/panel'; // <-- ruta corregida
+    const defaultNext = joinBase('app/panel');
+    const sanitizeNext = (value) => {
+      if (!value) return defaultNext;
+      if (/^https?:\/\//i.test(value)) return value;
+      if (value.startsWith(BASE_PATH)) return value;
+      if (value.startsWith('/')) return joinBase(value);
+      return joinBase(value);
+    };
+    const next = sanitizeNext(params.get('next'));
 
     const form = document.getElementById('loginForm');
     const err  = document.getElementById('err');
@@ -43,7 +71,7 @@ import Base from '../../layouts/Base.astro';
       const password = document.getElementById('password').value;
 
       try {
-        const response = await fetch('/inbolsaNeo/inbolsa-api/api/auth/login', { // <-- ruta corregida (mismo origen)
+        const response = await fetch(`${API_BASE}/auth/login`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'

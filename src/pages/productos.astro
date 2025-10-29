@@ -472,7 +472,9 @@ const PRODUCT_DETAILS = {
       'Dimensiones:40-150 cm de ancho (consulte por otras anchuras)',
       'Opción de Tela pesada o liviana',
       'Protección UV para uso en el exterior',
-      'Laminación con opción de micro perforación'
+      'Bobinas con identificación por código QR.',
+      'Se puede suministrar plegada para extrusión secundaria.',
+      'Compatible con procesos automatizados de conversión.'
     ],
     applications: [
       '/inbolsaNeo/img/icons/tela-tubular-1.svg',
@@ -845,95 +847,6 @@ type ProductDetail = typeof PRODUCT_DETAILS[ProductId];
     transform: scale(1.1);
   }
 
-  /* Category navigation */
-  .category-nav-outer {
-    --nav-border: rgba(59, 130, 246, 0.18);
-    --nav-highlight: rgba(37, 99, 235, 0.48);
-  }
-
-  .category-nav-container {
-    position: relative;
-    padding: 0.75rem 1rem;
-    border-radius: 9999px;
-    border: 1px solid var(--nav-border);
-    background: linear-gradient(135deg, rgba(148, 197, 255, 0.18), rgba(59, 130, 246, 0.08));
-    box-shadow: 0 18px 38px -28px rgba(15, 23, 42, 0.65), 0 12px 28px -30px rgba(37, 99, 235, 0.65);
-    backdrop-filter: blur(10px);
-  }
-
-  .category-nav-list {
-    display: flex;
-    flex-wrap: wrap;
-    list-style: none;
-    gap: 0.75rem;
-    margin: 0;
-    padding: 0;
-    justify-content: center;
-    align-items: center;
-  }
-
-  .category-nav-link {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.55rem;
-    padding: 0.58rem 1.35rem;
-    border-radius: 9999px;
-    border: 1px solid transparent;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    font-size: 0.72rem;
-    font-weight: 700;
-    color: #1e3a8a;
-    background: rgba(255, 255, 255, 0.92);
-    box-shadow: 0 10px 22px -18px rgba(30, 64, 175, 0.75);
-    transition: transform 0.22s ease, box-shadow 0.22s ease, border-color 0.22s ease, background 0.22s ease, color 0.22s ease;
-  }
-
-  .category-nav-link::before {
-    content: "";
-    display: inline-flex;
-    width: 8px;
-    height: 8px;
-    border-radius: 9999px;
-    background: rgba(37, 99, 235, 0.85);
-    box-shadow: 0 0 14px rgba(37, 99, 235, 0.55);
-    transition: transform 0.22s ease, opacity 0.22s ease;
-    margin-right: 0.45rem;
-  }
-
-  .category-nav-link:hover,
-  .category-nav-link:focus-visible {
-    transform: translateY(-2px);
-    border-color: var(--nav-highlight);
-    background: linear-gradient(135deg, rgba(37, 99, 235, 0.18), rgba(59, 130, 246, 0.14));
-    box-shadow: 0 16px 28px -24px rgba(37, 99, 235, 0.7);
-    color: #1d4ed8;
-  }
-
-  .category-nav-link:hover::before,
-  .category-nav-link:focus-visible::before {
-    opacity: 1;
-    transform: scale(1.2);
-  }
-
-  .category-nav-link:focus-visible {
-    outline: 2px solid rgba(59, 130, 246, 0.45);
-    outline-offset: 3px;
-  }
-
-  .category-nav-link:active {
-    transform: translateY(0);
-    box-shadow: 0 10px 20px -18px rgba(30, 41, 59, 0.55);
-  }
-
-  @media (min-width: 768px) {
-    .category-nav-link {
-      font-size: 0.78rem;
-      padding: 0.65rem 1.55rem;
-      letter-spacing: 0.1em;
-    }
-  }
-
   /* Estilos para iconos de aplicaciones */
   .application-icon-item {
     transition: transform 0.3s ease;
@@ -988,13 +901,17 @@ type ProductDetail = typeof PRODUCT_DETAILS[ProductId];
   </section>
 
   <main class="mx-auto max-w-7xl px-4 py-12">
-    <nav class="category-nav-outer sticky top-28 z-20 mb-14" data-nav-wrapper>
-      <div class="category-nav-container">
-        <ul class="category-nav-list">
+    <nav class="sticky top-24 z-20 mb-12" data-nav-wrapper>
+      <div class="rounded-2xl border border-white/70 bg-white/85 shadow-sm backdrop-blur">
+        <ul class="flex flex-wrap items-center justify-center gap-2 px-4 py-3 text-xs font-semibold uppercase text-brand-700 md:gap-3">
           {PRODUCT_NAV.map((item) => (
-            <li class="category-nav-item" data-nav-item={item.id}>
-              <a href={`#${item.id}`} class="category-nav-link">
-                {item.label}
+            <li data-nav-item={item.id}>
+              <a
+              href={`#${item.id}`}
+              class="inline-flex items-center gap-2 rounded-full border border-brand-200 bg-white px-4 py-2 shadow-sm transition hover:-translate-y-0.5 hover:bg-brand-50 hover:text-brand-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-500"
+              >
+              <span class="h-2 w-2 rounded-full bg-brand-500"></span>
+              {item.label}
               </a>
             </li>
           ))}
@@ -1317,13 +1234,11 @@ type ProductDetail = typeof PRODUCT_DETAILS[ProductId];
 
     (function(){
       // 1) Bloquea si no hay acceso privado
-      let privateActive = false;
       try {
         if (!isPrivateEnabled()) {
           location.replace('/inbolsaNeo/');
           return;
         }
-        privateActive = true;
       }
       catch (e) {
         location.replace('/inbolsaNeo/');
@@ -1383,25 +1298,11 @@ type ProductDetail = typeof PRODUCT_DETAILS[ProductId];
       };
 
       function applyFilter() {
-        const hasSpecificGrant = Array.isArray(allowIds) && allowIds.length > 0;
-
-        if (!hasSpecificGrant) {
-          if (privateActive) {
-            cards.forEach(showElement);
-            groupSections.forEach(showElement);
-            navItems.forEach(showElement);
-            if (navWrapper) {
-              showElement(navWrapper);
-              if (navWrapper instanceof HTMLElement) {
-                navWrapper.setAttribute('aria-hidden', 'false');
-              }
-            }
-          } else {
-            cards.forEach(hideElement);
-            groupSections.forEach(hideElement);
-            navItems.forEach(hideElement);
-            hideElement(navWrapper);
-          }
+        if (!Array.isArray(allowIds) || allowIds.length === 0) {
+          cards.forEach(hideElement);
+          groupSections.forEach(hideElement);
+          navItems.forEach(hideElement);
+          hideElement(navWrapper);
           return;
         }
 

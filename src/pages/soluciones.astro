@@ -64,236 +64,12 @@ const CATALOG = [
   },
 ];
 
-const PRODUCT_DETAILS: Record<
-  string,
-  {
-    summary: string;
-    specs: { label: string; value: string }[];
-  }
-> = {
-  'sacos-convencionales': {
-    summary: 'Saco tejido estándar con excelente respiración y resistencia para granos, harinas y materiales a granel.',
-    specs: [
-      { label: 'Gramaje estándar', value: '80 g/m²' },
-      { label: 'Capacidad', value: '25 / 40 / 50 kg' },
-      { label: 'Tratamientos', value: 'Anti UV, microperforado' },
-    ],
-  },
-  'sacos-premium': {
-    summary: 'Saco laminado con acabado brillante o mate para exhibición y productos de alto valor.',
-    specs: [
-      { label: 'Laminado', value: 'BOPP alto brillo / mate' },
-      { label: 'Impresión', value: 'Flexografía HD hasta 8 colores' },
-      { label: 'Barrera', value: 'Coex anti humedad y aromas' },
-    ],
-  },
-  'sacos-fondo-cuadrado': {
-    summary: 'Formato block bottom que mantiene el saco erguido, ideal para apilado y góndola.',
-    specs: [
-      { label: 'Sistema', value: 'Soldado AD*Star' },
-      { label: 'Capacidad', value: '20 / 25 / 50 kg' },
-      { label: 'Opciones', value: 'Válvula interna, microventeo' },
-    ],
-  },
-  'big-bag-linea-costurada': {
-    summary: 'Big bag de paneles cosidos con refuerzos y asas diseñadas para ciclos de uso repetidos.',
-    specs: [
-      { label: 'Carga segura', value: 'Hasta 1.500 kg' },
-      { label: 'Factor de seguridad', value: '5:1 · 6:1' },
-      { label: 'Asas', value: '4 asas de 30/40 cm' },
-    ],
-  },
-  'big-bag-tubular': {
-    summary: 'FIBC tubular sin costuras laterales que evita fugas de polvo y mejora la limpieza.',
-    specs: [
-      { label: 'Diámetro plano', value: '90 x 90 cm' },
-      { label: 'Altura estándar', value: '110 / 120 / 150 cm' },
-      { label: 'Accesorios', value: 'Liners coex, válvulas de carga/descarga' },
-    ],
-  },
-  'sling-bag': {
-    summary: 'Bolsa tipo sling con eslingas continuas para transporte rápido sin pallets.',
-    specs: [
-      { label: 'Capacidad', value: '500 a 1.000 kg' },
-      { label: 'Eslingas', value: 'Integradas, reforzadas' },
-      { label: 'Aplicación', value: 'Logística ágil y exportación' },
-    ],
-  },
-  'hilos-y-sogas': {
-    summary: 'Sogas trenzadas y monofilamentos de PP para atado, embalaje y aplicaciones agrícolas.',
-    specs: [
-      { label: 'Diámetros', value: '3 a 12 mm' },
-      { label: 'Resistencia', value: 'Hasta 650 kgf' },
-      { label: 'Presentación', value: 'Rollos de 200 / 500 m' },
-    ],
-  },
-  'hilo-costura': {
-    summary: 'Hilo plano lubricado para máquinas cosedoras de sacos y líneas automáticas.',
-    specs: [
-      { label: 'Título', value: '1500 / 2000 den' },
-      { label: 'Bobinas', value: '1.5 y 3 kg' },
-      { label: 'Acabado', value: 'Seco o siliconado' },
-    ],
-  },
-  'hilo-reforzado': {
-    summary: 'Hilo reforzado multifilamento con alma central de alta tenacidad.',
-    specs: [
-      { label: 'Título', value: '1800 / 2600 den' },
-      { label: 'Resistencia', value: 'Hasta 12 kgf' },
-      { label: 'Uso', value: 'Costura de sacos premium y big bags' },
-    ],
-  },
-  amarres: {
-    summary: 'Amarres trenzados y lazos preformados para asegurar cargas y fardos.',
-    specs: [
-      { label: 'Tipos', value: 'Trenzado plano / redondo' },
-      { label: 'Resistencia', value: '120 a 500 kgf' },
-      { label: 'Colores', value: 'Blanco, azul, naranja, personalizado' },
-    ],
-  },
-  'tela-tejido': {
-    summary: 'Tela tejido de rafia PP para conversión, recubrimiento y protección industrial.',
-    specs: [
-      { label: 'Gramaje', value: '70 a 200 g/m²' },
-      { label: 'Anchos', value: 'Hasta 320 cm' },
-      { label: 'Formatos', value: 'Rollo con mandril, plegado o corte' },
-    ],
-  },
-};
-
-const PRODUCT_THEME: Record<
-  string,
-  {
-    bg: string;
-    border: string;
-    accent: string;
-    badge: string;
-  }
-> = {
-  'sacos-convencionales': {
-    bg: 'bg-sky-50',
-    border: 'border-sky-200',
-    accent: 'text-sky-900',
-    badge: 'bg-sky-100 text-sky-700',
-  },
-  'sacos-premium': {
-    bg: 'bg-orange-50',
-    border: 'border-orange-200',
-    accent: 'text-orange-900',
-    badge: 'bg-orange-100 text-orange-700',
-  },
-  'sacos-fondo-cuadrado': {
-    bg: 'bg-emerald-50',
-    border: 'border-emerald-200',
-    accent: 'text-emerald-900',
-    badge: 'bg-emerald-100 text-emerald-700',
-  },
-  'big-bag-linea-costurada': {
-    bg: 'bg-indigo-50',
-    border: 'border-indigo-200',
-    accent: 'text-indigo-900',
-    badge: 'bg-indigo-100 text-indigo-700',
-  },
-  'big-bag-tubular': {
-    bg: 'bg-blue-50',
-    border: 'border-blue-200',
-    accent: 'text-blue-900',
-    badge: 'bg-blue-100 text-blue-700',
-  },
-  'sling-bag': {
-    bg: 'bg-cyan-50',
-    border: 'border-cyan-200',
-    accent: 'text-cyan-900',
-    badge: 'bg-cyan-100 text-cyan-700',
-  },
-  'hilos-y-sogas': {
-    bg: 'bg-lime-50',
-    border: 'border-lime-200',
-    accent: 'text-lime-900',
-    badge: 'bg-lime-100 text-lime-700',
-  },
-  'hilo-costura': {
-    bg: 'bg-amber-50',
-    border: 'border-amber-200',
-    accent: 'text-amber-900',
-    badge: 'bg-amber-100 text-amber-700',
-  },
-  'hilo-reforzado': {
-    bg: 'bg-purple-50',
-    border: 'border-purple-200',
-    accent: 'text-purple-900',
-    badge: 'bg-purple-100 text-purple-700',
-  },
-  amarres: {
-    bg: 'bg-rose-50',
-    border: 'border-rose-200',
-    accent: 'text-rose-900',
-    badge: 'bg-rose-100 text-rose-700',
-  },
-  'tela-tejido': {
-    bg: 'bg-slate-50',
-    border: 'border-slate-200',
-    accent: 'text-slate-900',
-    badge: 'bg-slate-100 text-slate-700',
-  },
-};
-
-const defaultTheme = {
-  bg: 'bg-white',
-  border: 'border-slate-200',
-  accent: 'text-slate-900',
-  badge: 'bg-slate-100 text-slate-700',
-};
-
-const FAMILY_HERO: Record<
-  string,
-  {
-    gradient: string;
-    accent: string;
-    chip: string;
-    circle: string;
-  }
-> = {
-  'sacos-pp': {
-    gradient: 'from-sky-200 via-sky-100 to-white',
-    accent: 'text-sky-900',
-    chip: 'bg-white text-sky-700 shadow-sm',
-    circle: 'border-sky-200',
-  },
-  'big-bag': {
-    gradient: 'from-indigo-200 via-indigo-100 to-white',
-    accent: 'text-indigo-900',
-    chip: 'bg-white text-indigo-700 shadow-sm',
-    circle: 'border-indigo-200',
-  },
-  'hilos-sogas': {
-    gradient: 'from-lime-200 via-lime-100 to-white',
-    accent: 'text-lime-900',
-    chip: 'bg-white text-lime-700 shadow-sm',
-    circle: 'border-lime-200',
-  },
-  telas: {
-    gradient: 'from-slate-200 via-slate-100 to-white',
-    accent: 'text-slate-900',
-    chip: 'bg-white text-slate-700 shadow-sm',
-    circle: 'border-slate-200',
-  },
-};
-
-const defaultFamilyHero = {
-  gradient: 'from-slate-200 via-slate-100 to-white',
-  accent: 'text-slate-900',
-  chip: 'bg-white text-slate-700 shadow-sm',
-  circle: 'border-slate-200',
-};
-
 // Detalle por familia
 const FAMILY_DETAILS = [
   {
     id: 'sacos-pp',
     eyebrow: 'Sacos PP',
     title: 'Soluciones para sacos PP',
-    heroLead: 'Sacos tejidos, laminados y block bottom customizados para agro, retail e industria.',
     products: CATALOG[0].items,
     description: [
       'Sacos tejidos con opciones de laminado, fondo cuadrado y acabados premium para resaltar la marca en retail o asegurar la cadena logística de agro e industria.',
@@ -310,12 +86,16 @@ const FAMILY_DETAILS = [
       'Microperforado y barrera coex según contenido.',
       'Personalización flexográfica a varios colores.',
     ],
+    specs: [
+      { label: 'Gramaje', value: '70 a 130 g/m²' },
+      { label: 'Capacidades', value: '20 a 50 kg' },
+      { label: 'Formatos', value: 'Convencional, premium, fondo cuadrado' },
+    ],
   },
   {
     id: 'big-bag',
     eyebrow: 'Big Bag',
     title: 'Soluciones para big bag',
-    heroLead: 'Big bags costurados, tubulares y sling bag listos para cargas de alto tonelaje con seguridad certificada.',
     products: CATALOG[1].items,
     description: [
       'Big bags línea costurada, tubulares y sling bag para cargas de 500 a 2.000 kg con factores de seguridad 5:1, 6:1 y 8:1.',
@@ -332,12 +112,16 @@ const FAMILY_DETAILS = [
       'Liners coex, antiestáticos y baffles internos.',
       'Etiquetas, doc pocket y trazabilidad integrada.',
     ],
+    specs: [
+      { label: 'Capacidad', value: '500 a 2.000 kg' },
+      { label: 'Factor de seguridad', value: '5:1 · 6:1 · 8:1' },
+      { label: 'Configuraciones', value: 'Costurada, tubular, sling' },
+    ],
   },
   {
     id: 'hilos-sogas',
     eyebrow: 'Hilos y sogas',
     title: 'Soluciones en hilos y sogas',
-    heroLead: 'Monofilamentos y multifilamentos diseñados para costura, atado y operaciones industriales exigentes.',
     products: CATALOG[2].items,
     description: [
       'Monofilamentos y multifilamentos de polipropileno y poliamida para costura, atado y logística.',
@@ -353,12 +137,16 @@ const FAMILY_DETAILS = [
       'Lubricación específica para máquinas de alta velocidad.',
       'Opciones antiestáticas y tratamiento UV.',
     ],
+    specs: [
+      { label: 'Títulos', value: '840 a 3200 den' },
+      { label: 'Presentación', value: 'Conos 1–5 kg · Bobinas 2–6 kg' },
+      { label: 'Aplicaciones', value: 'Costura, atado, logística' },
+    ],
   },
   {
     id: 'telas',
     eyebrow: 'Telas',
     title: 'Soluciones en telas tejidas',
-    heroLead: 'Telas de rafia PP para conversión, recubrimientos y protección con controles estrictos de gramaje.',
     products: CATALOG[3].items,
     description: [
       'Tela tejido de rafia PP para conversión, protección y recubrimiento en procesos industriales.',
@@ -372,6 +160,10 @@ const FAMILY_DETAILS = [
       'Gramajes calibrados con tolerancia ±3%.',
       'Tratamientos anti UV, antideslizante y corona opcionales.',
       'Entrega en rollos con mandril, plegados o cortes a medida.',
+    ],
+    specs: [
+      { label: 'Anchos', value: 'Hasta 320 cm' },
+      { label: 'Presentación', value: 'Rollo tejido' },
     ],
   },
 ];
@@ -413,9 +205,9 @@ const FAMILY_DETAILS = [
           </p>
 
           <div class="mt-10 flex flex-wrap justify-center gap-4">
-            <a href="#soluciones" 
+            <a href="#industrias" 
                class="group relative inline-flex items-center gap-2 rounded-xl bg-brand-600 px-8 py-4 text-white font-medium hover:bg-brand-700 transition-all hover:scale-105 shadow-xl shadow-brand-500/20">
-              <span>Soluciones</span>
+              <span>Explorar industrias</span>
               <svg class="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
               </svg>
@@ -501,59 +293,21 @@ const FAMILY_DETAILS = [
       </p>
     </section>
 
-    {FAMILY_DETAILS.map((familia, index) => {
-      const heroConfig = FAMILY_HERO[familia.id] ?? defaultFamilyHero;
-      const heroLead = familia.heroLead || familia.description[0] || '';
-      const bodyCopy = heroLead ? familia.description.slice(1) : familia.description;
-      const productGridClass =
-        familia.id === 'hilos-sogas' ? 'grid gap-6 md:grid-cols-2' : 'grid gap-6 md:grid-cols-2 xl:grid-cols-3';
-
-      return (
-        <section id={familia.id} class={`py-16 ${index % 2 === 0 ? 'bg-white' : 'bg-slate-50'}`}>
-          <div class="mx-auto max-w-6xl px-6 space-y-10">
-            <div class={`overflow-hidden rounded-[42px] bg-gradient-to-r ${heroConfig.gradient} shadow-xl`}>
-              <div class="grid gap-10 px-8 py-10 lg:grid-cols-[320px_1fr] lg:items-center">
-                <div class="relative mx-auto h-60 w-60">
-                  <div class={`absolute inset-0 rounded-full border-[12px] ${heroConfig.circle} bg-white/60 shadow-inner`}></div>
-                  <div class="absolute inset-6 rounded-full border border-white/50 bg-white/90 px-4 py-6 text-center text-sm font-semibold text-slate-600 flex flex-col items-center justify-center gap-2">
-                    {familia.products.slice(0, 5).map((product) => (
-                      <span>{product.name}</span>
-                    ))}
-                  </div>
-                  <div class="absolute inset-20 rounded-full border border-white/80 bg-white shadow flex items-center justify-center px-4 text-center">
-                    <span class={`text-xs font-semibold uppercase tracking-wide ${heroConfig.accent}`}>
-                      Inbolsa<br />{familia.eyebrow}
-                    </span>
-                  </div>
-                </div>
-                <div class="flex flex-col justify-center gap-4">
-                  <p class="text-xs font-semibold uppercase tracking-[0.35em] text-white/70">Soluciones integrales</p>
-                  <h4 class={`text-3xl font-black uppercase ${heroConfig.accent}`}>{familia.title}</h4>
-                  {heroLead && <p class="text-sm text-slate-700 max-w-2xl">{heroLead}</p>}
-                  <div class="flex flex-wrap gap-2">
-                    {familia.products.map((product) => (
-                      <span
-                        class={`inline-flex items-center rounded-full px-4 py-1.5 text-xs font-semibold uppercase tracking-wide ${heroConfig.chip}`}
-                      >
-                        {product.name}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-              </div>
+    {FAMILY_DETAILS.map((familia, index) => (
+      <section id={familia.id} class={`py-16 ${index % 2 === 0 ? 'bg-white' : 'bg-slate-50'}`}>
+        <div class="mx-auto grid max-w-6xl gap-12 px-6 lg:grid-cols-[1.1fr_0.9fr] lg:items-start">
+          <div class="space-y-5">
+            <span class="text-xs font-semibold uppercase tracking-[0.35em] text-sky-600">{familia.eyebrow}</span>
+            <h3 class="text-3xl font-bold text-slate-900">{familia.title}</h3>
+            <div class="space-y-3 text-sm text-slate-600">
+              {familia.description.map((paragraph) => (
+                <p>{paragraph}</p>
+              ))}
             </div>
 
-            {bodyCopy.length ? (
-              <div class="space-y-3 text-sm text-slate-600">
-                {bodyCopy.map((paragraph) => (
-                  <p>{paragraph}</p>
-                ))}
-              </div>
-            ) : null}
-
-            <div class="grid gap-6 lg:grid-cols-2">
-            <div class="rounded-2xl border border-sky-500/30 bg-white shadow">
-              <header class="border-b border-sky-500/20 bg-sky-500/10 px-5 py-3 text-xs font-semibold uppercase tracking-wide text-sky-800">
+            <div class="grid gap-6 md:grid-cols-2">
+              <div class="rounded-2xl border border-sky-500/30 bg-white shadow">
+                <header class="border-b border-sky-500/20 bg-sky-500/10 px-5 py-3 text-xs font-semibold uppercase tracking-wide text-sky-800">
                   Aplicaciones clave
                 </header>
                 <ul class="space-y-2 px-5 py-4 text-sm">
@@ -583,53 +337,41 @@ const FAMILY_DETAILS = [
               </div>
             </div>
 
-            <div class={productGridClass}>
-              {familia.products.map((product) => {
-                const detail = PRODUCT_DETAILS[product.id] || { summary: '', specs: [] };
-                const theme = PRODUCT_THEME[product.id] ?? defaultTheme;
-                return (
-                  <article
-                    class={`flex h-full flex-col rounded-3xl border ${theme.border} ${theme.bg} shadow transition hover:-translate-y-1 hover:shadow-2xl`}
-                  >
-                    <div class="overflow-hidden rounded-t-3xl bg-white/70 shadow-inner">
-                      <img
-                        src={product.img}
-                        alt={product.name}
-                        class="h-44 w-full object-cover"
-                        loading="lazy"
-                      />
-                    </div>
-                    <div class="flex flex-1 flex-col gap-4 p-6">
-                      <header>
-                        <h4 class={`text-xl font-semibold ${theme.accent}`}>{product.name}</h4>
-                        {detail.summary && <p class="mt-2 text-sm text-slate-600">{detail.summary}</p>}
-                      </header>
-                      {detail.specs.length ? (
-                        <dl class="mt-auto grid gap-3 text-sm text-slate-700">
-                          {detail.specs.map((spec) => (
-                            <div class="rounded-2xl border border-white/40 bg-white/80 px-4 py-3 shadow-sm">
-                              <dt class="text-xs font-semibold uppercase tracking-wide text-slate-500">{spec.label}</dt>
-                              <dd class={`text-sm font-semibold ${theme.accent}`}>{spec.value}</dd>
-                            </div>
-                          ))}
-                        </dl>
-                      ) : null}
-                      <div class="flex flex-wrap gap-2">
-                        <span
-                          class={`inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-wide ${theme.badge}`}
-                        >
-                          {familia.eyebrow}
-                        </span>
-                      </div>
-                    </div>
-                  </article>
-                );
-              })}
+            <div class="rounded-2xl border border-slate-200 bg-white shadow">
+              <header class="border-b border-slate-200 bg-slate-50 px-6 py-3 text-xs font-semibold uppercase tracking-wide text-slate-600">
+                Ficha técnica
+              </header>
+              <dl class="divide-y divide-slate-100 text-sm">
+                {familia.specs.map((spec) => (
+                  <div class="grid grid-cols-[0.9fr_1fr] gap-3 px-6 py-4">
+                    <dt class="font-semibold text-slate-600">{spec.label}</dt>
+                    <dd class="text-slate-800">{spec.value}</dd>
+                  </div>
+                ))}
+              </dl>
             </div>
           </div>
-        </section>
-      );
-    })}
+
+          <aside class="space-y-6">
+            <div class="rounded-2xl border border-slate-200 bg-white shadow">
+              <header class="border-b border-slate-200 bg-slate-50 px-6 py-3 text-xs font-semibold uppercase tracking-wide text-slate-600">
+                Productos de la familia
+              </header>
+              <div class="grid gap-4 px-6 py-6 sm:grid-cols-2">
+                {familia.products.map((product) => (
+                  <article class="rounded-xl border border-slate-200 bg-white/70 p-4 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md">
+                    <div class="aspect-[4/3] w-full overflow-hidden rounded-lg bg-slate-100">
+                      <img src={product.img} alt={product.name} class="h-full w-full object-cover" loading="lazy" />
+                    </div>
+                    <h4 class="mt-3 text-sm font-semibold text-slate-900">{product.name}</h4>
+                  </article>
+                ))}
+              </div>
+            </div>
+          </aside>
+        </div>
+      </section>
+    ))}
   </main>
 
   <Footer />
