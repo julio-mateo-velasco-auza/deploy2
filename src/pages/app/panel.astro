@@ -37,10 +37,15 @@ const CATALOG = [
     <div class="mx-auto max-w-5xl">
       <div class="flex items-center justify-between gap-4">
         <div>
-          <h1 class="text-2xl font-semibold">Panel del administrador</h1>
+          <h1 class="text-2xl font-semibold">Panel de Códigos QR</h1>
           <p class="text-slate-600 text-sm">Genera QRs y visualiza tu historial.</p>
         </div>
-        <button id="logoutBtn" class="rounded-xl border px-4 py-2 hover:bg-slate-50">Cerrar sesión</button>
+        <div class="flex items-center gap-2">
+          <a href="/inbolsaNeo/app" class="rounded-xl border border-slate-300 px-4 py-2 text-sm hover:bg-slate-50">
+            ← Dashboard
+          </a>
+          <button id="logoutBtn" class="rounded-xl border border-red-200 bg-red-50 px-4 py-2 text-sm text-red-700 hover:bg-red-100">Cerrar sesión</button>
+        </div>
       </div>
 
       <!-- Generar QR -->
@@ -157,7 +162,7 @@ const CATALOG = [
     try {
       // Guard de sesión
       const me = await api.me().catch(()=>null);
-      if (!me?.auth) { location.href = '/inbolsaNeo/app/login?next=' + encodeURIComponent('/app/panel'); return; }
+      if (!me?.auth) { location.href = '/inbolsaNeo/login'; return; }
 
       // ====== Picker de productos ======
       const selected = new Set();
@@ -384,11 +389,11 @@ const CATALOG = [
       document.querySelector('#qrModal [data-close]')?.addEventListener('click', ()=> close('qrModal'));
 
       // Logout
-      document.getElementById('logoutBtn')?.addEventListener('click', async ()=>{ 
-        try { 
-          await api.logout(); 
-        } catch {} 
-        location.href = '/inbolsaNeo/app/login'; 
+      document.getElementById('logoutBtn')?.addEventListener('click', async ()=>{
+        try {
+          await api.logout();
+        } catch {}
+        location.href = '/inbolsaNeo/login';
       });
 
       // Cargar lista

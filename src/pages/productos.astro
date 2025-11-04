@@ -27,6 +27,7 @@ const CATALOG = [
   { cat: 'Telas', items: [
     { id:'tela-tejido',  name:'Tela tejido', img:'/inbolsaNeo/imgs/hilo-algodon.jpg' },
     { id:'tela-tubular',    name:'Tela tubular',   img:'/inbolsaNeo/imgs/hilo-nylon.jpg' },
+    { id:'tela-plana',    name:'Tela plana',   img:'/inbolsaNeo/imgs/hilo-nylon.jpg' },
   ]},
   { cat: 'Hilos y sogas', items: [
     { id:'hilo-plano',  name:'Hilo Plano', img:'/inbolsaNeo/imgs/hilo-algodon.jpg' },
@@ -491,6 +492,39 @@ const PRODUCT_DETAILS = {
       '/inbolsaNeo/imgs/hilo-nylon.jpg'
     ]
   },
+  'tela-plana': {
+    name: 'Tela plana',
+    category: 'Telas',
+    cover: '/inbolsaNeo/imgs/hilo-nylon.jpg',
+    shortDescription: 'Tela plana tejida para refuerzo adicional en aplicaciones industriales.',
+    summary: 'Tejido plano de polipropileno con alta resistencia y durabilidad para múltiples usos.',
+    description: [
+      'Nuestra tela plana de polipropileno ofrece una superficie uniforme y resistente, ideal para aplicaciones que requieren un material robusto y versátil. Fabricada con hilo de alta calidad, proporciona excelente resistencia a la tracción y durabilidad en condiciones exigentes.',
+      'Esta tela es perfecta para uso en construcción, agricultura, embalaje industrial y otros sectores que demandan materiales confiables y de larga duración.'
+    ],
+    features: [
+      'Dimensiones: 40-200 cm de ancho',
+      'Alta resistencia a la tracción',
+      'Protección UV disponible',
+      'Superficie uniforme y lisa',
+      'Disponible en diferentes gramajes',
+      'Personalizable según necesidades'
+    ],
+    applications: [
+      '/inbolsaNeo/img/icons/tela-plana-1.svg',
+      '/inbolsaNeo/img/icons/tela-plana-2.svg',
+      '/inbolsaNeo/img/icons/tela-plana-3.svg'
+    ],
+    specs: [
+      { label: 'Gramaje', value: '70 a 130 g/m²' },
+      { label: 'Anchos', value: '80 a 200 cm' },
+      { label: 'Color', value: 'Natural, blanco o personalizado' },
+      { label: 'Tratamientos', value: 'Anti UV, antiestático' }
+    ],
+    gallery: [
+      '/inbolsaNeo/imgs/hilo-nylon.jpg'
+    ]
+  },
   'hilo-plano': {
     name: 'Hilo Plano',
     category: 'Hilos y sogas',
@@ -652,8 +686,16 @@ type ProductDetail = typeof PRODUCT_DETAILS[ProductId];
 ---
 
 <style>
-  
-  
+  /* Scrollbar Hide for Product Nav */
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+
   /* Header Pattern Background */
   .pattern-bg {
     background-image: 
@@ -867,7 +909,7 @@ type ProductDetail = typeof PRODUCT_DETAILS[ProductId];
 </style>
 
 <Base title={pageTitle}>
-  <Header />
+  <Header transparent={false} />
 
   <!-- Hero Section con estilo Sacaria -->
       <section class="relative overflow-hidden bg-gradient-to-b from-brand-100 via-sky-50 to-white">
@@ -900,17 +942,17 @@ type ProductDetail = typeof PRODUCT_DETAILS[ProductId];
     </div>
   </section>
 
-  <main class="mx-auto max-w-7xl px-4 py-12">
-    <nav class="sticky top-24 z-20 mb-12" data-nav-wrapper>
-      <div class="rounded-2xl border border-white/70 bg-white/85 shadow-sm backdrop-blur">
-        <ul class="flex flex-wrap items-center justify-center gap-2 px-4 py-3 text-xs font-semibold uppercase text-brand-700 md:gap-3">
+  <main class="mx-auto max-w-7xl px-4 sm:px-6 py-12">
+    <nav class="sticky top-20 md:top-24 z-20 mb-12 -mx-4 sm:mx-0" data-nav-wrapper>
+      <div class="sm:rounded-2xl border-y sm:border border-slate-200 bg-white/95 shadow-sm backdrop-blur-sm overflow-x-auto scrollbar-hide">
+        <ul class="flex flex-nowrap items-center justify-start gap-2 px-4 py-3 text-xs font-semibold uppercase text-brand-700 min-w-max">
           {PRODUCT_NAV.map((item) => (
-            <li data-nav-item={item.id}>
+            <li data-nav-item={item.id} class="flex-shrink-0">
               <a
               href={`#${item.id}`}
-              class="inline-flex items-center gap-2 rounded-full border border-brand-200 bg-white px-4 py-2 shadow-sm transition hover:-translate-y-0.5 hover:bg-brand-50 hover:text-brand-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-500"
+              class="inline-flex items-center gap-2 rounded-full border-2 border-brand-200 bg-white px-4 py-2.5 shadow-sm transition-all whitespace-nowrap hover:border-brand-400 hover:bg-brand-50 hover:text-brand-700 hover:shadow-md focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-500"
               >
-              <span class="h-2 w-2 rounded-full bg-brand-500"></span>
+              <span class="h-2.5 w-2.5 rounded-full bg-brand-500"></span>
               {item.label}
               </a>
             </li>
@@ -924,17 +966,14 @@ type ProductDetail = typeof PRODUCT_DETAILS[ProductId];
       <section id={sectionId} data-product-group={sectionId} class="mb-16 scroll-mt-32">
         <!-- Category Header -->
         <div class="mb-8">
-          <div class="flex items-center gap-4 mb-4">
-            <div class="h-1 w-16 bg-gradient-to-r from-brand-600 to-brand-400 rounded-full"></div>
-            <h2 class="text-3xl font-black uppercase tracking-tight text-slate-900">
-              {group.cat}
-            </h2>
-          </div>
-          <p class="text-slate-600 ml-20">Productos especializados de alta calidad</p>
+          <h2 class="text-3xl font-black uppercase tracking-tight text-slate-900 mb-3">
+            {group.cat}
+          </h2>
+          <p class="text-slate-600">Productos especializados de alta calidad</p>
         </div>
 
         <!-- Products Grid -->
-        <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <div class="grid gap-4 sm:gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
           {group.items.map((p) => {
             const detail = PRODUCT_DETAILS[p.id as ProductId];
             const applicationIcons: string[] = Array.isArray(detail.applications) ? [...detail.applications] : [];
@@ -944,7 +983,7 @@ type ProductDetail = typeof PRODUCT_DETAILS[ProductId];
                 class="product-card flex flex-col rounded-2xl border-2 border-slate-200 bg-white shadow-lg"
               >
                 {/* Image Section */}
-                <div class="product-img-wrapper aspect-[4/3] w-full rounded-t-2xl bg-gradient-to-br from-slate-100 to-slate-50 relative">
+                <div class="product-img-wrapper aspect-[4/3] w-full rounded-t-2xl bg-gradient-to-br from-slate-100 to-slate-50 relative overflow-hidden">
                   <img 
                     src={p.img} 
                     alt={p.name} 
@@ -962,8 +1001,8 @@ type ProductDetail = typeof PRODUCT_DETAILS[ProductId];
                 </div>
 
                 {/* Content Section */}
-                <div class="flex flex-1 flex-col p-6">
-                  <h3 class="text-xl font-bold text-slate-900 mb-3 leading-tight">
+                <div class="flex flex-1 flex-col p-4 sm:p-6">
+                  <h3 class="text-lg sm:text-xl font-bold text-slate-900 mb-3 leading-tight">
                     {p.name}
                   </h3>
                   
@@ -1016,20 +1055,20 @@ type ProductDetail = typeof PRODUCT_DETAILS[ProductId];
   <!-- Modal de Producto -->
   <div
     id="productModal"
-    class="fixed inset-0 z-50 hidden items-center justify-center px-4 py-6 bg-slate-900/80 backdrop-blur-sm"
+    class="fixed inset-0 z-50 hidden items-center justify-center px-2 sm:px-4 py-4 sm:py-6 bg-slate-900/80 backdrop-blur-sm"
     role="dialog"
     aria-modal="true"
   >
-    <div class="modal-content relative z-10 max-h-[90vh] w-full max-w-5xl overflow-hidden rounded-3xl bg-white shadow-2xl">
+    <div class="modal-content relative z-10 max-h-[95vh] sm:max-h-[90vh] w-full max-w-5xl overflow-hidden rounded-2xl sm:rounded-3xl bg-white shadow-2xl">
       {/* Modal Header */}
-      <div class="flex items-center justify-between border-b-2 border-brand-500 bg-gradient-to-r from-brand-600 to-brand-700 px-6 py-4">
-        <div class="flex items-center gap-3">
-          <div class="rounded-xl bg-white/20 p-2">
-            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <div class="flex items-center justify-between border-b-2 border-brand-500 bg-gradient-to-r from-brand-600 to-brand-700 px-4 sm:px-6 py-3 sm:py-4">
+        <div class="flex items-center gap-2 sm:gap-3">
+          <div class="rounded-xl bg-white/20 p-1.5 sm:p-2">
+            <svg class="w-5 h-5 sm:w-6 sm:h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
             </svg>
           </div>
-          <h2 class="text-lg font-black uppercase tracking-wide text-white">Detalle del producto</h2>
+          <h2 class="text-sm sm:text-lg font-black uppercase tracking-wide text-white">Detalle del producto</h2>
         </div>
         <button
           type="button"
@@ -1042,9 +1081,9 @@ type ProductDetail = typeof PRODUCT_DETAILS[ProductId];
           </svg>
         </button>
       </div>
-      
+
       {/* Modal Body */}
-      <div id="productModalBody" class="custom-scrollbar max-h-[calc(90vh-80px)] overflow-y-auto bg-slate-50 p-6"></div>
+      <div id="productModalBody" class="custom-scrollbar max-h-[calc(95vh-60px)] sm:max-h-[calc(90vh-80px)] overflow-y-auto bg-slate-50 p-3 sm:p-6"></div>
     </div>
   </div>
 
@@ -1054,12 +1093,12 @@ type ProductDetail = typeof PRODUCT_DETAILS[ProductId];
       const applicationIcons: string[] = Array.isArray(product.applications) ? [...product.applications] : [];
       return (
         <template id={`product-detail-${id}`}>
-        <article class="space-y-6">
+        <article class="space-y-4 sm:space-y-6">
           {/* Hero Card */}
-          <div class="overflow-hidden rounded-2xl border-2 border-brand-200 bg-white shadow-xl">
+          <div class="overflow-hidden rounded-xl sm:rounded-2xl border-2 border-brand-200 bg-white shadow-xl">
             <div class="grid gap-0 lg:grid-cols-[2fr_3fr]">
               {/* Image Section */}
-              <div class="relative bg-gradient-to-br from-brand-900 via-slate-900 to-brand-800 p-8">
+              <div class="relative bg-gradient-to-br from-brand-900 via-slate-900 to-brand-800 p-4 sm:p-8">
                 <div class="aspect-square w-full overflow-hidden rounded-2xl bg-white shadow-2xl">
                   <img
                     src={product.cover}
@@ -1071,8 +1110,8 @@ type ProductDetail = typeof PRODUCT_DETAILS[ProductId];
               </div>
 
               {/* Info Section */}
-              <div class="relative bg-white p-8">
-                <div class="mb-6">
+              <div class="relative bg-white p-4 sm:p-8">
+                <div class="mb-4 sm:mb-6">
                   <span class="inline-flex items-center gap-2 rounded-full bg-brand-100 px-4 py-1.5 text-xs font-bold uppercase tracking-wide text-brand-700">
                     <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
                       <path fill-rule="evenodd" d="M17.707 9.293a1 1 0 010 1.414l-7 7a1 1 0 01-1.414 0l-7-7A.997.997 0 012 10V5a3 3 0 013-3h5c.256 0 .512.098.707.293l7 7zM5 6a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd"/>
@@ -1080,17 +1119,17 @@ type ProductDetail = typeof PRODUCT_DETAILS[ProductId];
                     {product.category}
                   </span>
                 </div>
-                
-                <h3 class="text-3xl font-black uppercase text-slate-900 mb-4 tracking-tight">
+
+                <h3 class="text-xl sm:text-3xl font-black uppercase text-slate-900 mb-3 sm:mb-4 tracking-tight">
                   {product.name}
                 </h3>
-                
-                <p class="text-base text-slate-700 leading-relaxed mb-6">
+
+                <p class="text-sm sm:text-base text-slate-700 leading-relaxed mb-4 sm:mb-6">
                   {product.summary}
                 </p>
 
                 {/* Quick Specs */}
-                <div class="grid gap-3 sm:grid-cols-2">
+                <div class="grid gap-2 sm:gap-3 grid-cols-1 sm:grid-cols-2">
                   {product.specs.slice(0, 4).map((spec) => (
                     <div class="rounded-xl border-2 border-slate-200 bg-slate-50 p-3">
                       <dt class="text-xs font-bold uppercase tracking-wide text-slate-500 mb-1">{spec.label}</dt>
@@ -1103,7 +1142,7 @@ type ProductDetail = typeof PRODUCT_DETAILS[ProductId];
           </div>
 
           {/* Description */}
-          <div class="rounded-2xl border-2 border-slate-200 bg-white p-6 shadow-lg">
+          <div class="rounded-xl sm:rounded-2xl border-2 border-slate-200 bg-white p-4 sm:p-6 shadow-lg">
             <div class="flex items-center gap-3 mb-4 pb-4 border-b-2 border-brand-500">
               <div class="icon-container rounded-xl p-2">
                 <svg class="w-5 h-5 text-brand-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -1298,11 +1337,15 @@ type ProductDetail = typeof PRODUCT_DETAILS[ProductId];
       };
 
       function applyFilter() {
+        // Si no hay filtros específicos, mostrar todos los productos
         if (!Array.isArray(allowIds) || allowIds.length === 0) {
-          cards.forEach(hideElement);
-          groupSections.forEach(hideElement);
-          navItems.forEach(hideElement);
-          hideElement(navWrapper);
+          cards.forEach(showElement);
+          groupSections.forEach(showElement);
+          navItems.forEach(showElement);
+          if (navWrapper instanceof HTMLElement) {
+            showElement(navWrapper);
+            navWrapper.setAttribute('aria-hidden', 'false');
+          }
           return;
         }
 

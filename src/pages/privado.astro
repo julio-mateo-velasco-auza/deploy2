@@ -11,7 +11,7 @@ import HomeHero from '../components/HomeHero.astro';
 const PAGE_TITLE = 'Inbolsa — Zona privada';
 ---
 <Base title={PAGE_TITLE}>
-  <Header />
+  <Header transparent={true} />
 
   <main>
     <section class="relative">
@@ -53,14 +53,22 @@ const PAGE_TITLE = 'Inbolsa — Zona privada';
         const params = new URLSearchParams(location.search);
         const token = params.get('accessToken');
         const productsParam = params.get('p');
-        
+        const fromQR = params.get('from') === 'qr';
+
         console.log("Token:", token ? "Presente" : "No presente");
         console.log("Productos en URL:", productsParam);
-        
+        console.log("Viene de QR:", fromQR);
+
         if (token) {
+          // CRÍTICO: Si viene de un QR, LIMPIAR productos viejos primero
+          if (fromQR) {
+            console.log("Viene de QR - Limpiando productos anteriores del localStorage");
+            localStorage.removeItem('inbolsa:qr:products');
+          }
+
           console.log("Habilitando acceso privado");
           enablePrivate(120);
-          
+
           if (productsParam) {
             const productIds = productsParam.split(',').filter(Boolean);
             console.log("Guardando productos desde URL:", productIds);
@@ -70,7 +78,7 @@ const PAGE_TITLE = 'Inbolsa — Zona privada';
               console.log("Consultando payload del backend");
               const payload = await api.accessPayload(token);
               console.log("Payload recibido:", payload);
-              
+
               if (payload?.qr?.payload) {
                 const p = payload.qr.payload;
                 if (p.section === 'productos') {
@@ -84,7 +92,7 @@ const PAGE_TITLE = 'Inbolsa — Zona privada';
               console.error('Error al procesar token:', error);
             }
           }
-          
+
           // TODO(claude): respetar subcarpeta /inbolsaNeo al limpiar history
           history.replaceState({}, document.title, '/inbolsaNeo/privado');
         }

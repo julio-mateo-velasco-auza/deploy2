@@ -17,7 +17,7 @@ const baseLinks: NavLink[] = [
 ];
 
 // Quitamos Valores e Historia del render principal (van al dropdown)
-const otherLinks = baseLinks.filter(
+const otherLinks: NavLink[] = baseLinks.filter(
   (l) => l.href !== '/inbolsaNeo/' && 
          l.href !== '/inbolsaNeo/valores' && 
          l.href !== '/inbolsaNeo/historia' &&
@@ -41,21 +41,40 @@ const solutionAnchors: NavLink[] = [
 
 <header
   id="siteHeader"
-  class={`${transparent ? 'fixed' : 'sticky'} inset-x-0 top-0 z-50 border-b transition-all duration-300
-          ${transparent ? 'bg-transparent text-white border-transparent' : 'bg-white/85 text-slate-800 backdrop-blur-md border-slate-200 shadow-sm'}`}
+  class={`fixed md:${transparent ? 'fixed' : 'sticky'} inset-x-0 top-0 z-50 border-b transition-all duration-300
+          ${transparent ? 'bg-transparent text-white border-transparent' : 'bg-white/90 text-slate-800 backdrop-blur-sm border-slate-200 shadow-sm'}`}
 >
-  <div class="mx-auto max-w-7xl px-6 h-24 md:h-28 flex items-center justify-between">
-  <a href="/inbolsaNeo/" class="inline-flex items-center gap-4" aria-label="Inbolsa">      
+  <div class="mx-auto max-w-7xl px-6 h-20 md:h-24 flex items-center justify-between">
+  <a href="/inbolsaNeo/" id="logoLink" class="inline-flex items-center gap-4" aria-label="Inbolsa">
   <img
         id="siteLogo"
         src={transparent ? '/inbolsaNeo/logo.png' : '/inbolsaNeo/Black.png'}
         data-logo-white="/inbolsaNeo/logo.png"
         data-logo-black="/inbolsaNeo/Black.png"
         alt="Inbolsa"
-        class="h-20 md:h-20 w-auto transition-opacity duration-300"
+        class="h-14 md:h-16 w-auto transition-opacity duration-300"
       />
       <span class="sr-only">Inbolsa</span>
     </a>
+
+    <!-- Botón hamburguesa para móvil -->
+    <button
+      id="mobile-menu-btn"
+      type="button"
+      class="md:hidden inline-flex items-center justify-center p-2 rounded-xl transition-all relative z-50"
+      aria-label="Abrir menú de navegación"
+      aria-controls="mobile-menu"
+      aria-expanded="false"
+      data-mobile-menu-trigger
+      onclick="return toggleMobileMenu(event);"
+    >
+      <svg id="menu-icon-open" class="h-8 w-8 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+      </svg>
+      <svg id="menu-icon-close" class="h-8 w-8 hidden pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+      </svg>
+    </button>
 
     <nav id="main-nav" class="hidden md:flex items-center gap-8 text-base md:text-lg">
       {(() => {
@@ -63,6 +82,7 @@ const solutionAnchors: NavLink[] = [
         const active = isActive(l.href);
         return (
           <a
+            id="homeNavLink"
             href={l.href}
             aria-current={active ? 'page' : undefined}
             class={`${transparent
@@ -208,14 +228,14 @@ const solutionAnchors: NavLink[] = [
         const active = isActive(l.href);
         return (
           <a
-            href={l.href}
-            aria-current={active ? 'page' : undefined}
-            class={`${transparent
-                ? `relative pb-1 hover:opacity-90 ${active ? 'after:absolute after:left-0 after:right-0 after:-bottom-0.5 after:h-0.5 after:bg-white/70' : ''}`
-                : `hover:text-brand-700 ${active ? 'text-brand-700 font-medium' : ''}`
-              }`}
+        href={l.href}
+        aria-current={active ? 'page' : undefined}
+        class={`${transparent
+            ? `relative pb-1 hover:opacity-90 ${active ? 'after:absolute after:left-0 after:right-0 after:-bottom-0.5 after:h-0.5 after:bg-white/70' : ''}`
+            : `hover:text-brand-700 ${active ? 'text-brand-700 font-medium' : ''}`
+          }`}
           >
-            {l.label}
+        {l.label}
           </a>
         );
       })}
@@ -227,6 +247,93 @@ const solutionAnchors: NavLink[] = [
           ? 'rounded-2xl border border-white/70 bg-white/10 hover:bg-white/20 text-white px-5 py-2.5 md:px-6 md:py-3 transition'
           : 'rounded-2xl bg-brand-600 hover:bg-brand-700 text-white px-5 py-2.5 md:px-6 md:py-3 transition'
         }`}
+      >
+        Contáctanos
+      </a>
+    </nav>
+  </div>
+
+  <!-- Menú móvil -->
+  <div
+    id="mobile-menu"
+    class="md:hidden fixed inset-0 z-[9999] bg-white transform translate-x-full transition-transform duration-300 ease-in-out overflow-y-auto pt-20"
+  >
+    <nav class="px-6 py-6 space-y-2">
+      <a
+        id="mobileHomeLink"
+        href="/inbolsaNeo/"
+        class="block px-4 py-3 rounded-xl text-slate-800 hover:bg-brand-50 hover:text-brand-700 transition font-medium"
+      >
+        Home
+      </a>
+
+      <div id="mobile-products-link" class="hidden"></div>
+
+      <!-- Soluciones con submenú -->
+      <div>
+        <button
+          id="mobile-soluciones-btn"
+          type="button"
+          class="w-full flex items-center justify-between px-4 py-3 rounded-xl text-slate-800 hover:bg-brand-50 hover:text-brand-700 transition font-medium"
+          data-mobile-submenu="mobile-soluciones-menu"
+          aria-controls="mobile-soluciones-menu"
+          aria-expanded="false"
+          onclick="return toggleSubmenu('mobile-soluciones-menu', event);"
+        >
+          <span>Soluciones</span>
+          <svg class="h-5 w-5 transition-transform duration-200" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 10.94l3.71-3.71a.75.75 0 111.08 1.04l-4.25 4.25a.75.75 0 01-1.08 0L5.21 8.27a.75.75 0 01.02-1.06z" clip-rule="evenodd"/>
+          </svg>
+        </button>
+        <div id="mobile-soluciones-menu" class="hidden pl-4 space-y-1 mt-1">
+          <a href="/inbolsaNeo/soluciones" class="block px-4 py-2 text-sm text-slate-600 hover:text-brand-600 rounded-lg">
+            Página principal
+          </a>
+          {solutionAnchors.map((link) => (
+            <a href={link.href} class="block px-4 py-2 text-sm text-slate-600 hover:text-brand-600 rounded-lg">
+              {link.label}
+            </a>
+          ))}
+        </div>
+      </div>
+
+      <!-- Nosotros con submenú -->
+      <div>
+        <button
+          id="mobile-nosotros-btn"
+          type="button"
+          class="w-full flex items-center justify-between px-4 py-3 rounded-xl text-slate-800 hover:bg-brand-50 hover:text-brand-700 transition font-medium"
+          data-mobile-submenu="mobile-nosotros-menu"
+          aria-controls="mobile-nosotros-menu"
+          aria-expanded="false"
+          onclick="return toggleSubmenu('mobile-nosotros-menu', event);"
+        >
+          <span>Nosotros</span>
+          <svg class="h-5 w-5 transition-transform duration-200" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 10.94l3.71-3.71a.75.75 0 111.08 1.04l-4.25 4.25a.75.75 0 01-1.08 0L5.21 8.27a.75.75 0 01.02-1.06z" clip-rule="evenodd"/>
+          </svg>
+        </button>
+        <div id="mobile-nosotros-menu" class="hidden pl-4 space-y-1 mt-1">
+          {dropdownLinks.map((link) => (
+            <a href={link.href} class="block px-4 py-2 text-sm text-slate-600 hover:text-brand-600 rounded-lg">
+              {link.label}
+            </a>
+          ))}
+        </div>
+      </div>
+
+      {otherLinks.map((link) => (
+        <a
+          href={link.href}
+          class="block px-4 py-3 rounded-xl text-slate-800 hover:bg-brand-50 hover:text-brand-700 transition font-medium"
+        >
+          {link.label}
+        </a>
+      ))}
+
+      <a
+        href="/inbolsaNeo/contacto"
+        class="block mt-4 px-4 py-3 rounded-xl bg-brand-600 hover:bg-brand-700 text-white text-center font-medium transition"
       >
         Contáctanos
       </a>
@@ -246,13 +353,13 @@ const solutionAnchors: NavLink[] = [
         function setSolidLocal(s) {
           if (!header) return;
           if (s) {
-            header.classList.add('bg-white/85','backdrop-blur-md','text-slate-800','border-slate-200','shadow-sm');
+            header.classList.add('bg-white/90','backdrop-blur-sm','text-slate-800','border-slate-200','shadow-sm');
             header.classList.remove('bg-transparent','text-white','border-transparent');
             if (logo && blackSrc) logo.setAttribute('src', blackSrc);
             if (cta) cta.className = 'rounded-2xl bg-brand-600 hover:bg-brand-700 text-white px-5 py-2.5 md:px-6 md:py-3 transition';
           } else {
             header.classList.add('bg-transparent','text-white','border-transparent');
-            header.classList.remove('bg-white/85','backdrop-blur-md','text-slate-800','border-slate-200','shadow-sm');
+            header.classList.remove('bg-white/90','backdrop-blur-sm','text-slate-800','border-slate-200','shadow-sm');
             if (logo && whiteSrc) logo.setAttribute('src', whiteSrc);
             if (cta) cta.className = 'rounded-2xl border border-white/70 bg-white/10 hover:bg-white/20 text-white px-5 py-2.5 md:px-6 md:py-3 transition';
           }
@@ -265,7 +372,7 @@ const solutionAnchors: NavLink[] = [
     </script>
   )}
 
-  <!-- Script para mostrar/ocultar Productos solo en modo privado -->
+  <!-- Script para mostrar/ocultar Productos solo en modo privado Y actualizar Home dinámicamente -->
   <script type="module">
     // TODO(claude): compat subcarpeta para rutas al verificar modo privado
     function isPrivateEnabled() {
@@ -282,43 +389,98 @@ const solutionAnchors: NavLink[] = [
       } catch (e) { return false; }
     }
 
+    function updateHomeLinks() {
+      try {
+        const logoLink = document.getElementById('logoLink');
+        const homeNavLink = document.getElementById('homeNavLink');
+        const mobileHomeLink = document.getElementById('mobileHomeLink');
+
+        const isPrivadoPage = location.pathname.endsWith('/privado') || location.pathname.includes('/inbolsaNeo/privado');
+        const isProductosPage = location.pathname.endsWith('/productos') || location.pathname.includes('/inbolsaNeo/productos');
+
+        // Si estamos en modo privado O en páginas privadas, el home debe ser /privado
+        if (isPrivateEnabled() || isPrivadoPage || isProductosPage) {
+          if (logoLink) logoLink.href = '/inbolsaNeo/privado';
+          if (homeNavLink) homeNavLink.href = '/inbolsaNeo/privado';
+          if (mobileHomeLink) mobileHomeLink.href = '/inbolsaNeo/privado';
+        } else {
+          // Modo público: home es la raíz
+          if (logoLink) logoLink.href = '/inbolsaNeo/';
+          if (homeNavLink) homeNavLink.href = '/inbolsaNeo/';
+          if (mobileHomeLink) mobileHomeLink.href = '/inbolsaNeo/';
+        }
+      } catch {}
+    }
+
     function updateProductsLink() {
       try {
         const container = document.getElementById('products-link-container');
-        if (!container) return;
-        container.innerHTML = ''; container.classList.add('hidden');
+        const mobileContainer = document.getElementById('mobile-products-link');
+        if (container) {
+          container.innerHTML = '';
+          container.classList.add('hidden');
+        }
+        if (mobileContainer) {
+          mobileContainer.innerHTML = '';
+          mobileContainer.classList.add('hidden');
+        }
 
         // TODO(claude): uso de rutas correctas para productos con subcarpeta
         // Verificar patrones de ruta que incluyan la subcarpeta o la ruta relativa
         const isPrivadoPage = location.pathname.endsWith('/privado') || location.pathname.includes('/inbolsaNeo/privado');
         const isProductosPage = location.pathname.endsWith('/productos') || location.pathname.includes('/inbolsaNeo/productos');
-        
+
         if (isPrivateEnabled() || isPrivadoPage || isProductosPage) {
-          const link = document.createElement('a');
-          link.href = '/inbolsaNeo/productos';
-          link.textContent = 'Productos';
-          const isAct = isProductosPage;
-          link.className = `hover:text-brand-700 ${isAct ? 'text-brand-700 font-medium' : ''}`;
-          container.appendChild(link);
-          container.classList.remove('hidden');
+          // Desktop link
+          if (container) {
+            const link = document.createElement('a');
+            link.href = '/inbolsaNeo/productos';
+            link.textContent = 'Productos';
+            const isAct = isProductosPage;
+            link.className = `hover:text-brand-700 ${isAct ? 'text-brand-700 font-medium' : ''}`;
+            container.appendChild(link);
+            container.classList.remove('hidden');
+          }
+
+          // Mobile link
+          if (mobileContainer) {
+            const mobileLink = document.createElement('a');
+            mobileLink.href = '/inbolsaNeo/productos';
+            mobileLink.textContent = 'Productos';
+            mobileLink.className = 'block px-4 py-3 rounded-xl text-slate-800 hover:bg-brand-50 hover:text-brand-700 transition font-medium';
+            mobileContainer.appendChild(mobileLink);
+            mobileContainer.classList.remove('hidden');
+          }
         }
       } catch {}
     }
-    updateProductsLink();
-    setInterval(updateProductsLink, 2000);
+
+    // Actualizar tanto productos como home links
+    function updateAll() {
+      updateHomeLinks();
+      updateProductsLink();
+    }
+
+    updateAll();
+    setInterval(updateAll, 2000);
     window.addEventListener('storage', (e) => {
-      if (e.key && (e.key.startsWith('inbolsa:') || e.key === 'qrauth' || e.key === 'inb_access')) updateProductsLink();
+      if (e.key && (e.key.startsWith('inbolsa:') || e.key === 'qrauth' || e.key === 'inb_access')) updateAll();
     });
   </script>
 
   <!-- Scripts de los dropdowns (click, fuera/ESC, transiciones) -->
   <script is:inline>
     (function(){
+      /** @type {WeakSet<HTMLElement>} */
+      const BOUND = new WeakSet();
+
       function setupDropdown(wrapId, btnId, menuId){
-        var wrap = document.getElementById(wrapId);
-        var btn  = document.getElementById(btnId);
-        var menu = document.getElementById(menuId);
+        /** @type {HTMLElement|null} */ var wrap = document.getElementById(wrapId);
+        /** @type {HTMLElement|null} */ var btn  = document.getElementById(btnId);
+        /** @type {HTMLElement|null} */ var menu = document.getElementById(menuId);
         if (!wrap || !btn || !menu) return;
+        if (BOUND.has(btn)) return; // evita doble binding SPA
+        BOUND.add(btn);
 
         var open = false;
         function apply() {
@@ -340,10 +502,11 @@ const solutionAnchors: NavLink[] = [
           toggle();
         });
 
+        // SOLO cerrar dropdowns al hacer click fuera (desktop only)
         document.addEventListener('click', function(e){
           if (!open) return;
-          if (!wrap.contains(e.target)) close();
-        });
+          if (!wrap.contains(/** @type {Node} */(e.target))) close();
+        }, false);
 
         document.addEventListener('keydown', function(e){
           if (e.key === 'Escape') close();
@@ -352,8 +515,172 @@ const solutionAnchors: NavLink[] = [
         apply();
       }
 
-      setupDropdown('nosotros-wrap','nosotros-btn','nosotros-menu');
-      setupDropdown('soluciones-wrap','soluciones-btn','soluciones-menu');
+      function initDropdowns() {
+        setupDropdown('nosotros-wrap','nosotros-btn','nosotros-menu');
+        setupDropdown('soluciones-wrap','soluciones-btn','soluciones-menu');
+      }
+
+      document.addEventListener('astro:page-load', initDropdowns);
+      if (document.readyState !== 'loading') initDropdowns();
+      else document.addEventListener('DOMContentLoaded', initDropdowns);
+    })();
+  </script>
+
+  <!-- Script SIMPLE para el menú móvil -->
+  <script is:inline>
+    (function() {
+      var menuState = { open: false };
+
+      function ensureMenuPlacement(menu) {
+        if (!menu) return null;
+        if (menu.parentElement !== document.body) {
+          try {
+            document.body.appendChild(menu);
+            menu.dataset.mobileMenuPortal = 'body';
+          } catch (_) {}
+        }
+        return menu;
+      }
+
+      function getRefs() {
+        return {
+          btn: document.getElementById('mobile-menu-btn'),
+          menu: ensureMenuPlacement(document.getElementById('mobile-menu')),
+          openIcon: document.getElementById('menu-icon-open'),
+          closeIcon: document.getElementById('menu-icon-close'),
+        };
+      }
+
+      function setBodyLock(lock) {
+        try {
+          document.body.style.overflow = lock ? 'hidden' : '';
+        } catch (_) {}
+      }
+
+      function resetSubmenus() {
+        document.querySelectorAll('[data-mobile-submenu]').forEach(function(btn) {
+          var targetId = btn.getAttribute('data-mobile-submenu');
+          if (!targetId) return;
+          var submenu = document.getElementById(targetId);
+          if (submenu) submenu.classList.add('hidden');
+          var svg = btn.querySelector('svg');
+          if (svg) svg.classList.remove('rotate-180');
+          btn.setAttribute('aria-expanded', 'false');
+        });
+      }
+
+      function applyMenuState(open) {
+        var refs = getRefs();
+        if (!refs.menu || !refs.btn) return;
+        if (open) {
+          refs.menu.classList.remove('translate-x-full');
+          refs.menu.classList.add('translate-x-0');
+          refs.btn.setAttribute('aria-expanded', 'true');
+        } else {
+          refs.menu.classList.remove('translate-x-0');
+          refs.menu.classList.add('translate-x-full');
+          refs.btn.setAttribute('aria-expanded', 'false');
+          resetSubmenus();
+        }
+
+        if (refs.openIcon) refs.openIcon.classList.toggle('hidden', open);
+        if (refs.closeIcon) refs.closeIcon.classList.toggle('hidden', !open);
+
+        setBodyLock(open);
+      }
+
+      function openMenu() {
+        if (menuState.open) return;
+        menuState.open = true;
+        applyMenuState(true);
+      }
+
+      function closeMenu() {
+        if (!menuState.open) {
+          // Aseguramos limpiar overflow si hubiese quedado bloqueado
+          setBodyLock(false);
+          return;
+        }
+        menuState.open = false;
+        applyMenuState(false);
+      }
+
+      function toggleMenu() {
+        if (menuState.open) closeMenu();
+        else openMenu();
+      }
+
+      function handleKeydown(event) {
+        if (event.key === 'Escape') closeMenu();
+      }
+
+      function handleResize() {
+        if (window.innerWidth >= 768) closeMenu();
+      }
+
+      function handleMenuClick(event) {
+        if (event.target.closest('[data-mobile-submenu]')) return;
+        var link = event.target.closest('a');
+        if (link) closeMenu();
+      }
+
+      function toggleSubmenu(btn, menuId) {
+        if (!menuId) return;
+        var submenu = document.getElementById(menuId);
+        if (!submenu) return;
+        var svg = btn.querySelector('svg');
+        var willOpen = submenu.classList.contains('hidden');
+
+        if (willOpen) submenu.classList.remove('hidden');
+        else submenu.classList.add('hidden');
+
+        if (svg) svg.classList.toggle('rotate-180', willOpen);
+        btn.setAttribute('aria-expanded', willOpen ? 'true' : 'false');
+      }
+
+      function bindMenu() {
+        var refs = getRefs();
+        if (!refs.menu) return;
+        ensureMenuPlacement(refs.menu);
+
+        if (!refs.menu.__mobileMenuBound) {
+          refs.menu.__mobileMenuBound = true;
+          refs.menu.addEventListener('click', handleMenuClick);
+        }
+
+        if (!window.__mobileMenuGlobalBound) {
+          document.addEventListener('keydown', handleKeydown);
+          window.addEventListener('resize', handleResize);
+          window.__mobileMenuGlobalBound = true;
+        }
+      }
+
+      function initMobileMenu() {
+        bindMenu();
+      }
+
+      document.addEventListener('astro:page-load', initMobileMenu);
+      if (document.readyState !== 'loading') initMobileMenu();
+      else document.addEventListener('DOMContentLoaded', initMobileMenu);
+
+      window.toggleMobileMenu = function(event) {
+        if (event) {
+          event.preventDefault();
+          event.stopPropagation();
+        }
+        toggleMenu();
+        return false;
+      };
+
+      window.toggleSubmenu = function(menuId, event) {
+        if (event) {
+          event.preventDefault();
+          event.stopPropagation();
+        }
+        var btn = document.querySelector('[data-mobile-submenu="' + menuId + '"]');
+        if (btn) toggleSubmenu(btn, menuId);
+        return false;
+      };
     })();
   </script>
 </header>

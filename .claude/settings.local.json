@@ -1,0 +1,21 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(dir:*)",
+      "Read(//c/xampp/htdocs/inbolsaNeo/inbolsa-api/**)",
+      "Bash(cat:*)",
+      "Read(//c/xampp/htdocs/inbolsaNeo/**)",
+      "Bash(mysql:*)",
+      "Bash(npx astro check:*)",
+      "Bash(npm run build:*)",
+      "Bash(net stop Apache2.4)",
+      "Bash(net start:*)",
+      "Bash(httpd:*)",
+      "Bash(findstr:*)",
+      "Read(//c/xampp/apache/conf/**)",
+      "Read(//c/**)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}
