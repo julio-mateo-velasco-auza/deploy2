@@ -97,8 +97,21 @@ const apiBase = import.meta.env.PUBLIC_API_BASE || '/inbolsaNeo/inbolsa-api/api'
         const response = await api.login(email, password);
 
         if (response?.ok) {
-          // Login exitoso → ir a /app
-          window.location.href = '/inbolsaNeo/app';
+          // Login exitoso → esperar un momento para que se establezcan las cookies
+          await new Promise(resolve => setTimeout(resolve, 100));
+          // Verificar que la sesión esté activa antes de redirigir
+          try {
+            const meResponse = await api.me();
+            if (meResponse?.auth) {
+              window.location.href = '/inbolsaNeo/app';
+            } else {
+              loginErr.textContent = 'Error al iniciar sesión. Intenta nuevamente.';
+              loginErr.classList.remove('hidden');
+            }
+          } catch {
+            // Si falla la verificación, intentar redirigir de todas formas
+            window.location.href = '/inbolsaNeo/app';
+          }
         } else {
           loginErr.textContent = response.error || 'Credenciales inválidas';
           loginErr.classList.remove('hidden');

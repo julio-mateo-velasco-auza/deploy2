@@ -13,7 +13,13 @@
       "Bash(httpd:*)",
       "Bash(findstr:*)",
       "Read(//c/xampp/apache/conf/**)",
-      "Read(//c/**)"
+      "Read(//c/**)",
+      "Bash(curl:*)",
+      "Bash(php -l:*)",
+      "Bash(/c/xampp/php/php.exe:*)",
+      "Bash(for:*)",
+      "Bash(do echo \"=== Checking $file ===\")",
+      "Bash(done)"
     ],
     "deny": [],
     "ask": []
