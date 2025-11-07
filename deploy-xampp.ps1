@@ -1,4 +1,4 @@
-﻿param(
+param(
   [string]$ApiSrc
 )
 
@@ -54,10 +54,10 @@ Write-Host "[OK] API copiada.`n"
 $htaccess = @"
 # .htaccess para la API de Inbolsa (acepta /api/*)
 RewriteEngine On
-RewriteBase /inbolsaNeo/inbolsa-api
+RewriteBase /inbolsa-api
 
-# Si la URI comienza con /inbolsaNeo/inbolsa-api/api -> enviar a index.php
-RewriteCond %{REQUEST_URI} ^/inbolsaNeo/inbolsa-api/api(/.*)?$ [NC]
+# Si la URI comienza con /inbolsa-api/api -> enviar a index.php
+RewriteCond %{REQUEST_URI} ^/inbolsa-api/api(/.*)?$ [NC]
 RewriteRule ^ api [QSA,PT,L]
 
 # Si el archivo o directorio no existe, redirigir a index.php
@@ -144,7 +144,8 @@ Write-Host "[OK] SQL creado.`n"
 # 9) Resumen
 Write-Host "============================================="
 Write-Host "¡Despliegue en XAMPP completado!"
-Write-Host "Frontend : http://localhost/inbolsaNeo/"
-Write-Host "API      : http://localhost/inbolsaNeo/inbolsa-api/api/health"
-Write-Host "Verifica : http://localhost/inbolsaNeo/verify.php"
+Write-Host "Frontend : http://localhost/"
+Write-Host "API      : http://localhost/inbolsa-api/api/health"
+Write-Host "Verifica : http://localhost/verify.php"
 Write-Host "============================================="
+

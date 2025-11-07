@@ -19,7 +19,7 @@ import AppLayout from '../../layouts/AppLayout.astro';
           <p class="mt-1 text-slate-600" id="welcomeText">Bienvenido</p>
         </div>
         <div class="flex items-center gap-3">
-          <a href="/inbolsaNeo/"
+          <a href="/"
              class="rounded-xl border border-slate-300 px-4 py-2 text-sm hover:border-brand-400 hover:text-brand-700 transition">
             Sitio público
           </a>
@@ -32,7 +32,7 @@ import AppLayout from '../../layouts/AppLayout.astro';
 
       <!-- Dashboard - Panel único -->
       <div class="max-w-2xl mx-auto">
-        <a href="/inbolsaNeo/app/panel"
+        <a href="/app/panel"
            class="group block rounded-3xl border border-slate-200 bg-white p-10 shadow-sm hover:shadow-xl hover:border-brand-300 transition-all">
           <div class="flex items-start justify-between mb-6">
             <div class="flex h-16 w-16 items-center justify-center rounded-2xl bg-brand-100 text-brand-700 group-hover:bg-brand-600 group-hover:text-white transition-colors">
@@ -84,7 +84,7 @@ import AppLayout from '../../layouts/AppLayout.astro';
   </section>
 
   <script type="module">
-    import { api } from '/inbolsaNeo/lib/api.js';
+    import { api } from '/lib/api.js';
 
     // PROTECCIÓN: Verificar autenticación al cargar
     (async function checkAuth() {
@@ -93,7 +93,7 @@ import AppLayout from '../../layouts/AppLayout.astro';
 
         if (!response?.auth) {
           // No autenticado → redirigir a /login
-          window.location.href = '/inbolsaNeo/login';
+          window.location.href = '/login';
           return;
         }
 
@@ -107,7 +107,7 @@ import AppLayout from '../../layouts/AppLayout.astro';
       } catch (error) {
         console.error('Error verificando autenticación:', error);
         // En caso de error, redirigir al login por seguridad
-        window.location.href = '/inbolsaNeo/login';
+        window.location.href = '/login';
         return;
       }
     })();
@@ -119,7 +119,7 @@ import AppLayout from '../../layouts/AppLayout.astro';
       } catch (e) {
         console.error('Error en logout:', e);
       }
-      window.location.href = '/inbolsaNeo/login';
+      window.location.href = '/login';
     });
 
     // Verificación periódica de sesión (cada 5 minutos)
@@ -128,7 +128,7 @@ import AppLayout from '../../layouts/AppLayout.astro';
         const response = await api.me();
         if (!response?.auth) {
           alert('Tu sesión ha expirado. Por favor, inicia sesión nuevamente.');
-          window.location.href = '/inbolsaNeo/login';
+          window.location.href = '/login';
         }
       } catch (error) {
         console.error('Error verificando sesión:', error);
@@ -136,3 +136,4 @@ import AppLayout from '../../layouts/AppLayout.astro';
     }, 5 * 60 * 1000);
   </script>
 </AppLayout>
+

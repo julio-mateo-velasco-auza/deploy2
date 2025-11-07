@@ -114,7 +114,7 @@ export function getGrantProducts(): string[] {
 export async function checkAccessValid(): Promise<boolean> {
   try {
     // Actualizado para iPage: uso de ruta relativa en lugar de URL absoluta
-    const response = await fetch('/inbolsaNeo/inbolsa-api/api/access/payload', {
+    const response = await fetch('/inbolsa-api/api/access/payload', {
       credentials: 'include'
     });
     
@@ -155,3 +155,4 @@ if (typeof window !== 'undefined') {
     startRevocationCheck();
   }, 5000);
 }
+

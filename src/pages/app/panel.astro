@@ -5,30 +5,30 @@ import AppLayout from '../../layouts/AppLayout.astro';
 /** Catálogo EXACTO que ya usábamos (ids deben coincidir con la landing) */
 const CATALOG = [
   { cat: 'Sacos PP', items: [
-    { id:'sacos-convencionales',   name:'Sacos Convencionales',   img:'/inbolsaNeo/imgs/bolsa-chica.jpg' },
-    { id:'sacos-red', name:'Sacos de red', img:'/inbolsaNeo/imgs/bolsa-mediana.jpg' },
-    { id:'sacos-laminados',  name:'Sacos laminados',  img:'/inbolsaNeo/imgs/bolsa-enorme.jpg' },
-    { id:'sacos-laminacion-premium',  name:'Sacos con laminacion premium',  img:'/inbolsaNeo/imgs/bolsa-enorme.jpg' },
-    { id:'sacos-planos',  name:'Sacos planos',  img:'/inbolsaNeo/imgs/bolsa-enorme.jpg' },
-    { id:'sacos-fondo-cuadrado',  name:'Sacos con fondo cuadrado',  img:'/inbolsaNeo/imgs/bolsa-enorme.jpg' },
+    { id:'sacos-convencionales',   name:'Sacos Convencionales',   img:'/img/bolsa-chica.jpg' },
+    { id:'sacos-red', name:'Sacos de red', img:'/img/bolsa-mediana.jpg' },
+    { id:'sacos-laminados',  name:'Sacos laminados',  img:'/img/bolsa-enorme.jpg' },
+    { id:'sacos-laminacion-premium',  name:'Sacos con laminacion premium',  img:'/img/bolsa-enorme.jpg' },
+    { id:'sacos-planos',  name:'Sacos planos',  img:'/img/bolsa-enorme.jpg' },
+    { id:'sacos-fondo-cuadrado',  name:'Sacos con fondo cuadrado',  img:'/img/bolsa-enorme.jpg' },
   ]},
   { cat: 'Big Bag', items: [
-    { id:'big-bag-tubular',  name:'Big Bag Tubular', img:'/inbolsaNeo/imgs/hilo-algodon.jpg' },
-    { id:'big-bag-u-panel',    name:'Big Bag U Panel',   img:'/inbolsaNeo/imgs/hilo-nylon.jpg' },
-    { id:'big-bag-cuadripanel',    name:'Big Bag cuadripanel',   img:'/inbolsaNeo/imgs/hilo-nylon.jpg' },
-    { id:'big-bag-compartimentada',    name:'Big Bag compartimentada',   img:'/inbolsaNeo/imgs/hilo-nylon.jpg' },
-    { id:'sling-bag',    name:'Sling Bag',   img:'/inbolsaNeo/imgs/hilo-nylon.jpg' },
+    { id:'big-bag-tubular',  name:'Big Bag Tubular', img:'/img/hilo-algodon.jpg' },
+    { id:'big-bag-u-panel',    name:'Big Bag U Panel',   img:'/img/hilo-nylon.jpg' },
+    { id:'big-bag-cuadripanel',    name:'Big Bag cuadripanel',   img:'/img/hilo-nylon.jpg' },
+    { id:'big-bag-compartimentada',    name:'Big Bag compartimentada',   img:'/img/hilo-nylon.jpg' },
+    { id:'sling-bag',    name:'Sling Bag',   img:'/img/hilo-nylon.jpg' },
   ]},
   { cat: 'Telas', items: [
-    { id:'tela-plana',  name:'Tela plana', img:'/inbolsaNeo/imgs/hilo-algodon.jpg' },
-    { id:'tela-tubular',    name:'Tela tubular',   img:'/inbolsaNeo/imgs/hilo-nylon.jpg' },
+    { id:'tela-plana',  name:'Tela plana', img:'/img/hilo-algodon.jpg' },
+    { id:'tela-tubular',    name:'Tela tubular',   img:'/img/hilo-nylon.jpg' },
   ]},
   { cat: 'Hilos y sogas', items: [
-    { id:'hilo-plano',  name:'Hilo Plano', img:'/inbolsaNeo/imgs/hilo-algodon.jpg' },
-    { id:'hilo-multifilamentado',    name:'Hilo multifilamento',   img:'/inbolsaNeo/imgs/hilo-nylon.jpg' },
-    { id:'hilo-reforzado-pp',    name:'Hilo reforzado pp',   img:'/inbolsaNeo/imgs/hilo-nylon.jpg' },
-    { id:'hilo-reforzado-multifilamento',    name:'Hilo reforzado multifilamento',   img:'/inbolsaNeo/imgs/hilo-nylon.jpg' },
-    { id:'amarres',    name:'Amarres',   img:'/inbolsaNeo/imgs/hilo-nylon.jpg' },
+    { id:'hilo-plano',  name:'Hilo Plano', img:'/img/hilo-algodon.jpg' },
+    { id:'hilo-multifilamentado',    name:'Hilo multifilamento',   img:'/img/hilo-nylon.jpg' },
+    { id:'hilo-reforzado-pp',    name:'Hilo reforzado pp',   img:'/img/hilo-nylon.jpg' },
+    { id:'hilo-reforzado-multifilamento',    name:'Hilo reforzado multifilamento',   img:'/img/hilo-nylon.jpg' },
+    { id:'amarres',    name:'Amarres',   img:'/img/hilo-nylon.jpg' },
   ]},
 ];
 ---
@@ -41,7 +41,7 @@ const CATALOG = [
           <p class="text-slate-600 text-sm">Genera QRs y visualiza tu historial.</p>
         </div>
         <div class="flex items-center gap-2">
-          <a href="/inbolsaNeo/app" class="rounded-xl border border-slate-300 px-4 py-2 text-sm hover:bg-slate-50">
+          <a href="/app" class="rounded-xl border border-slate-300 px-4 py-2 text-sm hover:bg-slate-50">
             ← Dashboard
           </a>
           <button id="logoutBtn" class="rounded-xl border border-red-200 bg-red-50 px-4 py-2 text-sm text-red-700 hover:bg-red-100">Cerrar sesión</button>
@@ -149,7 +149,7 @@ const CATALOG = [
   </div>
 
   <script type="module">
-  import { api, BACK_BASE } from '/inbolsaNeo/lib/api.js';
+  import { api, BACK_BASE } from '/lib/api.js';
 
   // util seguro
   const esc = (t) => String(t??'')
@@ -162,7 +162,7 @@ const CATALOG = [
     try {
       // Guard de sesión
       const me = await api.me().catch(()=>null);
-      if (!me?.auth) { location.href = '/inbolsaNeo/login'; return; }
+      if (!me?.auth) { location.href = '/login'; return; }
 
       // ====== Picker de productos ======
       const selected = new Set();
@@ -393,7 +393,7 @@ const CATALOG = [
         try {
           await api.logout();
         } catch {}
-        location.href = '/inbolsaNeo/login';
+        location.href = '/login';
       });
 
       // Cargar lista
@@ -445,3 +445,4 @@ const CATALOG = [
 </script>
 
 </AppLayout>
+

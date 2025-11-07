@@ -6,45 +6,52 @@ import Footer from '../components/Footer.astro';
 const milestones = [
   {
     year: '1974',
-    title: 'Fundación de Inbolsa',
-    description: 'Iniciamos operaciones fabricando envases tejidos de polipropileno de alta calidad.',
-    imageLeft: '/inbolsaNeo/img/story1.jpg',
-    imageRight: '/inbolsaNeo/img/landing20.jpg'
+    title: 'Nuestra Inauguración',
+    description: 'Abrimos nuestra primera planta en El Alto, La Paz. Nuestro fundador Hugo Ochiay envisionó Inbolsa como referente de tejidos en Sudamérica y prueba del potencial de la industria boliviana.',
+    imageLeft: '/img/story1.jpg',
+    imageRight: '/img/landing20.jpg'
   },
   {
     year: '2000',
-    title: 'Modernización y expansión',
-    description: 'Actualización significativa de infraestructura y maquinaria.',
-    imageLeft: '/inbolsaNeo/img/story4.jpg',
-    imageRight: '/inbolsaNeo/img/landing18.jpg'
+    title: 'Modernización de maquinaria',
+    description: 'El inicio del nuevo milenio marcó un cambio radical: expandimos producción incorporando maquinaria de punta para garantizar excelencia en cada paso del proceso industrial.',
+    imageLeft: '/img/story4.jpg',
+    imageRight: '/img/landing18.jpg'
+  },
+  {
+    year: '2010',
+    title: 'Expansión de planta',
+    description: 'Ejecutamos nuestra primera ampliación masiva en la planta principal, reafirmando el compromiso de llegar a más clientes de la región con servicios optimizados.',
+    imageLeft: '/img/story3.jpg',
+    imageRight: '/img/landing17.jpg'
   },
   {
     year: '2016',
-    title: 'Certificación OEA',
-    description: 'Primera certificación como Operador Económico Autorizado.',
-    imageLeft: '/inbolsaNeo/img/story3.jpg',
-    imageRight: '/inbolsaNeo/img/landing21.jpg'
+    title: 'Planta Big Bag',
+    description: 'Dimos apertura a la planta especializada en envases Big Bag, elevando la personalización y dedicación con cada cliente que confía su logística en nosotros.',
+    imageLeft: '/img/landing21.jpg',
+    imageRight: '/img/landing14.jpg'
   },
   {
     year: '2017',
-    title: 'Planta Big Bag',
-    description: 'Inauguración de planta dedicada exclusivamente a Big Bags.',
-    imageLeft: '/inbolsaNeo/img/landing21.jpg',
-    imageRight: '/inbolsaNeo/img/landing14.jpg'
+    title: 'Certificación OEA',
+    description: 'Fuimos la primera empresa en Bolivia certificada por la Aduana Nacional como Operador Económico Autorizado, cumpliendo estándares de seguridad y confiabilidad ejemplares.',
+    imageLeft: '/img/story2.jpg',
+    imageRight: '/img/landing13.jpg'
+  },
+  {
+    year: '2020',
+    title: 'Ayuda social durante COVID',
+    description: 'Nos volcamos al servicio del país confeccionando y donando trajes de bioseguridad a hospitales en todas las regiones, protegiendo al personal que salvó miles de vidas.',
+    imageLeft: '/img/landing24.jpg',
+    imageRight: '/img/landing25.jpg'
   },
   {
     year: '2024',
-    title: 'Nueva planta en Warnes',
-    description: 'Planta moderna en Warnes, Santa Cruz.',
-    imageLeft: '/inbolsaNeo/img/story2.jpg',
-    imageRight: '/inbolsaNeo/img/landing13.jpg'
-  },
-  {
-    year: '2025',
-    title: 'Innovación Block Bottom',
-    description: 'Lanzamiento de bolsas con fondo cuadrado.',
-    imageLeft: '/inbolsaNeo/img/landing25.jpg',
-    imageRight: '/inbolsaNeo/img/landing24.JPG'
+    title: 'Planta Warnes',
+    description: 'Estrenamos nuestra planta en Santa Cruz de la Sierra con más de 30,000 m2, un galpón de tecnología de punta que guía el futuro y sostiene la excelencia en cada paso.',
+    imageLeft: '/img/landing23.jpg',
+    imageRight: '/img/landing26.jpg'
   }
 ];
 ---
@@ -254,31 +261,26 @@ const milestones = [
         </div>
 
         <!-- Timeline Navigation mejorada -->
-        <div class="mt-12 overflow-x-auto">
-          <div class="flex items-center justify-between min-w-max mx-auto px-4 gap-4">
-            {milestones.map((milestone, index) => (
-              <div class="flex items-center">
+        <div class="mt-12">
+          <div class="max-w-6xl mx-auto px-6">
+            <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-6">
+              {milestones.map((milestone, index) => (
                 <button 
-                  class="timeline-year-btn flex flex-col items-center group"
+                  class="timeline-year-btn group flex flex-col items-center text-center gap-3"
                   data-index={index}
                 >
-                  <span class="text-white text-lg font-bold mb-3 opacity-50 group-hover:opacity-100 transition-all">
+                  <span class="text-white text-base font-bold opacity-50 group-hover:opacity-100 transition-all">
                     {milestone.year}
                   </span>
-                  <div class="timeline-dot w-4 h-4 rounded-full bg-slate-600 group-hover:bg-brand-500 relative">
+                  <div class="timeline-dot w-3.5 h-3.5 rounded-full bg-slate-500 group-hover:bg-brand-500 relative">
                     <div class="absolute inset-0 rounded-full bg-brand-400 opacity-0 group-hover:opacity-50 blur-md"></div>
                   </div>
-                  <div class="mt-3 text-xs text-slate-500 opacity-0 group-hover:opacity-100 transition-all max-w-[120px] text-center">
+                  <div class="text-xs text-slate-500 opacity-0 group-hover:opacity-100 transition-all max-w-[140px]">
                     {milestone.title}
                   </div>
                 </button>
-                {index < milestones.length - 1 && (
-                  <div class="w-24 md:w-32 h-0.5 bg-slate-700 mx-2 relative overflow-hidden">
-                    <div class="absolute inset-0 bg-gradient-to-r from-brand-500 to-transparent w-0 group-hover:w-full transition-all duration-500"></div>
-                  </div>
-                )}
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
         </div>
       </div>

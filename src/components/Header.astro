@@ -4,38 +4,37 @@ type NavLink = { href: string; label: string };
 const { transparent = false } = Astro.props as { transparent?: boolean };
 const isActive = (href: string) => Astro.url.pathname === href;
 
-// TODO(claude): ajustar subpath /inbolsaNeo para enlaces, mantener consistencia
+// TODO(claude): ajustar subpath / para enlaces, mantener consistencia
 // NO dependemos de cookies; el client script usará isPrivateEnabled()
 const baseLinks: NavLink[] = [
-  { href: '/inbolsaNeo/', label: 'Home' },
-  { href: '/inbolsaNeo/valores', label: 'Valores' },
-  { href: '/inbolsaNeo/industrias', label: 'Industrias' },
-  { href: '/inbolsaNeo/historia', label: 'Historia' },
-  { href: '/inbolsaNeo/contacto', label: 'Contacto' },
+  { href: '/', label: 'Home' },
+  { href: '/valores', label: 'Valores' },
+  { href: '/industrias', label: 'Industrias' },
+  { href: '/historia', label: 'Historia' },
   // TODO(claude): agregada nueva página soluciones
-  { href: '/inbolsaNeo/soluciones', label: 'Soluciones' },
+  { href: '/soluciones', label: 'Soluciones' },
 ];
 
 // Quitamos Valores e Historia del render principal (van al dropdown)
 const otherLinks: NavLink[] = baseLinks.filter(
-  (l) => l.href !== '/inbolsaNeo/' && 
-         l.href !== '/inbolsaNeo/valores' && 
-         l.href !== '/inbolsaNeo/historia' &&
-         l.href !== '/inbolsaNeo/soluciones'
+  (l) => l.href !== '/' && 
+         l.href !== '/valores' && 
+         l.href !== '/historia' &&
+         l.href !== '/soluciones'
 );
 
 // Links del dropdown
 const dropdownLinks: NavLink[] = [
-   { href: '/inbolsaNeo/valores', label: 'Valores' },
-   { href: '/inbolsaNeo/historia', label: 'Historia' },
+   { href: '/valores', label: 'Valores' },
+   { href: '/historia', label: 'Historia' },
 
 ];
 
 const solutionAnchors: NavLink[] = [
-  { href: '/inbolsaNeo/soluciones#sacos-pp', label: 'Sacos PP' },
-  { href: '/inbolsaNeo/soluciones#big-bag', label: 'Big Bag' },
-  { href: '/inbolsaNeo/soluciones#telas', label: 'Telas' },
-  { href: '/inbolsaNeo/soluciones#hilos-sogas', label: 'Hilos y sogas' },
+  { href: '/soluciones#sacos-pp', label: 'Sacos PP' },
+  { href: '/soluciones#big-bag', label: 'Big Bag' },
+  { href: '/soluciones#telas', label: 'Telas' },
+  { href: '/soluciones#hilos-sogas', label: 'Hilos y sogas' },
 ];
 ---
 
@@ -45,12 +44,12 @@ const solutionAnchors: NavLink[] = [
           ${transparent ? 'bg-transparent text-white border-transparent' : 'bg-white/90 text-slate-800 backdrop-blur-sm border-slate-200 shadow-sm'}`}
 >
   <div class="mx-auto max-w-7xl px-6 h-20 md:h-24 flex items-center justify-between">
-  <a href="/inbolsaNeo/" id="logoLink" class="inline-flex items-center gap-4" aria-label="Inbolsa">
+  <a href="/" id="logoLink" class="inline-flex items-center gap-4" aria-label="Inbolsa">
   <img
         id="siteLogo"
-        src={transparent ? '/inbolsaNeo/logo.png' : '/inbolsaNeo/Black.png'}
-        data-logo-white="/inbolsaNeo/logo.png"
-        data-logo-black="/inbolsaNeo/Black.png"
+        src={transparent ? '/logo.png' : '/Black.png'}
+        data-logo-white="/logo.png"
+        data-logo-black="/Black.png"
         alt="Inbolsa"
         class="h-14 md:h-16 w-auto transition-opacity duration-300"
       />
@@ -78,7 +77,7 @@ const solutionAnchors: NavLink[] = [
 
     <nav id="main-nav" class="hidden md:flex items-center gap-8 text-base md:text-lg">
       {(() => {
-        const l = { href: '/inbolsaNeo/', label: 'Home' };
+        const l = { href: '/', label: 'Home' };
         const active = isActive(l.href);
         return (
           <a
@@ -97,64 +96,6 @@ const solutionAnchors: NavLink[] = [
 
       <!-- Contenedor para Productos (solo visible en modo privado) -->
       <span id="products-link-container" class="hidden"></span>
-
-      <!-- Submenú Soluciones -->
-      {(() => {
-        const active = isActive('/inbolsaNeo/soluciones');
-        const triggerBase = transparent
-          ? `relative pb-1 hover:opacity-90 ${active ? 'after:absolute after:left-0 after:right-0 after:-bottom-0.5 after:h-0.5 after:bg-white/70' : ''}`
-          : `hover:text-brand-700 ${active ? 'text-brand-700 font-medium' : ''}`;
-        const panelBase = transparent
-          ? 'bg-white/80 text-slate-800 border-white/40 backdrop-blur-xl'
-          : 'bg-white text-slate-700 border-slate-200';
-
-        return (
-          <div id="soluciones-wrap" class="relative">
-            <button
-              id="soluciones-btn"
-              type="button"
-              aria-haspopup="menu"
-              aria-expanded={active ? 'true' : 'false'}
-              class={`${triggerBase} inline-flex items-center gap-2 select-none rounded-xl px-2 py-1 ${
-                transparent ? 'hover:bg-white/10' : 'hover:bg-slate-50'
-              }`}
-            >
-              <span>Soluciones</span>
-              <svg class={`h-4 w-4 transition-transform duration-200 ${active ? 'rotate-180' : 'rotate-0'}`} viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 10.94l3.71-3.71a.75.75 0 111.08 1.04l-4.25 4.25a.75.75 0 01-1.08 0L5.21 8.27a.75.75 0 01.02-1.06z" clip-rule="evenodd" />
-              </svg>
-            </button>
-
-            <div
-              id="soluciones-menu"
-              role="menu"
-              aria-label="Submenú Soluciones"
-              class={`absolute left-0 mt-3 w-60 rounded-2xl border shadow-xl z-50 origin-top transition-all duration-150 invisible opacity-0 scale-95 pointer-events-none ${panelBase}`}
-            >
-              <div class={`absolute -top-2 left-6 h-4 w-4 rotate-45 ${
-                transparent ? 'bg-white/80 border-l border-t border-white/40' : 'bg-white border-l border-t border-slate-200'
-              }`}></div>
-              <div class="py-2 text-sm font-medium uppercase tracking-wide">
-                <a
-                  href="/inbolsaNeo/soluciones"
-                  class="block rounded-xl px-4 py-3 transition hover:bg-brand-600/10 hover:text-brand-600"
-                >
-                  Página principal
-                </a>
-                <div class="my-2 h-px bg-slate-200/70"></div>
-                {solutionAnchors.map((link) => (
-                  <a
-                    href={link.href}
-                    class="block rounded-xl px-4 py-3 text-xs uppercase tracking-wide transition hover:bg-brand-600/10 hover:text-brand-600"
-                  >
-                    {link.label}
-                  </a>
-                ))}
-              </div>
-            </div>
-          </div>
-        );
-      })()}
 
       <!-- Dropdown "Nosotros" — diseño glass/pill, clic estable -->
       {(() => {
@@ -240,9 +181,67 @@ const solutionAnchors: NavLink[] = [
         );
       })}
 
+      <!-- Submenú Soluciones -->
+      {(() => {
+        const active = isActive('/soluciones');
+        const triggerBase = transparent
+          ? `relative pb-1 hover:opacity-90 ${active ? 'after:absolute after:left-0 after:right-0 after:-bottom-0.5 after:h-0.5 after:bg-white/70' : ''}`
+          : `hover:text-brand-700 ${active ? 'text-brand-700 font-medium' : ''}`;
+        const panelBase = transparent
+          ? 'bg-white/80 text-slate-800 border-white/40 backdrop-blur-xl'
+          : 'bg-white text-slate-700 border-slate-200';
+
+        return (
+          <div id="soluciones-wrap" class="relative">
+            <button
+              id="soluciones-btn"
+              type="button"
+              aria-haspopup="menu"
+              aria-expanded={active ? 'true' : 'false'}
+              class={`${triggerBase} inline-flex items-center gap-2 select-none rounded-xl px-2 py-1 ${
+                transparent ? 'hover:bg-white/10' : 'hover:bg-slate-50'
+              }`}
+            >
+              <span>Soluciones</span>
+              <svg class={`h-4 w-4 transition-transform duration-200 ${active ? 'rotate-180' : 'rotate-0'}`} viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 10.94l3.71-3.71a.75.75 0 111.08 1.04l-4.25 4.25a.75.75 0 01-1.08 0L5.21 8.27a.75.75 0 01.02-1.06z" clip-rule="evenodd" />
+              </svg>
+            </button>
+
+            <div
+              id="soluciones-menu"
+              role="menu"
+              aria-label="Submenú Soluciones"
+              class={`absolute left-0 mt-3 w-60 rounded-2xl border shadow-xl z-50 origin-top transition-all duration-150 invisible opacity-0 scale-95 pointer-events-none ${panelBase}`}
+            >
+              <div class={`absolute -top-2 left-6 h-4 w-4 rotate-45 ${
+                transparent ? 'bg-white/80 border-l border-t border-white/40' : 'bg-white border-l border-t border-slate-200'
+              }`}></div>
+              <div class="py-2 text-sm font-medium uppercase tracking-wide">
+                <a
+                  href="/soluciones"
+                  class="block rounded-xl px-4 py-3 transition hover:bg-brand-600/10 hover:text-brand-600"
+                >
+                  Página principal
+                </a>
+                <div class="my-2 h-px bg-slate-200/70"></div>
+                {solutionAnchors.map((link) => (
+                  <a
+                    href={link.href}
+                    class="block rounded-xl px-4 py-3 text-xs uppercase tracking-wide transition hover:bg-brand-600/10 hover:text-brand-600"
+                  >
+                    {link.label}
+                  </a>
+                ))}
+              </div>
+            </div>
+          </div>
+        );
+      })()}
+
       <a
         id="ctaHeader"
-        href="/inbolsaNeo/contacto"
+        href="/contacto"
         class={`${transparent
           ? 'rounded-2xl border border-white/70 bg-white/10 hover:bg-white/20 text-white px-5 py-2.5 md:px-6 md:py-3 transition'
           : 'rounded-2xl bg-brand-600 hover:bg-brand-700 text-white px-5 py-2.5 md:px-6 md:py-3 transition'
@@ -252,95 +251,96 @@ const solutionAnchors: NavLink[] = [
       </a>
     </nav>
   </div>
+</header>
 
-  <!-- Menú móvil -->
-  <div
-    id="mobile-menu"
-    class="md:hidden fixed inset-0 z-[9999] bg-white transform translate-x-full transition-transform duration-300 ease-in-out overflow-y-auto pt-20"
-  >
-    <nav class="px-6 py-6 space-y-2">
+<!-- Menú móvil (fuera del header para evitar recortes en páginas con overflow) -->
+<div
+  id="mobile-menu"
+  class="md:hidden fixed inset-0 z-[9999] bg-white transform translate-x-full transition-transform duration-300 ease-in-out overflow-y-auto pt-20"
+>
+  <nav class="px-6 py-6 space-y-2">
+    <a
+      id="mobileHomeLink"
+      href="/"
+      class="block px-4 py-3 rounded-xl text-slate-800 hover:bg-brand-50 hover:text-brand-700 transition font-medium"
+    >
+      Home
+    </a>
+
+    <div id="mobile-products-link" class="hidden"></div>
+
+    {otherLinks.map((link) => (
       <a
-        id="mobileHomeLink"
-        href="/inbolsaNeo/"
+        href={link.href}
         class="block px-4 py-3 rounded-xl text-slate-800 hover:bg-brand-50 hover:text-brand-700 transition font-medium"
       >
-        Home
+        {link.label}
       </a>
+    ))}
 
-      <div id="mobile-products-link" class="hidden"></div>
-
-      <!-- Soluciones con submenú -->
-      <div>
-        <button
-          id="mobile-soluciones-btn"
-          type="button"
-          class="w-full flex items-center justify-between px-4 py-3 rounded-xl text-slate-800 hover:bg-brand-50 hover:text-brand-700 transition font-medium"
-          data-mobile-submenu="mobile-soluciones-menu"
-          aria-controls="mobile-soluciones-menu"
-          aria-expanded="false"
-          onclick="return toggleSubmenu('mobile-soluciones-menu', event);"
-        >
-          <span>Soluciones</span>
-          <svg class="h-5 w-5 transition-transform duration-200" viewBox="0 0 20 20" fill="currentColor">
-            <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 10.94l3.71-3.71a.75.75 0 111.08 1.04l-4.25 4.25a.75.75 0 01-1.08 0L5.21 8.27a.75.75 0 01.02-1.06z" clip-rule="evenodd"/>
-          </svg>
-        </button>
-        <div id="mobile-soluciones-menu" class="hidden pl-4 space-y-1 mt-1">
-          <a href="/inbolsaNeo/soluciones" class="block px-4 py-2 text-sm text-slate-600 hover:text-brand-600 rounded-lg">
-            Página principal
-          </a>
-          {solutionAnchors.map((link) => (
-            <a href={link.href} class="block px-4 py-2 text-sm text-slate-600 hover:text-brand-600 rounded-lg">
-              {link.label}
-            </a>
-          ))}
-        </div>
-      </div>
-
-      <!-- Nosotros con submenú -->
-      <div>
-        <button
-          id="mobile-nosotros-btn"
-          type="button"
-          class="w-full flex items-center justify-between px-4 py-3 rounded-xl text-slate-800 hover:bg-brand-50 hover:text-brand-700 transition font-medium"
-          data-mobile-submenu="mobile-nosotros-menu"
-          aria-controls="mobile-nosotros-menu"
-          aria-expanded="false"
-          onclick="return toggleSubmenu('mobile-nosotros-menu', event);"
-        >
-          <span>Nosotros</span>
-          <svg class="h-5 w-5 transition-transform duration-200" viewBox="0 0 20 20" fill="currentColor">
-            <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 10.94l3.71-3.71a.75.75 0 111.08 1.04l-4.25 4.25a.75.75 0 01-1.08 0L5.21 8.27a.75.75 0 01.02-1.06z" clip-rule="evenodd"/>
-          </svg>
-        </button>
-        <div id="mobile-nosotros-menu" class="hidden pl-4 space-y-1 mt-1">
-          {dropdownLinks.map((link) => (
-            <a href={link.href} class="block px-4 py-2 text-sm text-slate-600 hover:text-brand-600 rounded-lg">
-              {link.label}
-            </a>
-          ))}
-        </div>
-      </div>
-
-      {otherLinks.map((link) => (
-        <a
-          href={link.href}
-          class="block px-4 py-3 rounded-xl text-slate-800 hover:bg-brand-50 hover:text-brand-700 transition font-medium"
-        >
-          {link.label}
-        </a>
-      ))}
-
-      <a
-        href="/inbolsaNeo/contacto"
-        class="block mt-4 px-4 py-3 rounded-xl bg-brand-600 hover:bg-brand-700 text-white text-center font-medium transition"
+    <!-- Nosotros con submenú -->
+    <div>
+      <button
+        id="mobile-nosotros-btn"
+        type="button"
+        class="w-full flex items-center justify-between px-4 py-3 rounded-xl text-slate-800 hover:bg-brand-50 hover:text-brand-700 transition font-medium"
+        data-mobile-submenu="mobile-nosotros-menu"
+        aria-controls="mobile-nosotros-menu"
+        aria-expanded="false"
+        onclick="return toggleSubmenu('mobile-nosotros-menu', event);"
       >
-        Contáctanos
-      </a>
-    </nav>
-  </div>
+        <span>Nosotros</span>
+        <svg class="h-5 w-5 transition-transform duration-200" viewBox="0 0 20 20" fill="currentColor">
+          <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 10.94l3.71-3.71a.75.75 0 111.08 1.04l-4.25 4.25a.75.75 0 01-1.08 0L5.21 8.27a.75.75 0 01.02-1.06z" clip-rule="evenodd"/>
+        </svg>
+      </button>
+      <div id="mobile-nosotros-menu" class="hidden pl-4 space-y-1 mt-1">
+        {dropdownLinks.map((link) => (
+          <a href={link.href} class="block px-4 py-2 text-sm text-slate-600 hover:text-brand-600 rounded-lg">
+            {link.label}
+          </a>
+        ))}
+      </div>
+    </div>
 
-  {transparent && (
+    <!-- Soluciones con submenú -->
+    <div>
+      <button
+        id="mobile-soluciones-btn"
+        type="button"
+        class="w-full flex items-center justify-between px-4 py-3 rounded-xl text-slate-800 hover:bg-brand-50 hover:text-brand-700 transition font-medium"
+        data-mobile-submenu="mobile-soluciones-menu"
+        aria-controls="mobile-soluciones-menu"
+        aria-expanded="false"
+        onclick="return toggleSubmenu('mobile-soluciones-menu', event);"
+      >
+        <span>Soluciones</span>
+        <svg class="h-5 w-5 transition-transform duration-200" viewBox="0 0 20 20" fill="currentColor">
+          <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 10.94l3.71-3.71a.75.75 0 111.08 1.04l-4.25 4.25a.75.75 0 01-1.08 0L5.21 8.27a.75.75 0 01.02-1.06z" clip-rule="evenodd"/>
+        </svg>
+      </button>
+      <div id="mobile-soluciones-menu" class="hidden pl-4 space-y-1 mt-1">
+        <a href="/soluciones" class="block px-4 py-2 text-sm text-slate-600 hover:text-brand-600 rounded-lg">
+          Página principal
+        </a>
+        {solutionAnchors.map((link) => (
+          <a href={link.href} class="block px-4 py-2 text-sm text-slate-600 hover:text-brand-600 rounded-lg">
+            {link.label}
+          </a>
+        ))}
+      </div>
+    </div>
+
+    <a
+      href="/contacto"
+      class="block mt-4 px-4 py-3 rounded-xl bg-brand-600 hover:bg-brand-700 text-white text-center font-medium transition"
+    >
+      Contáctanos
+    </a>
+  </nav>
+</div>
+
+{transparent && (
     <script is:inline>
       (function HeaderScrollInit(){
         var header = document.getElementById('siteHeader');
@@ -395,19 +395,19 @@ const solutionAnchors: NavLink[] = [
         const homeNavLink = document.getElementById('homeNavLink');
         const mobileHomeLink = document.getElementById('mobileHomeLink');
 
-        const isPrivadoPage = location.pathname.endsWith('/privado') || location.pathname.includes('/inbolsaNeo/privado');
-        const isProductosPage = location.pathname.endsWith('/productos') || location.pathname.includes('/inbolsaNeo/productos');
+        const isPrivadoPage = location.pathname.endsWith('/privado') || location.pathname.includes('/privado');
+        const isProductosPage = location.pathname.endsWith('/productos') || location.pathname.includes('/productos');
 
         // Si estamos en modo privado O en páginas privadas, el home debe ser /privado
         if (isPrivateEnabled() || isPrivadoPage || isProductosPage) {
-          if (logoLink) logoLink.href = '/inbolsaNeo/privado';
-          if (homeNavLink) homeNavLink.href = '/inbolsaNeo/privado';
-          if (mobileHomeLink) mobileHomeLink.href = '/inbolsaNeo/privado';
+          if (logoLink) logoLink.href = '/privado';
+          if (homeNavLink) homeNavLink.href = '/privado';
+          if (mobileHomeLink) mobileHomeLink.href = '/privado';
         } else {
           // Modo público: home es la raíz
-          if (logoLink) logoLink.href = '/inbolsaNeo/';
-          if (homeNavLink) homeNavLink.href = '/inbolsaNeo/';
-          if (mobileHomeLink) mobileHomeLink.href = '/inbolsaNeo/';
+          if (logoLink) logoLink.href = '/';
+          if (homeNavLink) homeNavLink.href = '/';
+          if (mobileHomeLink) mobileHomeLink.href = '/';
         }
       } catch {}
     }
@@ -427,14 +427,14 @@ const solutionAnchors: NavLink[] = [
 
         // TODO(claude): uso de rutas correctas para productos con subcarpeta
         // Verificar patrones de ruta que incluyan la subcarpeta o la ruta relativa
-        const isPrivadoPage = location.pathname.endsWith('/privado') || location.pathname.includes('/inbolsaNeo/privado');
-        const isProductosPage = location.pathname.endsWith('/productos') || location.pathname.includes('/inbolsaNeo/productos');
+        const isPrivadoPage = location.pathname.endsWith('/privado') || location.pathname.includes('/privado');
+        const isProductosPage = location.pathname.endsWith('/productos') || location.pathname.includes('/productos');
 
         if (isPrivateEnabled() || isPrivadoPage || isProductosPage) {
           // Desktop link
           if (container) {
             const link = document.createElement('a');
-            link.href = '/inbolsaNeo/productos';
+            link.href = '/productos';
             link.textContent = 'Productos';
             const isAct = isProductosPage;
             link.className = `hover:text-brand-700 ${isAct ? 'text-brand-700 font-medium' : ''}`;
@@ -445,7 +445,7 @@ const solutionAnchors: NavLink[] = [
           // Mobile link
           if (mobileContainer) {
             const mobileLink = document.createElement('a');
-            mobileLink.href = '/inbolsaNeo/productos';
+            mobileLink.href = '/productos';
             mobileLink.textContent = 'Productos';
             mobileLink.className = 'block px-4 py-3 rounded-xl text-slate-800 hover:bg-brand-50 hover:text-brand-700 transition font-medium';
             mobileContainer.appendChild(mobileLink);
@@ -683,4 +683,4 @@ const solutionAnchors: NavLink[] = [
       };
     })();
   </script>
-</header>
+

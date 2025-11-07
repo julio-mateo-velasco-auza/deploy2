@@ -1,5 +1,5 @@
 // src/lib/api.ts
-export const API_BASE = import.meta.env.PUBLIC_API_BASE || '/inbolsaNeo/inbolsa-api/api';
+export const API_BASE = import.meta.env.PUBLIC_API_BASE || '/inbolsa-api/api';
 export const BACK_BASE = API_BASE.replace(/\/api$/, "");
 
 async function fetchJSON(path: string, init: RequestInit = {}) {

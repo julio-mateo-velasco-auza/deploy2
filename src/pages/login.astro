@@ -3,8 +3,8 @@
 export const prerender = true;
 import AppLayout from '../layouts/AppLayout.astro';
 
-const basePath = import.meta.env.PUBLIC_BASE || '/inbolsaNeo';
-const apiBase = import.meta.env.PUBLIC_API_BASE || '/inbolsaNeo/inbolsa-api/api';
+const basePath = import.meta.env.PUBLIC_BASE || '/';
+const apiBase = import.meta.env.PUBLIC_API_BASE || '/inbolsa-api/api';
 ---
 <AppLayout title="Iniciar sesión — Inbolsa">
   <section class="relative overflow-hidden py-16 min-h-screen flex items-center justify-center">
@@ -52,7 +52,7 @@ const apiBase = import.meta.env.PUBLIC_API_BASE || '/inbolsaNeo/inbolsa-api/api'
         </form>
 
         <div class="mt-6 text-center">
-          <a href="/inbolsaNeo/" class="text-sm text-slate-600 hover:text-brand-700 transition">
+          <a href="/" class="text-sm text-slate-600 hover:text-brand-700 transition">
             ← Volver al sitio público
           </a>
         </div>
@@ -61,14 +61,14 @@ const apiBase = import.meta.env.PUBLIC_API_BASE || '/inbolsaNeo/inbolsa-api/api'
   </section>
 
   <script type="module">
-    import { api } from '/inbolsaNeo/lib/api.js';
+    import { api } from '/lib/api.js';
 
     // Si ya está logueado, redirigir a /app
     (async function checkExistingAuth() {
       try {
         const response = await api.me();
         if (response?.auth) {
-          window.location.href = '/inbolsaNeo/app';
+          window.location.href = '/app';
           return;
         }
       } catch (error) {
@@ -103,14 +103,14 @@ const apiBase = import.meta.env.PUBLIC_API_BASE || '/inbolsaNeo/inbolsa-api/api'
           try {
             const meResponse = await api.me();
             if (meResponse?.auth) {
-              window.location.href = '/inbolsaNeo/app';
+              window.location.href = '/app';
             } else {
               loginErr.textContent = 'Error al iniciar sesión. Intenta nuevamente.';
               loginErr.classList.remove('hidden');
             }
           } catch {
             // Si falla la verificación, intentar redirigir de todas formas
-            window.location.href = '/inbolsaNeo/app';
+            window.location.href = '/app';
           }
         } else {
           loginErr.textContent = response.error || 'Credenciales inválidas';
@@ -124,3 +124,4 @@ const apiBase = import.meta.env.PUBLIC_API_BASE || '/inbolsaNeo/inbolsa-api/api'
     });
   </script>
 </AppLayout>
+

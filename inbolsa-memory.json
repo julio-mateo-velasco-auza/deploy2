@@ -7,7 +7,7 @@
     "static_build": {
       "astro.config.mjs": {
         "output": "static",
-        "base": "/inbolsaNeo/" 
+        "base": "/" 
       },
       "env": {
         "PUBLIC_API_BASE": "https://backend-dominio.com/api",
@@ -56,7 +56,7 @@
   "notes": {
     "problemas_resueltos": [
       "Error NoAdapterInstalled → quitamos SSR, usamos build estático",
-      "Base path en Astro corregido (/inbolsaNeo/)",
+      "Base path en Astro corregido (/)",
       "Assets en _astro/ deben subirse completos",
       "Productos y login adaptados a modo demo para pruebas sin backend"
     ],
@@ -67,3 +67,4 @@
     ]
   }
 }
+

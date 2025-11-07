@@ -5,7 +5,7 @@ import compress from 'astro-compress';
 
 export default defineConfig({
   output: 'static',
-  base: '/inbolsaNeo/', // Mantener igual
+  base: '/', // Mantener igual
   server: { port: 4321, host: true },
   build: {
     format: 'file',
@@ -22,7 +22,7 @@ export default defineConfig({
     server: {
       // Proxy para XAMPP
       proxy: {
-        '/api': 'http://localhost/inbolsaNeo/inbolsa-api/api',
+        '/api': 'http://localhost/inbolsa-api/api',
       },
     },
     build: {

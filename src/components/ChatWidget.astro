@@ -6,23 +6,23 @@
 export const prerender = true;
 
 const WHATSAPP = {
-  number: '59170000000', // ← CAMBIA A TU NÚMERO DE WHATSAPP
-  message: 'Hola Inbolsa, quisiera más información sobre productos'
+  number: '59169999030', // ← CAMBIA A TU NÚMERO DE WHATSAPP
+  message: 'Hola Inbolsa, me gustaría recibir asesoría sobre sus soluciones.'
 };
 
 const INFO_EMPRESA = {
-  sobre: 'Somos Inbolsa, fabricantes de productos de polipropileo desde 1974. Ofrecemos bolsas, hilos y soluciones de embalaje industrial de alta calidad.',
-  productos: 'Fabricamos bolsas de polipropileno (chicas, grandes, enormes), hilos de algodón y nylon, y Big Bags para industria. Todos con certificación OEA.',
-  contacto: 'Tenemos oficinas en La Paz y Santa Cruz. Horario: Lun-Vie 11:00-17:00.'
+  sobre: 'Fabricamos envases técnicos de polipropileno en Bolivia desde 1974. Acompañamos a las industrias que necesitan embalaje confiable y soporte cercano.',
+  productos: 'Producimos sacos PP, Big Bags, telas técnicas e hilos industriales. Todo se personaliza en medidas, gramajes, colores e impresión según el proceso del cliente.',
+  contacto: 'Atendemos desde La Paz y Santa Cruz de lunes a viernes, 09:00‑18:00. También coordinamos reuniones virtuales o visitas técnicas bajo agenda.'
 };
 
 const RESPUESTAS = {
-  catalogo: 'Nuestro portafolio abarca sacos de polipropileno (convencionales, laminados, block bottom), Big Bags tubulares, U-panel y compartimentados, telas planas o tubulares y hilos industriales. Cada línea se personaliza en medidas, gramajes, colores e impresión hasta 8 tintas.',
-  personalizacion: 'Diseñamos empaques a medida: refuerzos cosidos, liners internos, válvulas de llenado y descarga, aditivos UV, ojales, asas y costuras de seguridad. Ajustamos gramajes de 70 a más de 200 g/m² según la exigencia de tu proceso.',
-  industrias: 'Acompañamos a sectores agro, metales y químicos, construcción, ganadería, textil y alimentación con soluciones específicas: ventilación, resistencia, protección UV y sistemas de izaje adaptados a cada industria.',
-  calidad: 'Somos Operador Económico Autorizado desde 2016, contamos con laboratorio propio, trazabilidad por lote y auditorías constantes que garantizan calidad estable y entregas confiables.',
-  historia: 'Desde 1974 tejemos soluciones en Bolivia: modernización industrial en 2000, certificación OEA en 2016, planta exclusiva de Big Bags en 2017, nueva planta en Warnes en 2024 e innovación Block Bottom en 2025.',
-  logistica: 'Producimos en La Paz y Warnes para cubrir Bolivia. Coordinamos entregas programadas, stock de seguridad y acompañamiento técnico en homologaciones y pruebas de certificación.'
+  catalogo: 'Portafolio: sacos ventilados, block bottom y laminados; Big Bags tubulares, U-panel y compartimentados; telas planas/tubulares e hilos industriales. Trabajamos desde 70 hasta 200 g/m² con impresión flexográfica hasta seis tintas.',
+  personalizacion: 'Podemos integrar liners, válvulas, ojales, refuerzos cosidos, aditivos UV y sistemas de izaje. Ajustamos dimensiones y gramajes para cada flujo de carga.',
+  industrias: 'Apoyamos a los sectores agroalimentario, químico, minero, construcción y retail con soluciones que equilibran resistencia, ventilación y trazabilidad.',
+  calidad: 'Somos Operador Económico Autorizado, contamos con laboratorio propio y control por lote. El enfoque está en entregas fiables y cumplimiento normativo.',
+  historia: 'Iniciamos en 1974 tejiendo sacos PP. Desde 2016 operamos como OEA y en 2024 ampliamos planta en Warnes para Big Bags y telas técnicas.',
+  logistica: 'Despachamos desde La Paz y Warnes, coordinamos entregas programadas, stock de seguridad y soporte en homologaciones o pruebas internas.'
 };
 ---
 
@@ -61,29 +61,9 @@ const RESPUESTAS = {
     }
   }
 
-  @keyframes pulse-ring {
-    0% {
-      transform: scale(1);
-      opacity: 1;
-    }
-    100% {
-      transform: scale(1.5);
-      opacity: 0;
-    }
-  }
-
-  @keyframes shimmer {
-    0% {
-      background-position: -1000px 0;
-    }
-    100% {
-      background-position: 1000px 0;
-    }
-  }
-
-  .chat-panel-hidden {
-    display: none;
-  }
+.chat-panel-hidden {
+  display: none;
+}
 
   .chat-panel-visible {
     display: block;
@@ -94,24 +74,9 @@ const RESPUESTAS = {
     animation: bubbleIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
   }
 
-  .chat-fab-float {
-    animation: float 3s ease-in-out infinite;
-  }
-
-  .pulse-ring {
-    animation: pulse-ring 2s cubic-bezier(0.455, 0.03, 0.515, 0.955) infinite;
-  }
-
-  .gradient-shimmer {
-    background: linear-gradient(
-      90deg,
-      rgba(255, 255, 255, 0) 0%,
-      rgba(255, 255, 255, 0.2) 50%,
-      rgba(255, 255, 255, 0) 100%
-    );
-    background-size: 1000px 100%;
-    animation: shimmer 3s infinite;
-  }
+.chat-fab-float {
+  animation: float 3s ease-in-out infinite;
+}
 
   #chat-messages::-webkit-scrollbar {
     width: 6px;
@@ -145,69 +110,65 @@ const RESPUESTAS = {
   }
 </style>
 
-<!-- Botón de chat posicionado sin tapar el botón de scroll -->
-<div id="chat-widget-root" class="fixed bottom-20 md:bottom-24 right-8 z-[9998] pointer-events-none">
-  <!-- Panel del chat -->
+<!-- Botón de chat anclado como floating action principal -->
   <div
-    id="chat-panel"
-    class="chat-panel-hidden pointer-events-auto mb-4 w-[min(92vw,400px)] rounded-3xl overflow-hidden shadow-2xl bg-white"
-    role="dialog"
-    aria-labelledby="chat-title"
-    aria-hidden="true"
-    style="box-shadow: 0 25px 50px -12px rgba(62, 125, 210, 0.25);"
+    id="chat-widget-root"
+    class="fixed bottom-6 right-6 md:bottom-10 md:right-10 z-[9998] pointer-events-none flex flex-col items-end gap-3"
+  >
+    <!-- Panel del chat -->
+    <div
+      id="chat-panel"
+      class="chat-panel-hidden pointer-events-auto mb-3 w-[min(90vw,340px)] rounded-3xl overflow-hidden shadow-xl bg-white"
+      role="dialog"
+      aria-labelledby="chat-title"
+      aria-hidden="true"
+      style="box-shadow: 0 20px 45px -18px rgba(62, 125, 210, 0.35);"
   >
     <!-- Header con logo de Inbolsa -->
-    <div class="relative overflow-hidden bg-gradient-to-br from-brand-600 via-brand-700 to-brand-600 px-5 py-4">
-      <div class="absolute inset-0 gradient-shimmer opacity-20"></div>
-      
-      <div class="relative flex items-center justify-between">
+    <div class="bg-brand-600 px-4 py-3 text-white">
+      <div class="flex items-center justify-between gap-3">
         <div class="flex items-center gap-3">
-          <!-- Logo de Inbolsa -->
-          <div class="relative">
-            <div class="absolute inset-0 pulse-ring rounded-2xl bg-white opacity-30"></div>
-            <div class="relative flex h-12 w-12 items-center justify-center rounded-2xl bg-white shadow-lg overflow-hidden">
-              <img 
-                src="/logo.png" 
-                alt="Inbolsa" 
-                class="h-10 w-10 object-contain"
-                onerror="this.style.display='none'; this.nextElementSibling.style.display='block';"
-              />
-              <!-- Fallback si no carga la imagen -->
-              <span style="display: none;" class="font-bold text-brand-600 text-xl">IB</span>
-            </div>
+          <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-white/95 shadow-sm shadow-brand-500/30">
+            <img
+              src="/logo.png"
+              alt="Inbolsa"
+              class="h-7 w-7 object-contain"
+              onerror="this.style.display='none'; this.nextElementSibling.style.display='block';"
+            />
+            <span style="display: none;" class="font-semibold text-brand-600 text-base">IB</span>
           </div>
           <div>
-            <h3 id="chat-title" class="font-bold text-white text-base leading-tight">
+            <h3 id="chat-title" class="font-semibold text-white text-sm leading-tight">
               Inbolsa
             </h3>
-            <p class="text-xs text-white/90 flex items-center gap-1.5 mt-0.5">
-              <span class="inline-block h-2 w-2 rounded-full bg-emerald-400 animate-pulse shadow-sm shadow-emerald-300"></span>
+            <p class="text-[11px] text-white/80 flex items-center gap-1 mt-0.5">
+              <span class="inline-block h-2 w-2 rounded-full bg-emerald-400 animate-pulse"></span>
               <span>Asistente en línea</span>
             </p>
           </div>
         </div>
-        <button 
-          id="chat-close" 
-          class="rounded-xl p-2 hover:bg-white/20 transition-all duration-300" 
+        <button
+          id="chat-close"
+          class="rounded-lg p-2 hover:bg-white/15 transition-all duration-200"
           aria-label="Cerrar chat"
         >
-          <svg class="h-5 w-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"/>
+          <svg class="h-4 w-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.25" d="M6 18L18 6M6 6l12 12"/>
           </svg>
         </button>
       </div>
     </div>
 
     <!-- Área de mensajes con fondo sólido -->
-    <div 
-      id="chat-messages" 
-      class="h-[min(60vh,450px)] overflow-y-auto bg-slate-50 p-4 space-y-3"
+    <div
+      id="chat-messages"
+      class="h-[min(50vh,360px)] overflow-y-auto bg-slate-50 p-3 space-y-2.5"
     >
       <!-- Los mensajes se agregarán aquí -->
     </div>
 
     <!-- Área de acciones con fondo blanco sólido -->
-    <div id="chat-quick-actions" class="bg-white border-t border-slate-200 p-4 space-y-2">
+    <div id="chat-quick-actions" class="bg-white border-t border-slate-200 p-3 space-y-2.5">
       <!-- Los botones se agregarán aquí -->
     </div>
   </div>
@@ -215,14 +176,14 @@ const RESPUESTAS = {
   <!-- Botón flotante -->
   <button
     id="chat-fab"
-    class="pointer-events-auto chat-fab-float relative h-16 w-16 rounded-full bg-gradient-to-br from-brand-600 to-brand-700 text-white shadow-2xl hover:shadow-brand-500/50 transition-all duration-500 group"
+    class="pointer-events-auto chat-fab-float relative h-14 w-14 rounded-full bg-gradient-to-br from-[#25D366] to-[#128C7E] text-white shadow-xl hover:shadow-emerald-500/50 transition-all duration-500 group"
     aria-label="Abrir chat"
-    style="box-shadow: 0 24px 48px -18px rgba(62, 125, 210, 0.45);"
+    style="box-shadow: 0 24px 48px -18px rgba(18, 140, 126, 0.45);"
   >
-    <div class="absolute inset-0 rounded-full bg-brand-600 opacity-0 group-hover:opacity-20 blur-xl transition-opacity duration-500"></div>
+    <div class="absolute inset-0 rounded-full bg-[#25D366] opacity-0 group-hover:opacity-20 blur-xl transition-opacity duration-500"></div>
     
     <span class="absolute inset-0 flex items-center justify-center">
-      <svg class="h-8 w-8 group-hover:scale-110 transition-transform duration-300" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+      <svg class="h-7 w-7 group-hover:scale-110 transition-transform duration-300" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
       </svg>
     </span>
@@ -230,7 +191,7 @@ const RESPUESTAS = {
     <span 
       id="chat-badge" 
       style="display: none;" 
-      class="absolute -top-1 -right-1 h-6 w-6 rounded-full bg-gradient-to-br from-red-500 to-red-600 text-white text-xs font-bold flex items-center justify-center shadow-lg animate-bounce"
+      class="absolute -top-1 -right-1 h-5 w-5 rounded-full bg-gradient-to-br from-red-500 to-red-600 text-white text-xs font-bold flex items-center justify-center shadow-lg animate-bounce"
     >
       1
     </span>
@@ -272,12 +233,12 @@ const RESPUESTAS = {
     </svg>`;
     
     bubble.innerHTML = `
-      <div class="\${bgClass} max-w-[85%] rounded-2xl px-4 py-3">
-        <div class="text-xs \${isBot ? 'text-slate-500' : 'text-white/80'} mb-1.5 font-medium flex items-center gap-2">
-          \${isBot ? iconBot : iconUser}
-          <span>\${isBot ? 'Asistente Inbolsa' : 'Tú'}</span>
+      <div class="${bgClass} max-w-[85%] rounded-2xl px-4 py-3">
+        <div class="text-xs ${isBot ? 'text-slate-500' : 'text-white/80'} mb-1.5 font-medium flex items-center gap-2">
+          ${isBot ? iconBot : iconUser}
+          <span>${isBot ? 'Asistente Inbolsa' : 'Tú'}</span>
         </div>
-        <div class="text-sm leading-relaxed">\${text}</div>
+        <div class="text-sm leading-relaxed">${text}</div>
       </div>
     `;
     
@@ -293,11 +254,11 @@ const RESPUESTAS = {
     const button = document.createElement('button');
     
     if (variant === 'primary') {
-      button.className = 'btn-hover-lift w-full rounded-xl bg-gradient-to-r from-brand-600 to-brand-700 text-white px-4 py-3.5 hover:from-brand-700 hover:to-brand-600 transition-all text-sm font-semibold shadow-lg shadow-brand-500/20';
+      button.className = 'btn-hover-lift w-full rounded-xl bg-gradient-to-r from-brand-600 to-brand-700 text-white px-3 py-2.5 hover:from-brand-700 hover:to-brand-600 transition-all text-sm font-semibold shadow-md shadow-brand-500/25';
     } else if (variant === 'whatsapp') {
-      button.className = 'btn-hover-lift w-full rounded-xl bg-gradient-to-r from-[#25D366] to-[#128C7E] text-white px-4 py-3.5 hover:from-[#1EBE5D] hover:to-[#0F6F5C] transition-all text-sm font-semibold shadow-lg shadow-emerald-500/30';
+      button.className = 'btn-hover-lift w-full rounded-xl bg-gradient-to-r from-[#25D366] to-[#128C7E] text-white px-3 py-2.5 hover:from-[#1EBE5D] hover:to-[#0F6F5C] transition-all text-sm font-semibold shadow-md shadow-emerald-500/30';
     } else {
-      button.className = 'btn-hover-lift w-full rounded-xl border-2 border-slate-200 bg-white px-4 py-3 hover:border-brand-300 hover:bg-brand-50 transition-all text-sm text-left font-medium text-slate-700 hover:text-brand-700';
+      button.className = 'btn-hover-lift w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 hover:border-brand-300 hover:bg-brand-50/50 transition-all text-sm text-left font-medium text-slate-700 hover:text-brand-700';
     }
     
     button.innerHTML = icon ? `<span class="flex items-center gap-2">${icon} <span>${label}</span></span>` : label;
@@ -342,16 +303,16 @@ const RESPUESTAS = {
   function showInitialOptions() {
     conversationState = 'initial';
     clearQuickActions();
-    addQuickAction('Explorar soluciones por industria', () => {
-      addMessage('Explorar soluciones por industria', false);
+    addQuickAction('Soluciones por industria', () => {
+      addMessage('Soluciones por industria', false);
       showSolucionesOptions();
     }, 'default', icons.industries);
-    addQuickAction('Ver catálogo de productos', () => {
-      addMessage('Ver catálogo de productos', false);
+    addQuickAction('Ver catálogo', () => {
+      addMessage('Ver catálogo', false);
       showProductosOptions();
     }, 'default', icons.catalog);
-    addQuickAction('Información corporativa', () => {
-      addMessage('Información corporativa', false);
+    addQuickAction('Información de la empresa', () => {
+      addMessage('Información de la empresa', false);
       showCorporateOptions();
     }, 'default', icons.info);
     addWhatsappAction();
@@ -373,9 +334,9 @@ const RESPUESTAS = {
       setTimeout(showProductosOptions, 500);
     }, 'default', icons.custom);
     
-    addQuickAction('Revisar productos específicos', () => {
-      addMessage('Revisar productos específicos', false);
-      addMessage('Disponemos de sacos PP, Big Bags, telas técnicas e hilos industriales. Si buscas un producto puntual compárteme el tipo de carga, volumen y acabados para guiarte mejor.', true);
+    addQuickAction('Necesito una sugerencia', () => {
+      addMessage('Necesito una sugerencia', false);
+      addMessage('Compárteme tipo de producto, carga aproximada y acabados que necesitas. Con eso te sugiero la línea que mejor funciona.', true);
       setTimeout(showProductosOptions, 500);
     }, 'default', icons.catalog);
     
@@ -398,7 +359,7 @@ const RESPUESTAS = {
     
     addQuickAction('Soluciones de embalaje', () => {
       addMessage('Soluciones de embalaje', false);
-      addMessage('Integramos asesoría técnica, diseño de empaque y producción ágil para consolidar abastecimiento industrial, proyectos agro, minería y textiles. Coordinamos pilotos, pruebas de resistencia y ajustes hasta lograr el envase óptimo.', true);
+      addMessage('Integramos asesoría técnica, prototipos y producción ágil para que el empaque cumpla seguridad, performance y presentación.', true);
       setTimeout(showSolucionesOptions, 500);
     }, 'default', icons.box);
     
@@ -451,9 +412,9 @@ const RESPUESTAS = {
   }
 
   function initChat() {
-    addMessage(`${getSaludo()} Soy tu asistente virtual de Inbolsa.`, true);
+    addMessage(`${getSaludo()} Soy el asistente virtual de Inbolsa.`, true);
     setTimeout(() => {
-      addMessage('¿En qué puedo ayudarte hoy?', true);
+      addMessage('Elige una opción rápida o cuéntame qué necesitas.', true);
       showInitialOptions();
     }, 600);
   }
@@ -491,4 +452,3 @@ const RESPUESTAS = {
     }
   }, 5000);
 </script>
-dex corregido ✅
